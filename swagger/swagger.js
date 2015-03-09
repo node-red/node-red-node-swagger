@@ -43,8 +43,16 @@ module.exports = function(RED) {
                 
                 resp.paths[node.url] = resp.paths[node.url]||{};
                 
-                resp.paths[node.url][node.method] = {
-                    summary: node.name||(node.method+" "+node.url)
+                var path = resp.paths[node.url][node.method] = {
+                    responses: {
+                        200: {
+                            description: "success"
+                        }
+                    }
+                }
+                
+                if (node.name) {
+                    path.summary = node.name;
                 }
             }
         });

@@ -1,0 +1,22 @@
+{
+    "name": "node-red-node-swagger",
+    "version": "0.0.1",
+    "description": "A set of tools for generating Swagger api documentation based on the HTTP nodes deployed in a flow",
+    "license": "Apache",
+    "repository"   : {
+        "type":"git",
+        "url":"https://github.com/node-red/node-red-node-swagger.git"
+    },
+    "keywords": [
+        "node-red",
+        "swagger"
+    ],
+    "node-red": {
+        "nodes": {
+            "swagger": "swagger/swagger.js"
+        }
+    },
+    "author": {
+        "name": "Nick O'Leary"
+    }
+}

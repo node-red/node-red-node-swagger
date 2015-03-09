@@ -17,6 +17,11 @@
 module.exports = function(RED) {
     "use strict";
 
+    var path = require("path");
+    RED.httpAdmin.get("/http-api/lib/yaml.js",function(req,res) {
+        res.sendfile(path.join(__dirname,"lib","yaml.js"));
+    });
+    
     RED.httpNode.get("/http-api/swagger.json",function(req,res) {
         var basePath = RED.settings.httpNodeRoot;
         if (basePath != "/") {

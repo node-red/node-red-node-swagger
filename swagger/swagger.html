@@ -15,4 +15,786 @@
 -->
 
 
+<script type="text/x-red" data-template-name="swagger-doc-path">
+        <div class="form-row">
+            <label>Path</label>
+            <span id="node-config-input-method"></span>
+            <span id="node-config-input-path"></span>
+        </div>
+        <!--
+        <div class="form-row node-text-editor-row">
+            <input type="hidden" id="node-config-input-swagger">
+            <div style="height: 250px;" class="node-text-editor" id="node-config-input-swagger-editor" ></div>
+        </div>
+        -->
+        <div class="form-row">
+            <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-config-swagger-tabs"></ul>
+        </div>
+
+        <div id="node-config-swagger-tabs-content" style="min-height: 350px">
+            <div id="swagger-tab-info">
+                <div class="form-row">
+                    <label for="node-config-input-summary">Summary</label>
+                    <input type="text" id="node-config-input-summary">
+                </div>
+                <div class="form-row">
+                    <label for="node-config-input-description">Description</label>
+                    <input type="text" id="node-config-input-description">
+                </div>
+                <div class="form-row">
+                    <label for="node-config-input-tags">Tags</label>
+                    <input type="text" id="node-config-input-tags" placeholder="Comma-separated list of Tags">
+                </div>
+                <div class="form-row">
+                    <label for="node-config-input-consumes">Consumes</label>
+                    <input type="text" id="node-config-input-consumes" placeholder="Comma-separated list of Mime Types">
+                </div>
+                <div class="form-row">
+                    <label for="node-config-input-produces">Produces</label>
+                    <input type="text" id="node-config-input-produces" placeholder="Comma-separated list of Mime Types">
+                </div>
+                <div class="form-row">
+                    <input type="checkbox" id="node-config-input-deprecated" style="width: auto; vertical-align: top;"> <label for="node-config-input-deprecated">Deprecated</label>
+                </div>
+            </div>
+            <div id="swagger-tab-parameters">
+                <div class="form-row" style="box-sizing: border-box; border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">
+                    <ul id="node-config-parameter-list" style="padding: 0; margin:0;"></ul>
+                </div>
+                <div class="form-row">
+                    <a href="#" class="btn btn-mini" id="node-config-input-add-parameter"><i class="fa fa-plus"></i> parameter</a>
+                </div>
+            </div>
+            <div id="swagger-tab-responses">
+                <div class="form-row">
+                    <label>Responses</label>
+                </div>
+            </div>
+         </div>
+    </div>
+    
+</script>
+
+<script type="text/x-red" data-help-name="swagger-doc-path">
+    <p>Describes an HTTP API using Swagger.</p>
+</script>
+
+
+<script type="text/x-red" data-template-name="swagger-doc">
+</script>
+
+<script type="text/x-red" data-help-name="swagger-doc">
+    <p>Describes an HTTP API using Swagger.</p>
+</script>
+
+
+<script type="text/javascript">
+(function() {
+    RED.nodes.registerType('swagger-doc-path',{
+        category: 'config',
+        defaults: {
+            swagger: {value:""},
+            summary: {value:""},
+            description: {value:""},
+            tags: {value:""},
+            consumes: {value:""},
+            produces: {value:""},
+            parameters: {value:[]},
+            responses: {value:null},
+            deprecated: {value:false}
+            
+        },
+        label: function() {
+            return this.name||"swagger doc";
+        },
+        oneditprepare: function() {
+        
+            //this.editor = RED.editor.createEditor({
+            //    id: 'node-config-input-swagger-editor',
+            //    mode: 'ace/mode/yaml'
+            //});
+            //this.editor.setValue($("#node-config-input-swagger").val(),-1);
+            
+            
+            $("#node-config-input-method").text($("#node-input-method").val().toUpperCase());
+            $("#node-config-input-path").html($("#node-input-url").val());
+        
+            var tabs = RED.tabs.create({
+                id:"node-config-swagger-tabs",
+                onchange:function(tab) {
+                    $("#node-config-swagger-tabs-content").children().hide();
+                    $("#"+tab.id).show();
+                }
+            });
+            tabs.addTab({id:"swagger-tab-info",label:"Info"});
+            tabs.addTab({id:"swagger-tab-parameters",label:"Parameters"});
+            tabs.addTab({id:"swagger-tab-responses",label:"Responses"});
+
+            // Need to wait for it to be rendered before the sizing of the tabs
+            // can be properly calculated
+            setTimeout(function() {
+                tabs.resize();
+            },10);
+            
+
+            var generateTypeRow = function(opts,top) {
+                var row = $("<div/>",{class:"node-swagger-type-row"+(top?" node-swagger-type-top-row":""),style:"margin-top: 3px;"+(top?"":"margin-left: 10px;")});
+                
+                $("<label/>").text("Type").appendTo(row);
+                var typeSelect = $('<select/>',{class:"node-swagger-type-select", style:"max-width: 150px"}).appendTo(row);
+                
+                var typeoptions = ["string", "number", "integer", "boolean", "array"];
+                for (var i=0;i<typeoptions.length;i++) {
+                    typeSelect.append($("<option/>").val(typeoptions[i]).text(typeoptions[i]));
+                }
+                if (!top) {
+                    typeSelect.append($("<option/>").val("ref").text("$ref"));
+                }
+                typeSelect.val(opts.type);
+                $("<label/>",{class:"node-swgger-type-format-label",style:"width: auto; margin-left:20px; margin-right: 10px;"}).text("Format").appendTo(row);
+                $('<input/>',{class:"node-swagger-type-format",style:"width: 150px;",type:"text"}).val(opts.format).appendTo(row);
+                var collFormatSelect = $('<select/>',{class:"node-swagger-type-collection-format",style:"width: 150px;",type:"text"}).appendTo(row);
+                var collformatoptions = ["csv", "ssv", "tsv", "pipes"];
+                if (top) {
+                    collformatoptions.push("multi");
+                }
+                for (var i=0;i<collformatoptions.length;i++) {
+                    collFormatSelect.append($("<option/>").val(collformatoptions[i]).text(collformatoptions[i]));
+                }
+                collFormatSelect.val(opts.collectionFormat||"csv");
+
+                typeSelect.change(function() {
+                    var t = $(this).val();
+                    if (t != "array") {
+                        $(this).parent().find(".node-swagger-type-row").remove();
+                        $(this).parent().find(".node-swagger-type-format").show();
+                        $(this).parent().find(".node-swagger-type-collection-format").hide();
+                        
+                        if (t == "ref") {
+                            $(this).parent().find(".node-swgger-type-format-label").text("");
+                        } else {
+                            $(this).parent().find(".node-swgger-type-format-label").text("Format");
+                        }
+                        
+                        
+                    } else {
+                        $(this).parent().find(".node-swagger-type-format").hide();
+                        $(this).parent().find(".node-swagger-type-collection-format").show();
+                        generateTypeRow({},false).appendTo($(this).parent());
+                    }
+                });
+                typeSelect.change();
+                
+                return row;
+            }
+            
+            var generateParameterLine = function(opts,expand) {
+                var li = $("<li/>",{style:"background: #fff; margin:4px 0; border: 1px solid #ccc;"}).appendTo("#node-config-parameter-list");
+                
+                var row1 = $("<div/>",{style:"background:#f3f3f3; padding: 5px;"}).appendTo(li);
+                var remove = $('<a/>',{href:"#", class:"btn btn-mini", style:"float: right; margin-right: 5px; margin-top: 3px;"}).appendTo(row1);
+                var removeIcon = $('<i/>',{class:"fa fa-remove"}).appendTo(remove);
+               
+                remove.click(function(e) {
+                    li.slideUp(100,function() { li.remove(); });
+                    e.preventDefault();
+                });
+                
+                //var required = $('<a/>',{href:"#", style:"display: inline-block; margin: 0 10px; height: 30px; line-height: 30px;"}).appendTo(row1);
+                //var requiredIcon = $('<i/>',{class:"fa fa-circle-o"}).appendTo(required);
+
+                var expanderSpan = $('<span/>',{style:"display:inline-block; width: 20px; margin-right:10px;"}).appendTo(row1);
+                var expander = $('<a/>',{href:"#", style:"text-align: center; display: inline-block; 5px; width: 20px; height: 30px; line-height: 30px;"}).appendTo(expanderSpan);
+                var expanderIcon = $('<i/>',{class:"fa fa-chevron-right",style:"width: 15px; text-align:centre;"}).appendTo(expander);
+                
+                var showDetails = function() {
+                    expanderIcon.removeClass("fa-chevron-right");
+                    expanderIcon.addClass("fa-chevron-down");
+                    nameRows.slideDown(200);
+                }
+                var hideDetails = function() {
+                    expanderIcon.removeClass("fa-chevron-down");
+                    expanderIcon.addClass("fa-chevron-right");
+                    nameRows.slideUp(200);
+                }
+                
+                expander.click(function(e) {
+                    var icn = $(this).children(".fa");
+                    if (icn.hasClass("fa-chevron-right")) {
+                        showDetails();
+                    } else {
+                        hideDetails();
+                    }
+                    e.preventDefault();
+                });
+                
+                var parameterSelect = $("<select/>",{class:"node-swagger-name-select", style:"max-width: 90px; margin-right: 10px;"}).appendTo(row1);
+                parameterSelect.append($("<option/>").val("name").text("Name"));
+                parameterSelect.append($("<option/>").val("ref").text("$ref"));
+                parameterSelect.change(function() {
+                    var p = $(this).val();
+                    if (p == "name") {
+                        expander.show();
+                        $(this).parent().children(".node-swagger-in-form").show();
+                        $(this).parent().find(".node-swagger-name").css({maxWidth:"150px"});
+                        showDetails();
+                    } else {
+                        expander.hide();
+                        $(this).parent().children(".node-swagger-in-form").hide();
+                        $(this).parent().find(".node-swagger-name").css({maxWidth:"300px"});
+                        hideDetails();
+                    }
+                });
+
+                var parameterName = $('<input/>',{style:"max-width: 150px",type:"text", class:"node-swagger-name"}).appendTo(row1);
+                
+                if (opts.ref) {
+                    parameterSelect.val("ref");
+                    parameterName.val(opts.ref);
+                } else {
+                    parameterSelect.val("name");
+                    parameterName.val(opts.name);
+                }
+                
+                var inSpan = $('<span/>',{class:"node-swagger-in-form"}).appendTo(row1);
+                $("<label/>",{style:"width: auto; margin-left:10px; margin-right: 10px;"}).text("in").appendTo(inSpan);
+                var inSelect = $('<select/>',{class:"node-swagger-in-select", style:"max-width: 150px"}).appendTo(inSpan);
+                var inoptions = ["query", "header", "path","formData","body"];
+                for (var i=0;i<inoptions.length;i++) {
+                    inSelect.append($("<option></option>").val(inoptions[i]).text(inoptions[i]));
+                }
+
+                var nameRows = $("<div/>",{class:"node-swagger-name-row",style:"padding: 15px;"}).appendTo(li).hide();
+                
+                var row2 = $("<div/>",{class:"form-row node-swagger-name-row"}).appendTo(nameRows);
+                $("<label/>").text("Description").appendTo(row2);
+                $('<input/>',{type:"text",class:"node-swagger-description"}).val(opts.description).appendTo(row2);
+                
+                
+                var rowSchema = $("<div/>",{class:"form-row node-swagger-schema-row"}).appendTo(nameRows);
+                $("<label/>").text("Schema").appendTo(rowSchema);
+                $('<input/>',{type:"text",class:"node-swagger-schema"}).val(opts.schema||"").appendTo(rowSchema);
+                
+                var row3 = generateTypeRow(opts,true).appendTo(nameRows);
+                
+                inSelect.change(function() {
+                    var i = $(this).val();
+                    var schemaRow = $(this).parent().parent().parent().children(".node-swagger-name-row").children(".node-swagger-schema-row"); 
+                    var typeRow = $(this).parent().parent().parent().children(".node-swagger-name-row").children(".node-swagger-type-row");
+                    if (i == "body") {
+                        schemaRow.show();
+                        typeRow.hide();
+                    } else {
+                        if (i == "formData") {
+                            if (typeRow.children(".node-swagger-type-select").children("option[value='file']").length == 0) {
+                                $("<option/>").val("file").text("file").appendTo(typeRow.children(".node-swagger-type-select"));
+                            }
+                        } else {
+                            typeRow.children(".node-swagger-type-select").children("option[value='file']").remove();
+                        }
+                        schemaRow.hide();
+                        typeRow.show();
+                    }
+                });
+                
+                inSelect.change();
+                parameterSelect.change();
+                if (!expand) {
+                    hideDetails();
+                }
+                
+                //var row4 = $("<div/>",{class:"form-row"}).appendTo(li);
+                //$("<label/>").text("Type").appendTo(row4);
+                //var typeSelect = $('<select/>',{style:"max-width: 150px"}).appendTo(row4);
+                //var typeoptions = ["string", "number", "integer", "boolean", "array", "file"];
+                //for (var i=0;i<typeoptions.length;i++) {
+                //    typeSelect.append($("<option></option>").val(typeoptions[i]).text(typeoptions[i]));
+                //}
+                //typeSelect.val(opts.type);
+                //
+                //$("<label/>",{style:"width: auto; margin-left:20px; margin-right: 10px;"}).text("Format").appendTo(row4);
+                //$('<input/>',{style:"width: 150px;",type:"text"}).val(opts.format).appendTo(row4);
+            }
+            
+            $("#node-config-input-add-parameter").click(function(e) {
+                generateParameterLine({},true);
+                var scrollContainer = $("#node-config-parameter-list").parent();
+                scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
+                e.preventDefault();
+            });
+            
+            generateParameterLine({
+                name: "latitudelatitude",
+                in: "query",
+                description: "Latitude component of location.",
+                required: true,
+                type: "number",
+                format: "double"
+            });
+            generateParameterLine({
+                ref: "#/definitions/Pet"
+            });
+            //generateParameterLine({
+            //    ref: "#/definitions/Pet",
+            //    name: "longitude",
+            //    in: "query",
+            //    description: "Longitude component of location.",
+            //    required: true,
+            //    type: "array",
+            //    items: { type: "string" },
+            //    collectionFormat: "csv"
+            //});
+            
+            window.foo = function() {
+                var swagger = {};
+                swagger.paths = {};
+                var path = $("#node-input-url").val();
+                var method = $("#node-input-method").val();
+                
+                swagger.paths[path] = {};
+                swagger.paths[path][method] = {};
+                var params = [];
+                var fields = ["summary","description","tags","consumes","produces"];
+                fields.forEach(function(f) {
+                    var v = $("#node-config-input-"+f).val();
+                    if (v) {
+                        swagger.paths[path][method][f] = v;
+                    }
+                });
+                swagger.paths[path][method].parameters = params;
+                
+                
+                $("#node-config-parameter-list li").each(function() {
+                    var param = {};
+                    var nameType = $(this).find(".node-swagger-name-select").val();
+                    var name = $(this).find(".node-swagger-name").val();
+                    if (nameType == "ref") {
+                        param["$ref"] = name;
+                    } else {
+                        param.name = name;
+                        param.in = $(this).find(".node-swagger-in-select").val();
+                        var desc = $(this).find(".node-swagger-description").val();
+                        if (desc) {
+                            param.description = desc;
+                        }
+                        //TODO: required
+                        if (param.in == "body") {
+                            param.schema = $(this).find(".node-swagger-schema").val();
+                        } else {
+                            var row = $(this).find(".node-swagger-type-top-row");
+                            
+                            var current = param;
+                            while (row.length != 0) {
+                                var ctype = row.children(".node-swagger-type-select").val();
+                                if (ctype != "ref") {
+                                    current.type = ctype;
+                                    if (current.type == "array") {
+                                        var collFormat = row.children(".node-swagger-type-collection-format").val();
+                                        if (collFormat != "csv") {
+                                            current.collectionFormat = collFormat;
+                                        }
+                                        current.items = {};
+                                        current = current.items;
+                                        row = row.children(".node-swagger-type-row");
+                                        
+                                    } else {
+                                        var format = row.children(".node-swagger-type-format").val();
+                                        if (format) {
+                                            current.format = format;
+                                        }
+                                        break;
+                                    }
+                                } else {
+                                    current["$ref"] = row.children(".node-swagger-type-format").val();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    params.push(param);
+                });
+                
+                console.log(JSON.stringify(swagger,"",4));
+            
+            }
+            
+        },
+        oneditsave: function() {
+            $("#node-config-input-swagger").val(this.editor.getValue());
+            delete this.editor;
+        }
+
+    });
+    
+    RED.nodes.registerType('swagger-doc', {
+        category: 'config',
+        defaults: {
+            swagger:{ value: ""}
+        },
+        label: "swagger",
+        
+        onpaletteadd: function() {
+            RED.swagger = {};
+            
+            var content = $("<div/>",{id:"tab-swagger",style:"position:relative; height: 100%;"});
+            
+            var initialContent = $("<div/>",{style:"text-align: center; margin-top:20px"}).appendTo(content);
+            
+            var addDocButton = $("<a/>",{href:"#",class:"btn"}).text("Add swagger documentation").appendTo(initialContent).click(function(e) {
+                var node = {
+                    id: RED.nodes.id(),
+                    type:"swagger-doc",
+                    swagger:"swagger: '2.0'\ninfo:\n  version: 1.0.0\n  title: My Node-RED API"
+                }
+                var hasPaths = false;
+                var httpNodes = getHTTPNodes();
+                
+                for (var urls in httpNodes) {
+                    if (httpNodes.hasOwnProperty(urls)) {
+                        if (!hasPaths) {
+                            node.swagger += "\npaths:\n";
+                            hasPaths = true;
+                        }
+                        node.swagger += "  "+urls+":\n";
+                        for (var methods in httpNodes[urls]) {
+                            if (httpNodes[urls].hasOwnProperty(methods)) {
+                                node.swagger += "    "+methods+":\n";
+                                node.swagger += "      responses:\n";
+                                node.swagger += "        200:\n";
+                                node.swagger += "          description: success!\n";
+                            }
+                        }
+                    }
+                }
+                
+                RED.nodes.import(node);
+                RED.view.dirty(true);
+                e.preventDefault();
+            });
+            
+            var Range = ace.require('ace/range').Range;
+            
+            RED.sidebar.addTab("swagger",content);
+
+            var swaggerDocNode = null;
+
+            var getHTTPNodes = function() {
+                var httpNodes = {};
+                RED.nodes.eachNode(function(node) {
+                    if (node.type == "http in") {
+                        var method = node.method.toLowerCase();
+                        var url = node.url;
+                        httpNodes[url] = httpNodes[url]||{}
+                        httpNodes[url][method] = node;
+                    }
+                });
+                return httpNodes;
+            }
+            
+            RED.swagger = {};
+            
+            RED.swagger.init = function(n) {
+                swaggerDocNode = n;
+                content.empty();
+                $("<div/>",{id:"tab-swagger-editor",style:"font-size: 16px; position:absolute;top:5px;bottom:5px;left:5px;right:5px;"}).appendTo(content);
+                
+                var editor = this.editor = RED.editor.createEditor({
+                    id:"tab-swagger-editor",
+                    mode: 'ace/mode/yaml',
+                    options: {
+                        enableBasicAutocompletion:true,
+                        enableSnippets:true,
+                        displayIndentGuides: true,
+                        tabSize: 2,
+                        wrap: "free"
+                    }
+                });
+                
+                editor.on("focus", function() {
+                    RED.keyboard.disable();
+                });
+                editor.on("blur", function() {
+                    RED.keyboard.enable();
+                    if (currentHighlightedBlock) {
+                        editor.session.removeMarker(currentHighlightedMarker);
+                    }
+                });
+                
+                var highlightNode = function(nodeMap) {
+                    if (!nodeMap) {
+                        currentHighlightedBlock = null;
+                        editor.session.removeMarker(currentHighlightedMarker);
+                        return;
+                    }
+                    if (currentHighlightedBlock && (
+                            nodeMap.node == currentHighlightedBlock.node &&
+                            nodeMap.start == currentHighlightedBlock.start &&
+                            nodeMap.end == currentHighlightedBlock.end
+                    ) ) { 
+                        return;
+                    }
+                    currentHighlightedBlock = nodeMap;
+                    editor.session.removeMarker(currentHighlightedMarker);
+                    currentHighlightedMarker = editor.session.addMarker(
+                        new Range(nodeMap.start, 0, nodeMap.end-1, 0),
+                        "ace_active-line",
+                        "fullLine"
+                    );
+                }
+                var refreshNodeHighlight = function() {
+                    var pos = editor.getCursorPosition();
+                    var node = null;
+                    var highlightBlock = null;
+                    for (var i=0;i<currentSwaggerPathMap.length;i++) {
+                        var p = currentSwaggerPathMap[i];
+                        if (pos.row>=p.start && pos.row<p.end) {
+                            node = p.node;
+                            highlightBlock = p;
+                            break;
+                        }
+                    }
+                    if (!currentHighlightedBlock || (
+                            node != currentHighlightedBlock.node ||
+                            highlightBlock.start != currentHighlightedBlock.start ||
+                            highlightBlock.end != currentHighlightedBlock.end
+                        )) {
+                        highlightNode(highlightBlock);
+                        if (currentHighlightedBlock) {
+                            RED.view.select(currentHighlightedBlock.node.id);
+                        } else {
+                            RED.view.select();
+                        }
+                    }
+                }
+                
+                editor.on("changeSelection", function() {
+                    refreshNodeHighlight();
+                });
+                
+                RED.sidebar.on("resize", function() {
+                    editor.resize();
+                });
+                
+                RED.view.on("selection-changed", function(selection) {
+                    if (!selection.nodes || 
+                        selection.nodes.length != 1 || 
+                        selection.nodes[0].type != "http in"
+                        ) {
+                            highlightNode(null);
+                            return;
+                    }
+                    if (currentHighlightedBlock) {
+                        if (selection.nodes[0] == currentHighlightedBlock.node) {
+                            return;
+                        }
+                    }
+                    
+                    var node = selection.nodes[0];
+                    for (var i=0;i<currentSwaggerPathMap.length;i++) {
+                        var p = currentSwaggerPathMap[i];
+                        if (p.node == node) {
+                            highlightNode(p);
+                            editor.gotoLine(p.start+1,0);
+                            break;
+                        }
+                    }
+                });
+                
+                
+                var changeEvent = null;
+                
+                var currentSwagger = null;
+                var currentSwaggerMap = null;
+                // TODO: optimise this - flat list is inefficient
+                var currentSwaggerPathMap = [];
+                
+                var currentHighlightedBlock = null;
+                var currentHighlightedMarker = null;
+                
+                RED.swagger.update = function() {
+                    editor.session.clearAnnotations();
+                    try {
+                        var annotations = [];
+                        var fullData = YAML.parse(editor.getValue());
+                        
+                        var data = currentSwagger = fullData.data;
+                        var dataMap = currentSwaggerMap = fullData.map;
+                        currentSwaggerPathMap = [];
+                        
+                        //console.log(currentSwaggerMap.paths);
+                        console.log(fullData.map);
+                        //console.log(data);
+                        
+                        var httpNodes = {};
+                        var redraw = false;
+                        RED.nodes.eachNode(function(node) {
+                            if (node.type == "http in") {
+                                var oldValidState = node.valid;
+                                RED.editor.validateNode(node);
+                                if (oldValidState !== node.valid) {
+                                    redraw = true;
+                                }
+                                var method = node.method.toLowerCase();
+                                var url = node.url;
+                                httpNodes[url] = httpNodes[url]||{}
+                                httpNodes[url][method] = node;
+                            }
+                        });
+                        if (redraw) {
+                            RED.view.redraw();
+                        }
+                        
+                        if (data.paths) {
+                            for (var u in data.paths) {
+                                if (data.paths.hasOwnProperty(u)) {
+                                    for (var m in data.paths[u]) {
+                                        if (data.paths[u].hasOwnProperty(m)) {
+                                            if (!httpNodes[u] || !httpNodes[u][m]) {
+                                                try {
+                                                    annotations.push({
+                                                        row:dataMap.paths[u][m].__line__,
+                                                        text: "no node implements the path: "+m+" "+u,
+                                                        type: "error"
+                                                    });
+                                                } catch(err) {
+                                                    console.log(err);
+                                                }
+                                            } else {
+                                                var p = currentSwaggerMap.paths[u][m];
+                                                currentSwaggerPathMap.push({
+                                                    start:p["__line__"],
+                                                    end:p["__end__"],
+                                                    node: httpNodes[u][m]
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (annotations.length > 0) {
+                            editor.session.setAnnotations(annotations);
+                        }
+                    } catch(er) {
+                        console.log(er.stack);
+                        currentSwagger = null;
+                        currentSwaggerMap = null;
+                        if (er.parsedLine) {
+                            editor.session.setAnnotations([
+                                {row: er.parsedLine-1, text: er.message, type: "error"}
+                            ]);
+                        }
+                    }
+                    refreshNodeHighlight();
+                }
+                RED.swagger.pathExists = function(url,method) {
+                    if (!currentSwagger) {
+                        return null;
+                    }
+                    
+                    return !(!currentSwagger.paths || !currentSwagger.paths[url] || !currentSwagger.paths[url][method.toLowerCase()]); 
+                }
+                RED.swagger.addPath = function(url,method,name) {
+                    if (RED.swagger.pathExists(url,method)) {
+                        return;
+                    }
+                    
+                    var insertAt;
+                    var text = "";
+                    if (!currentSwaggerMap.paths) {
+                        insertAt = editor.session.getLength();
+                        text += "\npaths:\n";
+                        text += "  "+url+":\n";
+                        text += "    "+method+":\n";
+                        //TODO: add paths
+                    } else if (currentSwaggerMap.paths[url]) {
+                        insertAt = currentSwaggerMap.paths[url]["__end__"];
+                        text += "    "+method+":\n";
+                    } else {
+                        insertAt = currentSwaggerMap.paths["__end__"];
+                        text += "  "+url+":\n";
+                        text += "    "+method+":\n";
+                    }
+                    if (name) {
+                        text += "      summary: "+name+"\n";
+                    }
+                    text += "      responses:\n";
+                    text += "        200:\n";
+                    text += "          description: success!\n";
+                    editor.gotoLine(insertAt+2);
+                    editor.insert(text);
+                }
+                RED.swagger.updatePath = function(url,method,newUrl,newMethod,newName) {
+                    if (!RED.swagger.pathExists(url,method)) {
+                        // TODO: failed to find path
+                        return;
+                    }
+                    var existingPath = currentSwaggerMap.paths[url][method];
+                    console.log(currentSwaggerMap.paths[url][method]);
+                    
+                    // Case: node url/method unchanged
+                    //   -> update summary
+                    if (newUrl == url && newMethod == method) {
+                        if (existingPath.summary) {
+                            if (currentSwagger.paths[url][method].summary != newName) {
+                                var newSummary = "";
+                                if (newName != "") {
+                                    newSummary = "      summary: "+newName;
+                                }
+                                editor.session.replace(
+                                    new Range(existingPath.summary["__line__"],0,existingPath.summary["__end__"]+1,0),
+                                    newSummary+"\n"
+                                )
+                            }
+                        } else if (newName != "") {
+                            editor.session.insert(
+                                {row:existingPath["__line__"]+1,column:0},
+                                newSummary = "      summary: "+newName+"\n"
+                            )
+                        }
+                    }
+                    
+                    // Case: only method for path
+                    //   -> update path/method in place
+                    
+                    // Case: multiple methods for path
+                    //   -> 
+                
+                }
+                RED.swagger.showPath = function(url,method) {
+                    if (currentSwaggerMap.paths && currentSwaggerMap.paths[url] && currentSwaggerMap.paths[url][method]) {
+                        editor.gotoLine(currentSwaggerMap.paths[url][method]["__line__"]+1);
+                        RED.sidebar.show("swagger");
+                        editor.focus();
+                    }
+                }
+                
+                editor.on('change',function() {
+                    if (changeEvent) {
+                        clearTimeout(changeEvent);
+                    }
+                    changeEvent = setTimeout(RED.swagger.update,500);
+                });
+                
+                
+                editor.setValue(swaggerDocNode.swagger,-1);
+                window.editor = this.editor;
+            }
+
+        },
+        
+        onadd: function() {
+            if (RED.swagger.init) {
+                RED.swagger.init(this);
+            }
+        }
+    });
+    $.getScript( "http-api/lib/yaml.js", function( data, textStatus, jqxhr ) {
+    });
+})();
+
+</script>
+
+
 

@@ -17,23 +17,29 @@
 module.exports = function(RED) {
     "use strict";
 
-    RED.httpNode.get("/http-api/swagger.json",function(req,res) {
-        var basePath = RED.settings.httpNodeRoot;
-        if (basePath != "/") {
-            basePath = basePath.replace(/\/$/,"");
+    RED.httpNode.get("/swagger-doc/swagger.json",function(req,res) {
+            
+        var swagger = RED.settings.swagger;
+        
+        if (!swagger) {
+            swagger = {
+                swagger: "2.0",
+                info: {
+                    "title": "My Node-RED API",
+                    "version": "0.0.1"
+                }
+            };
         }
-        var resp = {
-            swagger: "2.0",
-            info: {
-                "title": "An API",
-                "description": "Another Node-RED API",
-                "version": "0.0.1"
-            },
-            basePath: basePath,
-            paths: {
-                
+        
+        if (!swagger.basePath) {
+            var basePath = RED.settings.httpNodeRoot;
+            if (basePath != "/") {
+                basePath = basePath.replace(/\/$/,"");
             }
-        };
+            swagger.basePath = basePath;
+        }
+        
+        swagger.paths = swagger.paths || {};
         
         RED.nodes.eachNode(function(node) {
             if (node.type === "http in") {
@@ -41,9 +47,9 @@ module.exports = function(RED) {
                     method: node.method
                 }
                 
-                resp.paths[node.url] = resp.paths[node.url]||{};
+                swagger.paths[node.url] = swagger.paths[node.url]||{};
                 
-                var path = resp.paths[node.url][node.method] = {
+                var path = swagger.paths[node.url][node.method] = {
                     responses: {
                         200: {
                             description: "success"
@@ -58,6 +64,6 @@ module.exports = function(RED) {
         });
         
         
-        res.json(resp);
+        res.json(swagger);
     });
 h}

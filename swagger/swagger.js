@@ -66,4 +66,4 @@ module.exports = function(RED) {
         
         res.json(swagger);
     });
-h}
+}

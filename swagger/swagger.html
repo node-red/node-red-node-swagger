@@ -398,8 +398,11 @@
                     class: "node-swagger-in-select",
                     style: "max-width: 150px"
                 }).appendTo(inSpan);
-                //Removed path parameter, as node-red doesn't support it.
-                var inoptions = ["query", "header",/* "path",*/ "formData", "body"];
+                var inoptions = ["query", "header", "formData", "body"];
+                //only add path option if there were path params in the url
+                if(opts.in == 'path'){
+                    inSelect.append($("<option></option>").val('path').text('path'));
+                }
                 for (var i = 0; i < inoptions.length; i++) {
                     inSelect.append($("<option></option>").val(inoptions[i]).text(inoptions[i]));
                 }
@@ -443,6 +446,15 @@
                     delay: { show: 500, hide: 50 }
                 });
                 required.prop('checked', opts.required);
+                
+                //lock non-changeable fields if path variable
+                if(opts.in == 'path'){
+                    parameterSelect.attr('disabled', true);
+                    parameterName.attr('disabled', true);
+                    inSelect.attr('disabled', true);
+                    required.attr('disabled', true);
+                    remove.hide();
+                }
 
                 var row3 = generateTypeRow(opts, true).appendTo(nameRows);
 
@@ -663,17 +675,55 @@
                 e.preventDefault();
             });
 
+            //Discover path params
+            var pathParams = [];
+            $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function(p){ pathParams.push(p.substring(2)); });
+            
             node.parameters.forEach(function(p) {
+                if(p.in == 'path'){
+                    if(pathParams.indexOf(p.name) > -1){     //param was previously defined
+                        generateParameterLine({
+                            name: p.name,
+                            in : p.in,
+                            description: p.description,
+                            required: p.required,
+                            type: p.type,
+                            format: p.format,
+                            items: p.items,
+                            schema: p.schema
+                        }, false);
+                        pathParams.splice(pathParams.indexOf(p.name), 1);
+                    } else{//param is no longer a path param
+                        console.log('removing outdated path param: ' + p.name);
+                        delete p;
+                    }
+                } else{
+                    generateParameterLine({
+                        name: p.name,
+                        in : p.in,
+                        description: p.description,
+                        required: p.required,
+                        type: p.type,
+                        format: p.format,
+                        items: p.items,
+                        schema: p.schema
+                    }, false);
+                }
+            });
+            
+            //Add path params that weren't found above
+            pathParams.forEach(function(p){
+                console.log('adding path param: ' + p);
                 generateParameterLine({
-                    name: p.name,
-                    in : p.in,
-                    description: p.description,
-                    required: p.required,
-                    type: p.type,
-                    format: p.format,
-                    items: p.items,
-                    schema: p.schema
-                }, false);
+                    name: p,
+                    in : 'path',
+                    description: '',
+                    required: true,
+                    type: null,
+                    format: null,
+                    items: null,
+                    schema: null
+                }, true);
             });
 
             for (var code in node.responses) {

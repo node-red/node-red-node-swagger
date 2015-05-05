@@ -45,10 +45,12 @@ module.exports = function(RED) {
             if (node.type === "http in") {
                 var swagger = RED.nodes.getNode(node.swaggerDoc);
                 
-                resp.paths[node.url] = {};
+                var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
+                
+                resp.paths[url] = {};
                     var swaggerPart = {};
                 if(swagger){
-                    swaggerPart.summary = swagger.summary || node.name || (node.method+" "+node.url);
+                    swaggerPart.summary = swagger.summary || node.name || (node.method+" "+url);
                     if(swagger.description)
                         swaggerPart.description = swagger.description;
                     
@@ -85,12 +87,12 @@ module.exports = function(RED) {
                         };
                     }
                 } else{
-                    swaggerPart.summary = node.name || (node.method+" "+node.url);
+                    swaggerPart.summary = node.name || (node.method+" "+url);
                     swaggerPart.responses = {
                         default: {}
                     };
                 }
-                resp.paths[node.url][node.method] = swaggerPart;
+                resp.paths[url][node.method] = swaggerPart;
             }
         });
 

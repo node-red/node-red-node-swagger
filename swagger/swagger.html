@@ -21,7 +21,7 @@
             <span id="node-config-input-method"></span>
             <span id="node-config-input-path"></span>
         </div>
-		
+        
         <div class="form-row">
             <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-config-swagger-tabs"></ul>
         </div>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="form-row">
                     <a href="#" class="btn btn-mini" id="node-config-input-add-parameter"><i class="fa fa-plus"></i> parameter</a>
-					<a href="#" id="node-config-input-parameter-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right">Parameters Help</a>
+                    <a href="#" id="node-config-input-parameter-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right">Parameters Help</a>
                 </div>
             </div>
             <div id="swagger-tab-responses">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="form-row">
                     <a href="#" class="btn btn-mini" id="node-config-input-add-response"><i class="fa fa-plus"></i> response</a>
-					<a href="#" id="node-config-input-response-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right">Responses Help</a>
+                    <a href="#" id="node-config-input-response-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right">Responses Help</a>
                 </div>
             </div>
          </div>
@@ -113,30 +113,30 @@
             return this.summary || "swagger doc";
         },
         oneditprepare: function() {
-			$('.popover-right').popover({
+            $('.popover-right').popover({
                 placement:"right",
-				html: true,
+                html: true,
                 trigger: "hover",
-				container: '#main-container',
+                container: '#main-container',
                 delay: { show: 500, hide: 50 }
             });
-			$('#node-config-input-parameter-info').popover({
+            $('#node-config-input-parameter-info').popover({
                 placement:"left",
-				html: true,
+                html: true,
                 trigger: "hover",
-				container: '#main-container',
-				content: "<div style='font-size:10px'><p>A list of parameters that are applicable for this operation.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> parameter</span> button.</p><p>There are four possible parameter types.</p><ul><li>Query - Parameters that are appended to the URL. For example, in /items?id=###, the query parameter is id.</li><li>Header - Custom headers that are expected as part of the request.</li><li>Body - The payload that's appended to the HTTP request. Since there can only be one payload, there can only be one body parameter. The name of the body parameter has no effect on the parameter itself and is used for documentation purposes only.</li><li>Form - Used to describe the payload of an HTTP request when either application/x-www-form-urlencoded or multipart/form-data are used as the content type of the request (in Swagger's definition, the consumes property of an operation). This is the only parameter type that can be used to send files, thus supporting the file type.</li></ul></div>",
+                container: '#main-container',
+                content: "<div style='font-size:10px'><p>A list of parameters that are applicable for this operation.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> parameter</span> button.</p><p>There are four possible parameter types.</p><ul><li>Query - Parameters that are appended to the URL. For example, in /items?id=###, the query parameter is id.</li><li>Header - Custom headers that are expected as part of the request.</li><li>Body - The payload that's appended to the HTTP request. Since there can only be one payload, there can only be one body parameter. The name of the body parameter has no effect on the parameter itself and is used for documentation purposes only.</li><li>Form - Used to describe the payload of an HTTP request when either application/x-www-form-urlencoded or multipart/form-data are used as the content type of the request (in Swagger's definition, the consumes property of an operation). This is the only parameter type that can be used to send files, thus supporting the file type.</li></ul></div>",
                 delay: { show: 500, hide: 50 }
             });
-			$('#node-config-input-response-info').popover({
+            $('#node-config-input-response-info').popover({
                 placement:"left",
-				html: true,
+                html: true,
                 trigger: "hover",
-				container: '#main-container',
-				content: "<div style='font-size: 10px'><p>The list of possible responses as they are returned from executing this operation.</p><p>You may supply responses for individual status codes, and/or a default response.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> response</span> button.</p><p>If no responses are entered, a default response returning 'success' will be added for you.</p></div>",
+                container: '#main-container',
+                content: "<div style='font-size: 10px'><p>The list of possible responses as they are returned from executing this operation.</p><p>You may supply responses for individual status codes, and/or a default response.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> response</span> button.</p><p>If no responses are entered, a default response returning 'success' will be added for you.</p></div>",
                 delay: { show: 500, hide: 50 }
             });
-			
+            
             var node = this;
 
             $("#node-config-input-method").text($("#node-input-method").val().toUpperCase());
@@ -175,13 +175,13 @@
                 });
 
                 var typeLabel = $("<label/>").text("Type").appendTo(row);
-				typeLabel.popover({
-					placement:"right",
-					trigger: "hover",
-					container: '#main-container',
-					content: 'The type of the attribute, limited to primitive types.',
-					delay: { show: 500, hide: 50 }
-				});
+                typeLabel.popover({
+                    placement:"right",
+                    trigger: "hover",
+                    container: '#main-container',
+                    content: 'The type of the attribute, limited to primitive types.',
+                    delay: { show: 500, hide: 50 }
+                });
                 var typeSelect = $('<select/>', {
                     class: "node-swagger-type-select",
                     style: "max-width: 150px"
@@ -200,13 +200,13 @@
                     class: "node-swgger-type-format-label",
                     style: "width: auto; margin-left:20px; margin-right: 10px;"
                 }).text("Format").appendTo(row);
-				formatLabel.popover({
-					placement:"right",
-					trigger: "hover",
-					container: '#main-container',
-					content: 'The extending format for the previously mentioned type.',
-					delay: { show: 500, hide: 50 }
-				});
+                formatLabel.popover({
+                    placement:"right",
+                    trigger: "hover",
+                    container: '#main-container',
+                    content: 'The extending format for the previously mentioned type.',
+                    delay: { show: 500, hide: 50 }
+                });
                 $('<input/>', {
                     class: "node-swagger-type-format",
                     style: "width: 150px;",
@@ -351,10 +351,10 @@
                     style: "max-width: 90px; margin-right: 10px;"
                 }).appendTo(row1);
                 parameterSelect.append($("<option/>").val("name").text("Name"));
-				
+                
                 //Remove ref until theres a plan for it..
                 //parameterSelect.append($("<option/>").val("ref").text("$ref"));
-				
+                
                 parameterSelect.change(function() {
                     var p = $(this).val();
                     if (p == "name") {
@@ -398,8 +398,11 @@
                     class: "node-swagger-in-select",
                     style: "max-width: 150px"
                 }).appendTo(inSpan);
-				//Removed path parameter, as node-red doesn't support it.
-                var inoptions = ["query", "header",/* "path",*/ "formData", "body"];
+                var inoptions = ["query", "header", "formData", "body"];
+                //only add path option if there were path params in the url
+                if(opts.in == 'path'){
+                    inSelect.append($("<option></option>").val('path').text('path'));
+                }
                 for (var i = 0; i < inoptions.length; i++) {
                     inSelect.append($("<option></option>").val(inoptions[i]).text(inoptions[i]));
                 }
@@ -414,14 +417,14 @@
                     class: "form-row node-swagger-name-row"
                 }).appendTo(nameRows);
                 var descLabel = $("<label/>").text("Description").appendTo(row2);
-				descLabel.popover({
-					placement:"right",
-					html: true,
-					trigger: "hover",
-					container: '#main-container',
-					content: 'A brief description of the parameter. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation.',
-					delay: { show: 500, hide: 50 }
-				});
+                descLabel.popover({
+                    placement:"right",
+                    html: true,
+                    trigger: "hover",
+                    container: '#main-container',
+                    content: 'A brief description of the parameter. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation.',
+                    delay: { show: 500, hide: 50 }
+                });
                 $('<input/>', {
                     type: "text",
                     class: "node-swagger-description",
@@ -435,14 +438,23 @@
                 var reqLabel = $("<label/>", {
                     style: "width: auto; float: right; margin-left:20px; vertical-align: middle"
                 }).text("Required?").appendTo(row2);
-				reqLabel.popover({
-					placement:"left",
-					trigger: "hover",
-					container: '#main-container',
-					content: 'Determines whether this parameter is mandatory.',
-					delay: { show: 500, hide: 50 }
-				});
+                reqLabel.popover({
+                    placement:"left",
+                    trigger: "hover",
+                    container: '#main-container',
+                    content: 'Determines whether this parameter is mandatory.',
+                    delay: { show: 500, hide: 50 }
+                });
                 required.prop('checked', opts.required);
+                
+                //lock non-changeable fields if path variable
+                if(opts.in == 'path'){
+                    parameterSelect.attr('disabled', true);
+                    parameterName.attr('disabled', true);
+                    inSelect.attr('disabled', true);
+                    required.attr('disabled', true);
+                    remove.hide();
+                }
 
                 var row3 = generateTypeRow(opts, true).appendTo(nameRows);
 
@@ -607,14 +619,14 @@
                     class: "form-row node-swagger-description-row"
                 }).appendTo(nameRows);
                 var descLabel = $("<label/>").text("Description").appendTo(row2);
-				descLabel.popover({
-					placement:"right",
-					html: true,
-					trigger: "hover",
-					container: '#main-container',
-					content: 'A brief description of the response. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation.',
-					delay: { show: 500, hide: 50 }
-				});
+                descLabel.popover({
+                    placement:"right",
+                    html: true,
+                    trigger: "hover",
+                    container: '#main-container',
+                    content: 'A brief description of the response. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation.',
+                    delay: { show: 500, hide: 50 }
+                });
                 $('<input/>', {
                     type: "text",
                     class: "node-swagger-description"
@@ -663,17 +675,55 @@
                 e.preventDefault();
             });
 
+            //Discover path params
+            var pathParams = [];
+            $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function(p){ pathParams.push(p.substring(2)); });
+            
             node.parameters.forEach(function(p) {
+                if(p.in == 'path'){
+                    if(pathParams.indexOf(p.name) > -1){     //param was previously defined
+                        generateParameterLine({
+                            name: p.name,
+                            in : p.in,
+                            description: p.description,
+                            required: p.required,
+                            type: p.type,
+                            format: p.format,
+                            items: p.items,
+                            schema: p.schema
+                        }, false);
+                        pathParams.splice(pathParams.indexOf(p.name), 1);
+                    } else{//param is no longer a path param
+                        console.log('removing outdated path param: ' + p.name);
+                        delete p;
+                    }
+                } else{
+                    generateParameterLine({
+                        name: p.name,
+                        in : p.in,
+                        description: p.description,
+                        required: p.required,
+                        type: p.type,
+                        format: p.format,
+                        items: p.items,
+                        schema: p.schema
+                    }, false);
+                }
+            });
+            
+            //Add path params that weren't found above
+            pathParams.forEach(function(p){
+                console.log('adding path param: ' + p);
                 generateParameterLine({
-                    name: p.name,
-                    in : p.in,
-                    description: p.description,
-                    required: p.required,
-                    type: p.type,
-                    format: p.format,
-                    items: p.items,
-                    schema: p.schema
-                }, false);
+                    name: p,
+                    in : 'path',
+                    description: '',
+                    required: true,
+                    type: null,
+                    format: null,
+                    items: null,
+                    schema: null
+                }, true);
             });
 
             for (var code in node.responses) {
@@ -739,9 +789,10 @@
 
                             properties[name] = property;
                         });
-                        param.schema = {
-                            properties: properties
-                        };
+                        param.schema = {};
+                        if(Object.keys(properties).length > 0){
+                            param.schema.properties = properties;
+                        }
                     } else {
                         var row = $(this).find(".node-swagger-type-top-row");
 
@@ -828,8 +879,8 @@
 
                     properties[name] = property;
                 });
-                console.log(properties.length);
-                if (properties) {
+
+                if (Object.keys(properties).length > 0) {
                     response.schema = {
                         properties: properties
                     };
@@ -846,6 +897,3 @@
 })();
 
 </script>
-
-
-

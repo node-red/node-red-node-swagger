@@ -18,7 +18,6 @@ module.exports = function(RED) {
     "use strict";
 
     var path = require("path");
-    
     RED.httpNode.get("/http-api/swagger.json",function(req,res) {
         var resp = RED.settings.swagger;
         if(!resp){
@@ -39,6 +38,17 @@ module.exports = function(RED) {
                 }
             }
             resp.basePath = basePath;
+        }
+        var api_secret;
+        if(RED.settings.API_SECRET){
+            api_secret = {
+                "name": "API_SECRET",
+                "in": "header",
+                "description": "Access token to be passed as a header. Value: '" + RED.settings.API_SECRET + "'",
+                "required": true,
+                "type": "string",
+                "default": RED.settings.API_SECRET
+            };
         }
         resp.paths = {};
         RED.nodes.eachNode(function(node) {
@@ -78,6 +88,12 @@ module.exports = function(RED) {
                     }
                     if(swagger.parameters.length > 0){
                         swaggerPart.parameters = swagger.parameters;
+                        if(api_secret){
+                            swaggerPart.parameters[swaggerPart.parameters.length] = api_secret;
+                        }
+                    } else if(api_secret){
+                        swaggerPart.parameters = [];
+                        swaggerPart.parameters[0] = api_secret;
                     }
                     if(Object.keys(swagger.responses).length > 0){
                         swaggerPart.responses = swagger.responses;
@@ -91,6 +107,10 @@ module.exports = function(RED) {
                     swaggerPart.responses = {
                         default: {}
                     };
+                    if(api_secret){
+                        swaggerPart.parameters = [];
+                        swaggerPart.parameters[0] = api_secret;
+                    }
                 }
                 resp.paths[url][node.method] = swaggerPart;
             }

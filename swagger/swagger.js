@@ -18,9 +18,11 @@ module.exports = function(RED) {
     "use strict";
 
     var path = require("path");
-    
     RED.httpNode.get("/http-api/swagger.json",function(req,res) {
-        var resp = RED.settings.swagger;
+        var resp;
+        if(RED.settings.swagger){
+            resp = RED.settings.swagger.template;
+        }
         if(!resp){
             resp = {
                 swagger: "2.0",
@@ -39,6 +41,10 @@ module.exports = function(RED) {
                 }
             }
             resp.basePath = basePath;
+        }
+        var additionalParams;
+        if(RED.settings.swagger && RED.settings.swagger.parameters){
+            additionalParams = RED.settings.swagger.parameters;
         }
         resp.paths = {};
         RED.nodes.eachNode(function(node) {
@@ -77,7 +83,14 @@ module.exports = function(RED) {
                         swaggerPart.deprecated = true;
                     }
                     if(swagger.parameters.length > 0){
-                        swaggerPart.parameters = swagger.parameters;
+                        swaggerPart.parameters = swagger.parameters.slice();
+                        if(additionalParams){
+                            for(var i in additionalParams){
+                                swaggerPart.parameters.push(additionalParams[i]);
+                            }
+                        }
+                    } else if(additionalParams){
+                        swaggerPart.parameters = additionalParams.slice();
                     }
                     if(Object.keys(swagger.responses).length > 0){
                         swaggerPart.responses = swagger.responses;
@@ -91,6 +104,9 @@ module.exports = function(RED) {
                     swaggerPart.responses = {
                         default: {}
                     };
+                    if(additionalParams){
+                        swaggerPart.parameters = additionalParams.slice();
+                    }
                 }
                 resp.paths[url][node.method] = swaggerPart;
             }

@@ -677,7 +677,8 @@
 
             //Discover path params
             var pathParams = [];
-            $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function(p){ pathParams.push(p.substring(2)); });
+            if($('#node-config-input-path').html().match(/\/:\w*/g))
+                $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function(p){ pathParams.push(p.substring(2)); });
             
             node.parameters.forEach(function(p) {
                 if(p.in == 'path'){

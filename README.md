@@ -29,7 +29,7 @@ based on the HTTP nodes deployed in a flow.
 
   **Note:** You may additionally add parameters to the swagger file in 'settings.js' to have those parameters automatically added to each path in the generated swagger doc.
   
-        swagger: {
+        "swagger": {
           "template": {
             "swagger": "2.0",
             "info": {
@@ -37,13 +37,15 @@ based on the HTTP nodes deployed in a flow.
               "version": "0.0.1"
             }
           },
-          "parameters": {
-            "name": "parameterA",
-            "type": "string",
-            "in": "header",
-            "required": false,
-            "description": "This is a test parameter to show how parameters are automatically added to each path in the generated swagger doc."
-          }
+          "parameters": [
+            {
+              "name": "parameterA",
+              "type": "string",
+              "in": "header",
+              "required": false,
+              "description": "This is a test parameter to show how parameters are automatically added to each path in the generated swagger doc."
+            }
+          ]
         }
 
 4. After installing the package, you have the option to identify metadata for each HTTP-In node that will be used in the swagger doc generation.

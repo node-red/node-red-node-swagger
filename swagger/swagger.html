@@ -17,7 +17,7 @@
 
 <script type="text/x-red" data-template-name="swagger-doc">
         <div class="form-row">
-            <label>Path</label>
+            <label><span data-i18n="swagger.label.path"></span></label>
             <span id="node-config-input-method"></span>
             <span id="node-config-input-path"></span>
         </div>
@@ -29,27 +29,27 @@
         <div id="node-config-swagger-tabs-content" style="min-height: 350px">
             <div id="swagger-tab-info">
                 <div class="form-row">
-                    <label id="node-config-input-summary-label" for="node-config-input-summary" class="popover-right" data-content="A short summary of what the operation does. For maximum readability in the swagger-ui, this field SHOULD be less than 120 characters.">Summary</label>
+                    <label id="node-config-input-summary-label" for="node-config-input-summary" class="popover-right" data-i18n="[data-content]swagger.data-content.summary"><span data-i18n="swagger.label.summary"></span></label>
                     <input type="text" id="node-config-input-summary">
                 </div>
                 <div class="form-row">
-                    <label id="node-config-input-description-label" for="node-config-input-description" class="popover-right" data-content="A verbose explanation of the operation behavior. GitHub Flavored Markup syntax can be used for rich text representation.">Description</label>
+                    <label id="node-config-input-description-label" for="node-config-input-description" class="popover-right" data-i18n="[data-content]swagger.data-content.description"><span data-i18n="swagger.label.description"></span></label>
                     <input type="text" id="node-config-input-description">
                 </div>
                 <div class="form-row">
-                    <label id="node-config-input-tags-label" for="node-config-input-tags" class="popover-right" data-content="A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.">Tags</label>
-                    <input type="text" id="node-config-input-tags" placeholder="Comma-separated list of Tags">
+                    <label id="node-config-input-tags-label" for="node-config-input-tags" class="popover-right" data-i18n="[data-content]swagger.data-content.tags"><span data-i18n="swagger.label.tags"></span></label>
+                    <input type="text" id="node-config-input-tags" data-i18n="[placeholder]swagger.placeholder.tags">
                 </div>
                 <div class="form-row">
-                    <label id="node-config-input-consumes-label" for="node-config-input-consumes" class="popover-right" data-content="A list of MIME types the operation can consume.">Consumes</label>
-                    <input type="text" id="node-config-input-consumes" placeholder="Comma-separated list of Mime Types">
+                    <label id="node-config-input-consumes-label" for="node-config-input-consumes" class="popover-right" data-i18n="[data-content]swagger.data-content.consumes"><span data-i18n="swagger.label.consumes"></span></label>
+                    <input type="text" id="node-config-input-consumes" data-i18n="[placeholder]swagger.placeholder.consumes">
                 </div>
                 <div class="form-row">
-                    <label id="node-config-input-produces-label" for="node-config-input-produces" class="popover-right" data-content="A list of MIME types the operation can produce.">Produces</label>
-                    <input type="text" id="node-config-input-produces" placeholder="Comma-separated list of Mime Types">
+                    <label id="node-config-input-produces-label" for="node-config-input-produces" class="popover-right" data-i18n="[data-content]swagger.data-content.produces"><span data-i18n="swagger.label.produces"></span></label>
+                    <input type="text" id="node-config-input-produces" data-i18n="[placeholder]swagger.placeholder.produces">
                 </div>
                 <div  class="form-row">
-                    <input type="checkbox" id="node-config-input-deprecated" style="width: auto; vertical-align: top;"> <label id="node-config-input-deprecated-label" for="node-config-input-deprecated" class="popover-right" data-content="Declares this operation to be deprecated. Usage of the declared operation should be refrained.">Deprecated</label>
+                    <input type="checkbox" id="node-config-input-deprecated" style="width: auto; vertical-align: top;"> <label id="node-config-input-deprecated-label" for="node-config-input-deprecated" class="popover-right" data-i18n="[data-content]swagger.data-content.deprecated"><span data-i18n="swagger.label.deprecated"></span></label>
                 </div>
             </div>
             <div id="swagger-tab-parameters">
@@ -57,8 +57,8 @@
                     <ul id="node-config-parameter-list" style="padding: 0; margin:0;"></ul>
                 </div>
                 <div class="form-row">
-                    <a href="#" class="btn btn-mini" id="node-config-input-add-parameter"><i class="fa fa-plus"></i> parameter</a>
-                    <a href="#" id="node-config-input-parameter-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right">Parameters Help</a>
+                    <a href="#" class="btn btn-mini" id="node-config-input-add-parameter"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.parameter"></span></a>
+                    <a href="#" id="node-config-input-parameter-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right"><span data-i18n="swagger.label.parameters-help"></span></a>
                 </div>
             </div>
             <div id="swagger-tab-responses">
@@ -66,8 +66,8 @@
                     <ul id="node-config-response-list" style="padding: 0; margin:0;"></ul>
                 </div>
                 <div class="form-row">
-                    <a href="#" class="btn btn-mini" id="node-config-input-add-response"><i class="fa fa-plus"></i> response</a>
-                    <a href="#" id="node-config-input-response-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right">Responses Help</a>
+                    <a href="#" class="btn btn-mini" id="node-config-input-add-response"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.response"></span></a>
+                    <a href="#" id="node-config-input-response-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right"><span data-i18n="swagger.label.responses-help"></span></a>
                 </div>
             </div>
          </div>
@@ -125,7 +125,7 @@
                 html: true,
                 trigger: "hover",
                 container: '#main-container',
-                content: "<div style='font-size:10px'><p>A list of parameters that are applicable for this operation.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> parameter</span> button.</p><p>There are four possible parameter types.</p><ul><li>Query - Parameters that are appended to the URL. For example, in /items?id=###, the query parameter is id.</li><li>Header - Custom headers that are expected as part of the request.</li><li>Body - The payload that's appended to the HTTP request. Since there can only be one payload, there can only be one body parameter. The name of the body parameter has no effect on the parameter itself and is used for documentation purposes only.</li><li>Form - Used to describe the payload of an HTTP request when either application/x-www-form-urlencoded or multipart/form-data are used as the content type of the request (in Swagger's definition, the consumes property of an operation). This is the only parameter type that can be used to send files, thus supporting the file type.</li></ul></div>",
+                content: this._("swagger.content.parameter-info"),
                 delay: { show: 500, hide: 50 }
             });
             $('#node-config-input-response-info').popover({
@@ -133,7 +133,7 @@
                 html: true,
                 trigger: "hover",
                 container: '#main-container',
-                content: "<div style='font-size: 10px'><p>The list of possible responses as they are returned from executing this operation.</p><p>You may supply responses for individual status codes, and/or a default response.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> response</span> button.</p><p>If no responses are entered, a default response returning 'success' will be added for you.</p></div>",
+                content: this._("swagger.content.response-info"),
                 delay: { show: 500, hide: 50 }
             });
             
@@ -151,15 +151,15 @@
             });
             tabs.addTab({
                 id: "swagger-tab-info",
-                label: "Info"
+                label: this._("swagger.tabs-label.info")
             });
             tabs.addTab({
                 id: "swagger-tab-parameters",
-                label: "Parameters"
+                label: this._("swagger.tabs-label.parameters")
             });
             tabs.addTab({
                 id: "swagger-tab-responses",
-                label: "Responses"
+                label: this._("swagger.tabs-label.responses")
             });
 
             // Need to wait for it to be rendered before the sizing of the tabs
@@ -168,18 +168,36 @@
                 tabs.resize();
             }, 10);
 
+            var typeContent = this._("swagger.content.type");
+            var formatContent = this._("swagger.content.format");
+            var parameterDescriptionContent = this._("swagger.content.parameter-description");
+            var responseDescriptionContent = this._("swagger.content.response-description");
+            var requiredContent = this._("swagger.content.required");
+            var propertyText = this._("swagger.label.property");
+            var typeText = this._("swagger.text.type");
+            var formatText = this._("swagger.text.format");
+            var nameText = this._("swagger.text.name");
+            var inText = this._("swagger.text.in");
+            var pathText = this._("swagger.text.path");
+            var descriptionText = this._("swagger.text.description");
+            var requiredText = this._("swagger.text.required");
+            var propertiesText = this._("swagger.text.properties");
+            var fileText = this._("swagger.text.file");
+            var codeText = this._("swagger.text.code");
+            var defaultText = this._("swagger.text.default");
+            
             var generateTypeRow = function(opts, top) {
                 var row = $("<div/>", {
                     class: "node-swagger-type-row" + (top ? " node-swagger-type-top-row" : ""),
                     style: "margin-top: 3px;" + (top ? "" : "margin-left: 10px;")
                 });
 
-                var typeLabel = $("<label/>").text("Type").appendTo(row);
+                var typeLabel = $("<label/>").text(typeText).appendTo(row);
                 typeLabel.popover({
                     placement:"right",
                     trigger: "hover",
                     container: '#main-container',
-                    content: 'The type of the attribute, limited to primitive types.',
+                    content: typeContent,
                     delay: { show: 500, hide: 50 }
                 });
                 var typeSelect = $('<select/>', {
@@ -199,12 +217,12 @@
                 var formatLabel = $("<label/>", {
                     class: "node-swgger-type-format-label",
                     style: "width: auto; margin-left:20px; margin-right: 10px;"
-                }).text("Format").appendTo(row);
+                }).text(formatText).appendTo(row);
                 formatLabel.popover({
                     placement:"right",
                     trigger: "hover",
                     container: '#main-container',
-                    content: 'The extending format for the previously mentioned type.',
+                    content: formatContent,
                     delay: { show: 500, hide: 50 }
                 });
                 $('<input/>', {
@@ -236,7 +254,7 @@
                         if (t == "ref") {
                             $(this).parent().find(".node-swgger-type-format-label").text("");
                         } else {
-                            $(this).parent().find(".node-swgger-type-format-label").text("Format");
+                            $(this).parent().find(".node-swgger-type-format-label").text(formatText);
                         }
 
 
@@ -259,7 +277,7 @@
                 $("<label/>", {
                     class: "node-swagger-prop-name-label",
                     style: "width: auto; margin-right: 10px;"
-                }).text("Name").appendTo(row);
+                }).text(nameText).appendTo(row);
                 $('<input/>', {
                     class: "node-swagger-type-name",
                     style: "width: 150px;",
@@ -350,7 +368,7 @@
                     class: "node-swagger-name-select",
                     style: "max-width: 90px; margin-right: 10px;"
                 }).appendTo(row1);
-                parameterSelect.append($("<option/>").val("name").text("Name"));
+                parameterSelect.append($("<option/>").val("name").text(nameText));
                 
                 //Remove ref until theres a plan for it..
                 //parameterSelect.append($("<option/>").val("ref").text("$ref"));
@@ -393,7 +411,7 @@
                 }).appendTo(row1);
                 $("<label/>", {
                     style: "width: auto; margin-left:10px; margin-right: 10px;"
-                }).text("in").appendTo(inSpan);
+                }).text(inText).appendTo(inSpan);
                 var inSelect = $('<select/>', {
                     class: "node-swagger-in-select",
                     style: "max-width: 150px"
@@ -401,7 +419,7 @@
                 var inoptions = ["query", "header", "formData", "body"];
                 //only add path option if there were path params in the url
                 if(opts.in == 'path'){
-                    inSelect.append($("<option></option>").val('path').text('path'));
+                    inSelect.append($("<option></option>").val('path').text(pathText));
                 }
                 for (var i = 0; i < inoptions.length; i++) {
                     inSelect.append($("<option></option>").val(inoptions[i]).text(inoptions[i]));
@@ -416,13 +434,13 @@
                 var row2 = $("<div/>", {
                     class: "form-row node-swagger-name-row"
                 }).appendTo(nameRows);
-                var descLabel = $("<label/>").text("Description").appendTo(row2);
+                var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
                 descLabel.popover({
                     placement:"right",
                     html: true,
                     trigger: "hover",
                     container: '#main-container',
-                    content: 'A brief description of the parameter. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation.',
+                    content: parameterDescriptionContent,
                     delay: { show: 500, hide: 50 }
                 });
                 $('<input/>', {
@@ -437,12 +455,12 @@
                 }).appendTo(row2);
                 var reqLabel = $("<label/>", {
                     style: "width: auto; float: right; margin-left:20px; vertical-align: middle"
-                }).text("Required?").appendTo(row2);
+                }).text(requiredText).appendTo(row2);
                 reqLabel.popover({
                     placement:"left",
                     trigger: "hover",
                     container: '#main-container',
-                    content: 'Determines whether this parameter is mandatory.',
+                    content: requiredContent,
                     delay: { show: 500, hide: 50 }
                 });
                 required.prop('checked', opts.required);
@@ -464,8 +482,8 @@
                 $("<label/>", {
                     class: "node-swagger-propHeader-label",
                     style: "width: auto; font-weight: bold; margin-right: 10px"
-                }).text("Properties").appendTo(rowPropHeader);
-                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> property</a>').appendTo(rowPropHeader);
+                }).text(propertiesText).appendTo(rowPropHeader);
+                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
 
                 var rowPropList = $("<div/>", {
                     class: "form-row node-swagger-prop-list",
@@ -497,7 +515,7 @@
                     } else {
                         if (i == "formData") {
                             if (typeRow.children(".node-swagger-type-select").children("option[value='file']").length == 0) {
-                                $("<option/>").val("file").text("file").appendTo(typeRow.children(".node-swagger-type-select"));
+                                $("<option/>").val("file").text(fileText).appendTo(typeRow.children(".node-swagger-type-select"));
                             }
                         } else {
                             typeRow.children(".node-swagger-type-select").children("option[value='file']").remove();
@@ -582,8 +600,8 @@
                     class: "node-swagger-name-select",
                     style: "max-width: 90px; margin-right: 10px;"
                 }).appendTo(row1);
-                responseSelect.append($("<option/>").val("code").text("Code"));
-                responseSelect.append($("<option/>").val("default").text("Default"));
+                responseSelect.append($("<option/>").val("code").text(codeText));
+                responseSelect.append($("<option/>").val("default").text(defaultText));
                 responseSelect.change(function() {
                     var p = $(this).val();
                     if (p == "code") {
@@ -618,13 +636,13 @@
                 var row2 = $("<div/>", {
                     class: "form-row node-swagger-description-row"
                 }).appendTo(nameRows);
-                var descLabel = $("<label/>").text("Description").appendTo(row2);
+                var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
                 descLabel.popover({
                     placement:"right",
                     html: true,
                     trigger: "hover",
                     container: '#main-container',
-                    content: 'A brief description of the response. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation.',
+                    content: responseDescriptionContent,
                     delay: { show: 500, hide: 50 }
                 });
                 $('<input/>', {
@@ -638,8 +656,8 @@
                 $("<label/>", {
                     class: "node-swagger-propHeader-label",
                     style: "width: auto; font-weight: bold; margin-right: 10px"
-                }).text("Properties").appendTo(rowPropHeader);
-                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> property</a>').appendTo(rowPropHeader);
+                }).text(propertiesText).appendTo(rowPropHeader);
+                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
 
                 var rowPropList = $("<div/>", {
                     class: "form-row node-swagger-prop-list",

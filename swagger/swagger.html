@@ -791,6 +791,7 @@
                             properties[name] = property;
                         });
                         param.schema = {};
+                        param.schema.type = "object";
                         if(Object.keys(properties).length > 0){
                             param.schema.properties = properties;
                         }

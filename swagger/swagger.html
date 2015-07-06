@@ -112,6 +112,44 @@
         label: function() {
             return this.summary || "swagger doc";
         },
+        onpaletteadd: function() {
+            //setup swagger-ui
+            var swaggerUi;
+            var refreshInfoHeight = 75;
+            var content = $("<div/>",{
+                id:"tab-swagger-ui", style:"position: relative; padding: 0px 4px; height: 100%; overflow: hidden"
+            });
+            var refreshInfo = $("<div/>", {
+                style:"height: "+ refreshInfoHeight + "px; margin: 5px; text-align: center"
+            });
+            $("<p/>", {
+                text: "Please click refresh after making changes to any HTTP nodes."
+            }).appendTo(refreshInfo);
+            $("<div/>", {
+                style: 'margin: auto; height: 20px; width: 100px; border-radius: 25px; border: 2px solid #8AC007; cursor: pointer',
+                html: '<i class="fa fa-refresh" /> Refresh',
+                click: function(){
+                    swaggerUi.load();
+                }
+            }).appendTo(refreshInfo);
+            refreshInfo.appendTo(content);
+            $("<hr/>").appendTo(content);
+            var swaggerFrame = $("<iframe/>", {
+                id:"swagger-ui-frame", 
+                style:"margin: 0px 5px; padding: 0; border: none; width: 100%; height: " + (content.height() - refreshInfoHeight - 45) + "px", 
+                src:"http://localhost:1880/swagger-ui/swagger-ui.html"
+            }).appendTo(content);
+            RED.sidebar.addTab("swagger-ui", content);
+            console.log('here');
+            
+            setTimeout(function(){
+                swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
+                window.addEventListener('resize', function(event){
+                    swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
+                });
+                swaggerUi.load();
+            }, 1000);
+        },
         oneditprepare: function() {
             $('.popover-right').popover({
                 placement:"right",

@@ -20,6 +20,6 @@
     "name": "Nick O'Leary"
   },
   "dependencies": {
-    "swagger-ui": "^2.1.0"
+    "swagger-ui": "2.1.0"
   }
 }

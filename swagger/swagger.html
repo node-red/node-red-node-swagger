@@ -80,6 +80,7 @@
 </script>
 
 <script type="text/javascript">
+var swaggerDocUrl;
 (function() {
     RED.nodes.registerType('swagger-doc', {
         category: 'config',
@@ -134,10 +135,11 @@
             }).appendTo(refreshInfo);
             refreshInfo.appendTo(content);
             $("<hr/>").appendTo(content);
-            var swaggerFrame = $("<iframe/>", {
+			swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
+			var swaggerFrame = $("<iframe/>", {
                 id:"swagger-ui-frame", 
                 style:"margin: 0px 5px; padding: 0; border: none; width: 100%", 
-                src:"http://localhost:1880/swagger-ui/swagger-ui.html"
+                src: "swagger-ui/swagger-ui.html"
             }).appendTo(content);
             RED.sidebar.addTab("swagger-ui", content);
             

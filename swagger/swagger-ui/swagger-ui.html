@@ -17,8 +17,7 @@
   <script src='reqs/lib/highlight.7.3.pack.js' type='text/javascript'></script>
   <script src='reqs/lib/marked.js' type='text/javascript'></script>
   <script type="text/javascript">
-    //var url = "http://petstore.swagger.io/v2/swagger.json";
-    var url = "../../http-api/swagger.json";
+    var url = parent.swaggerDocUrl;
     window.swaggerUi = new SwaggerUi({
       url: url,
       dom_id: "swagger-ui-container",

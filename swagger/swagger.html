@@ -140,16 +140,15 @@
                 src:"http://localhost:1880/swagger-ui/swagger-ui.html"
             }).appendTo(content);
             RED.sidebar.addTab("swagger-ui", content);
-            console.log('here');
             
-            setTimeout(function(){
+            swaggerFrame.load(function(){
                 swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
                 window.addEventListener('resize', function(event){
                     swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
                 });
 				swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
                 swaggerUi.load();
-            }, 1000);
+            });
         },
         oneditprepare: function() {
             $('.popover-right').popover({

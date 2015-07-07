@@ -129,7 +129,7 @@ module.exports = function(RED) {
     RED.nodes.registerType("swagger-doc",SwaggerDoc);
     
     RED.httpAdmin.get('/swagger-ui/reqs/*', function(req, res){
-        var filename = path.join(__dirname , 'node_modules/swagger-ui/dist', req.params[0]);
+        var filename = path.join(__dirname , '../node_modules/swagger-ui/dist', req.params[0]);
         res.sendfile(filename);
     });
     RED.httpAdmin.get('/swagger-ui/*', function(req, res){

@@ -1,0 +1,58 @@
+{
+    "swagger": {
+        "label": {
+            "path": "Path",
+            "summary": "Summary",
+            "description": "Description",
+            "tags": "Tags",
+            "consumes": "Consumes",
+            "produces": "Produces",
+            "deprecated": "Deprecated",
+            "parameter": "parameter",
+            "parameters-help": "Parameters Help",
+            "response": "response",
+            "responses-help": "Responses Help",
+            "property": "property"
+        },
+        "placeholder": {
+            "tags": "Comma-separated list of Tags",
+            "consumes": "Comma-separated list of Mime Types",
+            "produces": "Comma-separated list of Mime Types"
+        },
+        "data-content": {
+            "summary": "A short summary of what the operation does. For maximum readability in the swagger-ui, this field SHOULD be less than 120 characters.",
+            "description": "A verbose explanation of the operation behavior. GitHub Flavored Markup syntax can be used for rich text representation.",
+            "tags": "A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.",
+            "consumes": "A list of MIME types the operation can consume.",
+            "produces": "A list of MIME types the operation can produce.",
+            "deprecated": "Declares this operation to be deprecated. Usage of the declared operation should be refrained."
+        },
+        "content": {
+            "parameter-info": "<div style='font-size:10px'><p>A list of parameters that are applicable for this operation.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> parameter</span> button.</p><p>There are four possible parameter types.</p><ul><li>Query - Parameters that are appended to the URL. For example, in /items?id=###, the query parameter is id.</li><li>Header - Custom headers that are expected as part of the request.</li><li>Body - The payload that's appended to the HTTP request. Since there can only be one payload, there can only be one body parameter. The name of the body parameter has no effect on the parameter itself and is used for documentation purposes only.</li><li>Form - Used to describe the payload of an HTTP request when either application/x-www-form-urlencoded or multipart/form-data are used as the content type of the request (in Swagger's definition, the consumes property of an operation). This is the only parameter type that can be used to send files, thus supporting the file type.</li></ul></div>",
+            "response-info": "<div style='font-size: 10px'><p>The list of possible responses as they are returned from executing this operation.</p><p>You may supply responses for individual status codes, and/or a default response.</p><p>To add a parameter, click the <span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> response</span> button.</p><p>If no responses are entered, a default response returning 'success' will be added for you.</p></div>",
+            "type": "The type of the attribute, limited to primitive types.",
+            "format": "The extending format for the previously mentioned type.",
+            "parameter-description": "A brief description of the parameter. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation.",
+            "required": "Determines whether this parameter is mandatory.",
+            "response-description": "A brief description of the response. This could contain examples of use. GitHub Flavored Markup syntax can be used for rich text representation."
+        },
+        "tabs-label": {
+            "info": "Info",
+            "parameters": "Parameters",
+            "responses": "Responses"
+        },
+        "text": {
+            "type": "Type",
+            "format": "Format",
+            "name": "Name",
+            "in": "in",
+            "path": "path",
+            "description": "Description",
+            "required": "Required?",
+            "properties": "Properties",
+            "file": "file",
+            "code": "Code",
+            "default": "Default"
+        }
+    }
+}

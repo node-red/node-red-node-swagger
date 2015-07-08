@@ -136,20 +136,25 @@ var swaggerDocUrl;
             }).appendTo(refreshInfo);
             refreshInfo.appendTo(content);
             $("<hr/>").appendTo(content);
-			swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
-			var swaggerFrame = $("<iframe/>", {
+            swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
+            var swaggerFrame = $("<iframe/>", {
                 id:"swagger-ui-frame",
                 style:"margin: 0px 5px; padding: 0; border: none; width: 100%",
                 src: "swagger-ui/swagger-ui.html"
             }).appendTo(content);
-            RED.sidebar.addTab("swagger-ui", content);
+            RED.sidebar.addTab({
+                id: "swagger-ui",
+                label: this._("swagger.sidebar.label"),
+                name: this._("swagger.sidebar.name"),
+                content: content
+            });
 
             swaggerFrame.load(function(){
                 swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
                 window.addEventListener('resize', function(event){
                     swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
                 });
-				swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
+                swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
                 swaggerUi.load();
             });
         },
@@ -180,9 +185,19 @@ var swaggerDocUrl;
 
             var node = this;
 
-            $("#node-config-input-method").text($("#node-input-method").val().toUpperCase());
-            $("#node-config-input-path").html($("#node-input-url").val());
-
+            if ($("#node-input-method").length) {
+                $("#node-config-input-method").text($("#node-input-method").val().toUpperCase());
+                $("#node-config-input-path").html($("#node-input-url").val());
+            } else {
+                var httpNodes = RED.nodes.filterNodes({type: "http in"});
+                for (var i=0;i<httpNodes.length;i++) {
+                    if (httpNodes[i].swaggerDoc === node.id) {
+                        $("#node-config-input-method").text(httpNodes[i].method.toUpperCase());
+                        $("#node-config-input-path").html(httpNodes[i].url);
+                        break;
+                    }
+                }
+            }
             var tabs = RED.tabs.create({
                 id: "node-config-swagger-tabs",
                 onchange: function(tab) {

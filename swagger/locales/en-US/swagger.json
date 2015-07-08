@@ -1,5 +1,9 @@
 {
     "swagger": {
+        "sidebar": {
+            "label": "swagger",
+            "name": "Swagger UI"
+        },
         "label": {
             "path": "Path",
             "summary": "Summary",

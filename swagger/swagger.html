@@ -21,7 +21,7 @@
             <span id="node-config-input-method"></span>
             <span id="node-config-input-path"></span>
         </div>
-        
+
         <div class="form-row">
             <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-config-swagger-tabs"></ul>
         </div>
@@ -72,7 +72,7 @@
             </div>
          </div>
     </div>
-    
+
 </script>
 
 <script type="text/x-red" data-help-name="swagger-doc">
@@ -84,6 +84,7 @@ var swaggerDocUrl;
 (function() {
     RED.nodes.registerType('swagger-doc', {
         category: 'config',
+        exclusive: true,
         defaults: {
             summary: {
                 value: ""
@@ -137,12 +138,12 @@ var swaggerDocUrl;
             $("<hr/>").appendTo(content);
 			swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
 			var swaggerFrame = $("<iframe/>", {
-                id:"swagger-ui-frame", 
-                style:"margin: 0px 5px; padding: 0; border: none; width: 100%", 
+                id:"swagger-ui-frame",
+                style:"margin: 0px 5px; padding: 0; border: none; width: 100%",
                 src: "swagger-ui/swagger-ui.html"
             }).appendTo(content);
             RED.sidebar.addTab("swagger-ui", content);
-            
+
             swaggerFrame.load(function(){
                 swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
                 window.addEventListener('resize', function(event){
@@ -176,7 +177,7 @@ var swaggerDocUrl;
                 content: this._("swagger.content.response-info"),
                 delay: { show: 500, hide: 50 }
             });
-            
+
             var node = this;
 
             $("#node-config-input-method").text($("#node-input-method").val().toUpperCase());
@@ -225,7 +226,7 @@ var swaggerDocUrl;
             var fileText = this._("swagger.text.file");
             var codeText = this._("swagger.text.code");
             var defaultText = this._("swagger.text.default");
-            
+
             var generateTypeRow = function(opts, top) {
                 var row = $("<div/>", {
                     class: "node-swagger-type-row" + (top ? " node-swagger-type-top-row" : ""),
@@ -409,10 +410,10 @@ var swaggerDocUrl;
                     style: "max-width: 90px; margin-right: 10px;"
                 }).appendTo(row1);
                 parameterSelect.append($("<option/>").val("name").text(nameText));
-                
+
                 //Remove ref until theres a plan for it..
                 //parameterSelect.append($("<option/>").val("ref").text("$ref"));
-                
+
                 parameterSelect.change(function() {
                     var p = $(this).val();
                     if (p == "name") {
@@ -504,7 +505,7 @@ var swaggerDocUrl;
                     delay: { show: 500, hide: 50 }
                 });
                 required.prop('checked', opts.required);
-                
+
                 //lock non-changeable fields if path variable
                 if(opts.in == 'path'){
                     parameterSelect.attr('disabled', true);
@@ -737,7 +738,7 @@ var swaggerDocUrl;
             var pathParams = [];
             if($('#node-config-input-path').html().match(/\/:\w*/g))
                 $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function(p){ pathParams.push(p.substring(2)); });
-            
+
             node.parameters.forEach(function(p) {
                 if(p.in == 'path'){
                     if(pathParams.indexOf(p.name) > -1){     //param was previously defined
@@ -769,7 +770,7 @@ var swaggerDocUrl;
                     }, false);
                 }
             });
-            
+
             //Add path params that weren't found above
             pathParams.forEach(function(p){
                 console.log('adding path param: ' + p);

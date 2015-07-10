@@ -1,25 +1,26 @@
 {
-  "name": "node-red-node-swagger",
-  "version": "0.0.2",
-  "description": "A set of tools for generating Swagger API documentation based on the HTTP nodes deployed in a flow",
-  "license": "Apache",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/node-red/node-red-node-swagger.git"
-  },
-  "keywords": [
-    "node-red",
-    "swagger"
-  ],
-  "node-red": {
-    "nodes": {
-      "swagger": "swagger/swagger.js"
+    "name": "node-red-node-swagger",
+    "version": "0.0.2",
+    "description": "A set of tools for generating Swagger API documentation based on the HTTP nodes deployed in a flow",
+    "license": "Apache",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/node-red/node-red-node-swagger.git"
+    },
+    "keywords": [
+        "node-red",
+        "swagger"
+    ],
+    "node-red": {
+        "version": ">=0.10.11",
+        "nodes": {
+            "swagger": "swagger/swagger.js"
+        }
+    },
+    "author": {
+        "name": "Nick O'Leary"
+    },
+    "dependencies": {
+        "swagger-ui": "2.1.0"
     }
-  },
-  "author": {
-    "name": "Nick O'Leary"
-  },
-  "dependencies": {
-    "swagger-ui": "2.1.0"
-  }
 }

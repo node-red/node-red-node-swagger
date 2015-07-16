@@ -53,8 +53,10 @@ module.exports = function(RED) {
                 
                 var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
                 
-                resp.paths[url] = {};
-                    var swaggerPart = {};
+                if(!resp.paths[url]){
+                    resp.paths[url] = {};
+                }
+                var swaggerPart = {};
                 if(swagger){
                     swaggerPart.summary = swagger.summary || node.name || (node.method+" "+url);
                     if(swagger.description)

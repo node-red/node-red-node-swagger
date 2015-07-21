@@ -133,7 +133,7 @@ var swaggerDocUrl;
             swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
             var swaggerFrame = $("<iframe/>", {
                 id:"swagger-ui-frame",
-                style:"margin: 0px 5px; padding: 5px; border: none; width: 100%",
+                style:"margin: 0; padding: 0; border: none; width: 100%",
                 src: "swagger-ui/swagger-ui.html"
             }).appendTo(content);
             RED.sidebar.addTab({

@@ -133,7 +133,7 @@ var swaggerDocUrl;
             swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
             var swaggerFrame = $("<iframe/>", {
                 id:"swagger-ui-frame",
-                style:"margin: 0px 5px; padding: 5px; border: none; width: 100%",
+                style:"margin: 0; padding: 0; border: none; width: 100%",
                 src: "swagger-ui/swagger-ui.html"
             }).appendTo(content);
             RED.sidebar.addTab({
@@ -153,6 +153,8 @@ var swaggerDocUrl;
             });
         },
         oneditprepare: function() {
+            
+            // Configures popover options for all popovers that appear when an editor option is hovered over
             $('.popover-right').popover({
                 placement:"right",
                 html: true,
@@ -160,6 +162,8 @@ var swaggerDocUrl;
                 container: '#main-container',
                 delay: { show: 500, hide: 50 }
             });
+            
+            //Configures popover options for parameter info link
             $('#node-config-input-parameter-info').popover({
                 placement:"left",
                 html: true,
@@ -168,6 +172,8 @@ var swaggerDocUrl;
                 content: this._("swagger.content.parameter-info"),
                 delay: { show: 500, hide: 50 }
             });
+            
+            //Configures popover options for response info link
             $('#node-config-input-response-info').popover({
                 placement:"left",
                 html: true,
@@ -236,11 +242,21 @@ var swaggerDocUrl;
             var codeText = this._("swagger.text.code");
             var defaultText = this._("swagger.text.default");
 
+            /**
+                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                This function is called anytime a row with Type and Format needs to be created.
+                If top is true, it is given an additional class to help keep track of everything.
+            */
             var generateTypeRow = function(opts, top) {
-                var row = $("<div/>", {
-                    class: "node-swagger-type-row" + (top ? " node-swagger-type-top-row" : ""),
-                    style: "margin-top: 3px;" + (top ? "" : "margin-left: 10px;")
-                });
+                var row = $("<div/>");
+                
+                row.addClass('node-swagger-type-row');
+                row.css('margin-top', '3px');
+                if(top){
+                    row.addClass('node-swagger-type-top-row');
+                } else{
+                    row.css('margin-left', '10px');
+                }
 
                 var typeLabel = $("<label/>").text(typeText).appendTo(row);
                 typeLabel.popover({
@@ -319,6 +335,11 @@ var swaggerDocUrl;
                 return row;
             }
 
+            /**
+                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                This function is called anytime a new property needs to be created.
+                This is currently only done when dealing with a body parameter, as a schema (with properties) is required.
+            */
             var generatePropertyRow = function(opts) {
                 var row = $("<div/>", {
                     class: "node-swagger-property-name-row",
@@ -357,6 +378,12 @@ var swaggerDocUrl;
                 return row;
             }
 
+            /**
+                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                This function is called anytime a new paramater is created.
+                This is called several times when parsing through the swagger doc.
+                If expand is true, the inner properties of the parameter will be showing when the editor opens.
+            */           
             var generateParameterLine = function(opts, expand) {
                 var li = $("<li/>", {
                     style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
@@ -582,6 +609,10 @@ var swaggerDocUrl;
                 }
             }
 
+            /**
+                This is called anytime the '+ parameter' button is clicked.
+                It will then call generateParameterLine to create and attach a new parameter.
+            */
             $("#node-config-input-add-parameter").click(function(e) {
                 generateParameterLine({}, true);
                 var scrollContainer = $("#node-config-parameter-list").parent();
@@ -589,6 +620,12 @@ var swaggerDocUrl;
                 e.preventDefault();
             });
 
+            /**
+                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                This function is called anytime a new response is created.
+                It is run when parsing through the swagger doc.
+                If expand is true, the inner properties of the response will be shown when the editor opens.
+            */ 
             var generateResponseLine = function(opts, expand) {
                 var li = $("<li/>", {
                     style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
@@ -736,6 +773,10 @@ var swaggerDocUrl;
                 }
             }
 
+            /**
+                This is called anytime the '+ response' button is clicked.
+                It will then call generateResponseLine to create and attach a new response.
+            */
             $("#node-config-input-add-response").click(function(e) {
                 generateResponseLine({}, true);
                 var scrollContainer = $("#node-config-response-list").parent();
@@ -748,6 +789,7 @@ var swaggerDocUrl;
             if($('#node-config-input-path').html().match(/\/:\w*/g))
                 $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function(p){ pathParams.push(p.substring(2)); });
 
+            //Parse defined parameters, calling appropriate functions to recreate the editor
             node.parameters.forEach(function(p) {
                 if(p.in == 'path'){
                     if(pathParams.indexOf(p.name) > -1){     //param was previously defined
@@ -758,6 +800,7 @@ var swaggerDocUrl;
                             required: p.required,
                             type: p.type,
                             format: p.format,
+                            collectionFormat: p.collectionFormat,
                             items: p.items,
                             schema: p.schema
                         }, false);
@@ -774,6 +817,7 @@ var swaggerDocUrl;
                         required: p.required,
                         type: p.type,
                         format: p.format,
+                        collectionFormat: p.collectionFormat,
                         items: p.items,
                         schema: p.schema
                     }, false);
@@ -795,6 +839,7 @@ var swaggerDocUrl;
                 }, true);
             });
 
+            //Recreate response objects in editor for those already defined
             for (var code in node.responses) {
                 var response = node.responses[code];
                 response.code = code;
@@ -805,6 +850,46 @@ var swaggerDocUrl;
         oneditsave: function() {
             var node = this;
 
+            /**
+                Recursive function used to generate the items object that is required for array objects
+            */
+            var getArrayItems = function (row){
+                console.log(row);
+                var items = {};
+                var type = row.find('.node-swagger-type-select').val();
+                items.type = type;
+                if(type == 'array'){
+                    var collFormat = row.find('.node-swagger-type-collection-format').val();
+                    items.collectionFormat = collFormat;
+                    var nextRow = row.children(".node-swagger-type-row");
+                    items.items = getArrayItems(nextRow);
+                } else{
+                    var format = row.find('.node-swagger-type-format').val();
+                    items.format = format;
+                }
+                return items;
+            }
+            
+            /**
+                Temporary placeholder to remove collectionFormat since swagger does not allow it
+            */
+            var getArrayItemsSchema = function (row){
+                console.log(row);
+                var items = {};
+                var type = row.find('.node-swagger-type-select').val();
+                items.type = type;
+                if(type == 'array'){
+                    //var collFormat = row.find('.node-swagger-type-collection-format').val();
+                    //items.collectionFormat = collFormat;
+                    var nextRow = row.children(".node-swagger-type-row");
+                    items.items = getArrayItems(nextRow);
+                } else{
+                    var format = row.find('.node-swagger-type-format').val();
+                    items.format = format;
+                }
+                return items;
+            }
+            
             //Parse parameters and generate list
             var params = [];
             $("#node-config-parameter-list li").each(function() {
@@ -828,31 +913,31 @@ var swaggerDocUrl;
                             var name = $(this).find(".node-swagger-type-name").val();
 
                             var row = $(this).find(".node-swagger-type-top-row");
-
+                            
                             var current = property;
-                            while (row.length != 0) {
-                                var ctype = row.children(".node-swagger-type-select").val();
+                            var ctype = row.children(".node-swagger-type-select").val();
+                        
+                            if(ctype){
                                 if (ctype != "ref") {
                                     current.type = ctype;
                                     if (current.type == "array") {
-                                        var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                        if (collFormat != "csv") {
-                                            current.collectionFormat = collFormat;
-                                        }
-                                        current.items = {};
-                                        current = current.items;
-                                        row = row.children(".node-swagger-type-row");
+                                        
+                                        //commented out until we figure out what to do with collectionFormat in schema objects
+                                        //var collFormat = row.children(".node-swagger-type-collection-format").val();
+                                        //current.collectionFormat = collFormat;
+                                        
+                                        var nextRow = row.children(".node-swagger-type-row");
+                                        
+                                        current.items = getArrayItemsSchema(nextRow);
 
                                     } else {
                                         var format = row.children(".node-swagger-type-format").val();
                                         if (format) {
                                             current.format = format;
                                         }
-                                        break;
                                     }
                                 } else {
                                     current["$ref"] = row.children(".node-swagger-type-format").val();
-                                    break;
                                 }
                             }
 
@@ -865,31 +950,30 @@ var swaggerDocUrl;
                         }
                     } else {
                         var row = $(this).find(".node-swagger-type-top-row");
-
+                        
                         var current = param;
-                        while (row.length != 0) {
-                            var ctype = row.children(".node-swagger-type-select").val();
+                        
+                        var ctype = row.children(".node-swagger-type-select").val();
+                        
+                        if(ctype){
                             if (ctype != "ref") {
                                 current.type = ctype;
                                 if (current.type == "array") {
                                     var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                    if (collFormat != "csv") {
-                                        current.collectionFormat = collFormat;
-                                    }
-                                    current.items = {};
-                                    current = current.items;
-                                    row = row.children(".node-swagger-type-row");
+                                    current.collectionFormat = collFormat;
+                                    
+                                    var nextRow = row.children(".node-swagger-type-row");
+                                    
+                                    current.items = getArrayItems(nextRow);
 
                                 } else {
                                     var format = row.children(".node-swagger-type-format").val();
                                     if (format) {
                                         current.format = format;
                                     }
-                                    break;
                                 }
                             } else {
                                 current["$ref"] = row.children(".node-swagger-type-format").val();
-                                break;
                             }
                         }
                     }
@@ -921,29 +1005,29 @@ var swaggerDocUrl;
                     var row = $(this).find(".node-swagger-type-top-row");
 
                     var current = property;
-                    while (row.length != 0) {
-                        var ctype = row.children(".node-swagger-type-select").val();
+                    var ctype = row.children(".node-swagger-type-select").val();
+                        
+                    if(ctype){
                         if (ctype != "ref") {
                             current.type = ctype;
                             if (current.type == "array") {
-                                var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                if (collFormat != "csv") {
-                                    current.collectionFormat = collFormat;
-                                }
-                                current.items = {};
-                                current = current.items;
-                                row = row.children(".node-swagger-type-row");
+                               
+                                //commented out until we figure out what to do with collectionFormat in schema objects
+                                //var collFormat = row.children(".node-swagger-type-collection-format").val();
+                                //current.collectionFormat = collFormat;
+                                        
+                                var nextRow = row.children(".node-swagger-type-row");
+                                        
+                                current.items = getArrayItemsSchema(nextRow);
 
                             } else {
-                                var format = row.children(".node-swagger-type-format").val();
-                                if (format) {
-                                    current.format = format;
+                                    var format = row.children(".node-swagger-type-format").val();
+                                    if (format) {
+                                        current.format = format;
+                                    }
                                 }
-                                break;
-                            }
                         } else {
                             current["$ref"] = row.children(".node-swagger-type-format").val();
-                            break;
                         }
                     }
 

@@ -114,6 +114,14 @@ This tab allows you to define the applicable responses that a user may receive b
 
 If no responses are provided, a default response with the reply "success" will be used.
 
+##Swagger-UI
+
+![](readme_images/Capture_Swagger_UI.PNG?raw=true)
+
+Swagger-UI is including in the plugin. Once loaded, the plugin will show a swagger tab in the node-red sidebar. From here, you can see the dynamically generated swagger for the current flow. Additionally, you can use the test function to try out your API directly from the editor, providing any parameters you have defined in the docs for the HTTP-In nodes. The Swagger-UI will automatically refresh any time the flow is redeployed.
+
+
+
 ## Notes
 
 - the `paths` entry of the swagger is generated based on the `HTTP In` nodes 

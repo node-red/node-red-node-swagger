@@ -48,7 +48,7 @@ module.exports = function(RED) {
         }
         resp.paths = {};
         RED.nodes.eachNode(function(node) {
-            if (node.type === "http in") {
+            if (node.type === "http in" && checkWiresForHttpResponse (node)) {
                 var swagger = RED.nodes.getNode(node.swaggerDoc);
                 
                 var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
@@ -116,6 +116,19 @@ module.exports = function(RED) {
 
         res.json(resp);
     });
+    
+    function checkWiresForHttpResponse (node) {
+        var wires = node.wires[0];
+        for(var i in wires){
+            var newNode = RED.nodes.getNode(wires[i]);
+            if(newNode.type == "http response"){
+                return true;
+            } else if(checkWiresForHttpResponse(newNode)){
+                return true;
+            }
+        }
+        return false;
+    }
     
     function SwaggerDoc(n){
         RED.nodes.createNode(this,n);

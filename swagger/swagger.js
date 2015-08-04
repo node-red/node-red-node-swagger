@@ -48,7 +48,7 @@ module.exports = function(RED) {
         }
         resp.paths = {};
         RED.nodes.eachNode(function(node) {
-            if (node.type === "http in" && checkWiresForHttpResponse (node)) {
+            if (node && node.type === "http in" && checkWiresForHttpResponse (node)) {
                 var swagger = RED.nodes.getNode(node.swaggerDoc);
                 
                 var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});

@@ -111,11 +111,11 @@ module.exports = function(RED) {
                         if(additionalParams){
                             swaggerPart.parameters = additionalParams.slice();
                         }
-                        node.status({fill:"yellow",shape:"ring",text:RED._("swagger.status.missingconfig")});
+                        node.status({fill:"yellow",shape:"ring",text:"swagger.status.missingconfig"});
                     }
                     resp.paths[url][node.method] = swaggerPart;
                 } else{
-                    node.status({fill:"grey",shape:"ring",text:RED._("swagger.status.excluded")});
+                    node.status({fill:"grey",shape:"ring",text:"swagger.status.excluded"});
                 }
             }
         });

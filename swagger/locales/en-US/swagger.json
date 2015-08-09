@@ -57,6 +57,10 @@
             "file": "file",
             "code": "Code",
             "default": "Default"
+        },
+        "status": {
+            "excluded": "Not included in Swagger",
+            "missingconfig": "Swagger config not set"
         }
     }
 }

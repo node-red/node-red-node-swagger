@@ -48,74 +48,92 @@ module.exports = function(RED) {
         }
         resp.paths = {};
         RED.nodes.eachNode(function(node) {
-            if (node.type === "http in") {
-                var swagger = RED.nodes.getNode(node.swaggerDoc);
+            if (node && node.type === "http in") {
+                if(checkWiresForHttpResponse(node)){
+                    var swagger = RED.nodes.getNode(node.swaggerDoc);
                 
-                var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
-                
-                if(!resp.paths[url]){
-                    resp.paths[url] = {};
-                }
-                var swaggerPart = {};
-                if(swagger){
-                    swaggerPart.summary = swagger.summary || node.name || (node.method+" "+url);
-                    if(swagger.description)
-                        swaggerPart.description = swagger.description;
+                    var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
                     
-                    if(swagger.tags){
-                        swaggerPart.tags = swagger.tags.split(',');
-                        for(var i=0; i < swaggerPart.tags.length; i++){
-                            swaggerPart.tags[i] = swaggerPart.tags[i].trim();
-                        }
+                    if(!resp.paths[url]){
+                        resp.paths[url] = {};
                     }
-                                            
-                    if(swagger.consumes){
-                        swaggerPart.consumes = swagger.consumes.split(',');
-                        for(var i=0; i < swaggerPart.consumes.length; i++){
-                            swaggerPart.consumes[i] = swaggerPart.consumes[i].trim();
-                        }
-                    }
-                    if(swagger.produces){
-                        swaggerPart.produces = swagger.produces.split(',');
-                        for(var i=0; i < swaggerPart.produces.length; i++){
-                            swaggerPart.produces[i] = swaggerPart.produces[i].trim();
-                        }
-                    }
-                    if(swagger.deprecated){
-                        swaggerPart.deprecated = true;
-                    }
-                    if(swagger.parameters.length > 0){
-                        swaggerPart.parameters = swagger.parameters.slice();
-                        if(additionalParams){
-                            for(var i in additionalParams){
-                                swaggerPart.parameters.push(additionalParams[i]);
+                    var swaggerPart = {};
+                    if(swagger){
+                        swaggerPart.summary = swagger.summary || node.name || (node.method+" "+url);
+                        if(swagger.description)
+                            swaggerPart.description = swagger.description;
+                        
+                        if(swagger.tags){
+                            swaggerPart.tags = swagger.tags.split(',');
+                            for(var i=0; i < swaggerPart.tags.length; i++){
+                                swaggerPart.tags[i] = swaggerPart.tags[i].trim();
                             }
                         }
-                    } else if(additionalParams){
-                        swaggerPart.parameters = additionalParams.slice();
-                    }
-                    if(Object.keys(swagger.responses).length > 0){
-                        swaggerPart.responses = swagger.responses;
+                                                
+                        if(swagger.consumes){
+                            swaggerPart.consumes = swagger.consumes.split(',');
+                            for(var i=0; i < swaggerPart.consumes.length; i++){
+                                swaggerPart.consumes[i] = swaggerPart.consumes[i].trim();
+                            }
+                        }
+                        if(swagger.produces){
+                            swaggerPart.produces = swagger.produces.split(',');
+                            for(var i=0; i < swaggerPart.produces.length; i++){
+                                swaggerPart.produces[i] = swaggerPart.produces[i].trim();
+                            }
+                        }
+                        if(swagger.deprecated){
+                            swaggerPart.deprecated = true;
+                        }
+                        if(swagger.parameters.length > 0){
+                            swaggerPart.parameters = swagger.parameters.slice();
+                            if(additionalParams){
+                                for(var i in additionalParams){
+                                    swaggerPart.parameters.push(additionalParams[i]);
+                                }
+                            }
+                        } else if(additionalParams){
+                            swaggerPart.parameters = additionalParams.slice();
+                        }
+                        if(Object.keys(swagger.responses).length > 0){
+                            swaggerPart.responses = swagger.responses;
+                        } else{
+                            swaggerPart.responses = {
+                                default: {}
+                            };
+                        }
+                        node.status({});
                     } else{
+                        swaggerPart.summary = node.name || (node.method+" "+url);
                         swaggerPart.responses = {
                             default: {}
                         };
+                        if(additionalParams){
+                            swaggerPart.parameters = additionalParams.slice();
+                        }
+                        node.status({fill:"yellow",shape:"ring",text:"swagger.status.missingconfig"});
                     }
+                    resp.paths[url][node.method] = swaggerPart;
                 } else{
-                    swaggerPart.summary = node.name || (node.method+" "+url);
-                    swaggerPart.responses = {
-                        default: {}
-                    };
-                    if(additionalParams){
-                        swaggerPart.parameters = additionalParams.slice();
-                    }
+                    node.status({fill:"grey",shape:"ring",text:"swagger.status.excluded"});
                 }
-                resp.paths[url][node.method] = swaggerPart;
             }
         });
-
         res.json(resp);
     });
+    
+    function checkWiresForHttpResponse (node) {
+        var wires = node.wires[0];
+        for(var i in wires){
+            var newNode = RED.nodes.getNode(wires[i]);
+            if(newNode.type == "http response"){
+                return true;
+            } else if(checkWiresForHttpResponse(newNode)){
+                return true;
+            }
+        }
+        return false;
+    }
     
     function SwaggerDoc(n){
         RED.nodes.createNode(this,n);

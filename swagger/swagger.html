@@ -249,7 +249,6 @@ var swaggerDocUrl;
             */
             var generateTypeRow = function(opts, top) {
                 var row = $("<div/>");
-                
                 row.addClass('node-swagger-type-row');
                 row.css('margin-top', '3px');
                 if(top){
@@ -281,7 +280,7 @@ var swaggerDocUrl;
                 }
                 typeSelect.val(opts.type);
                 var formatLabel = $("<label/>", {
-                    class: "node-swgger-type-format-label",
+                    class: "node-swagger-type-format-label",
                     style: "width: auto; margin-left:20px; margin-right: 10px;"
                 }).text(formatText).appendTo(row);
                 formatLabel.popover({
@@ -296,37 +295,48 @@ var swaggerDocUrl;
                     style: "width: 150px;",
                     type: "text"
                 }).val(opts.format).appendTo(row);
-                var collFormatSelect = $('<select/>', {
-                    class: "node-swagger-type-collection-format",
-                    style: "width: 150px;",
-                    type: "text"
-                }).appendTo(row);
-                var collformatoptions = ["csv", "ssv", "tsv", "pipes"];
-                if (top) {
-                    collformatoptions.push("multi");
+                
+                if(!opts.propertyRow){
+                    var collFormatSelect = $('<select/>', {
+                        class: "node-swagger-type-collection-format",
+                        style: "width: 150px;",
+                        type: "text"
+                    }).appendTo(row);
+                    var collformatoptions = ["csv", "ssv", "tsv", "pipes"];
+                    if (top) {
+                        collformatoptions.push("multi");
+                    }
+                    for (var i = 0; i < collformatoptions.length; i++) {
+                        collFormatSelect.append($("<option/>").val(collformatoptions[i]).text(collformatoptions[i]));
+                    }
+                    collFormatSelect.val(opts.collectionFormat || "csv");
                 }
-                for (var i = 0; i < collformatoptions.length; i++) {
-                    collFormatSelect.append($("<option/>").val(collformatoptions[i]).text(collformatoptions[i]));
-                }
-                collFormatSelect.val(opts.collectionFormat || "csv");
 
                 typeSelect.change(function() {
                     var t = $(this).val();
                     if (t != "array") {
                         $(this).parent().find(".node-swagger-type-row").remove();
                         $(this).parent().find(".node-swagger-type-format").show();
+                        $(this).parent().find(".node-swagger-type-format-label").text(formatText);
                         $(this).parent().find(".node-swagger-type-collection-format").hide();
-
+                        
                         if (t == "ref") {
-                            $(this).parent().find(".node-swgger-type-format-label").text("");
+                            $(this).parent().find(".node-swagger-type-format-label").text("");
                         } else {
-                            $(this).parent().find(".node-swgger-type-format-label").text(formatText);
+                            $(this).parent().find(".node-swagger-type-format-label").text(formatText);
                         }
 
 
                     } else {
                         $(this).parent().find(".node-swagger-type-format").hide();
                         $(this).parent().find(".node-swagger-type-collection-format").show();
+                        if(opts.propertyRow){
+                            $(this).parent().find(".node-swagger-type-format-label").text("");
+                            if(!opts.items){
+                                opts.items = {};
+                            }
+                            opts.items.propertyRow = true;
+                        }
                         generateTypeRow(opts.items || {}, false).appendTo($(this).parent());
                     }
                 });
@@ -374,6 +384,7 @@ var swaggerDocUrl;
                     style: "margin-top: 3px; margin-left: 10px;"
                 });
                 propList.appendTo(row);
+                opts.propertyRow = true;
                 var typeRow = generateTypeRow(opts, true).appendTo(propList);
                 return row;
             }
@@ -854,33 +865,13 @@ var swaggerDocUrl;
                 Recursive function used to generate the items object that is required for array objects
             */
             var getArrayItems = function (row){
-                console.log(row);
                 var items = {};
                 var type = row.find('.node-swagger-type-select').val();
                 items.type = type;
                 if(type == 'array'){
                     var collFormat = row.find('.node-swagger-type-collection-format').val();
-                    items.collectionFormat = collFormat;
-                    var nextRow = row.children(".node-swagger-type-row");
-                    items.items = getArrayItems(nextRow);
-                } else{
-                    var format = row.find('.node-swagger-type-format').val();
-                    items.format = format;
-                }
-                return items;
-            }
-            
-            /**
-                Temporary placeholder to remove collectionFormat since swagger does not allow it
-            */
-            var getArrayItemsSchema = function (row){
-                console.log(row);
-                var items = {};
-                var type = row.find('.node-swagger-type-select').val();
-                items.type = type;
-                if(type == 'array'){
-                    //var collFormat = row.find('.node-swagger-type-collection-format').val();
-                    //items.collectionFormat = collFormat;
+                    if(collFormat)
+                        items.collectionFormat = collFormat;
                     var nextRow = row.children(".node-swagger-type-row");
                     items.items = getArrayItems(nextRow);
                 } else{
@@ -922,13 +913,13 @@ var swaggerDocUrl;
                                     current.type = ctype;
                                     if (current.type == "array") {
                                         
-                                        //commented out until we figure out what to do with collectionFormat in schema objects
-                                        //var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                        //current.collectionFormat = collFormat;
+                                        var collFormat = row.children(".node-swagger-type-collection-format").val();
+                                        if(collFormat)
+                                            current.collectionFormat = collFormat;
                                         
                                         var nextRow = row.children(".node-swagger-type-row");
                                         
-                                        current.items = getArrayItemsSchema(nextRow);
+                                        current.items = getArrayItems(nextRow);
 
                                     } else {
                                         var format = row.children(".node-swagger-type-format").val();
@@ -1012,13 +1003,13 @@ var swaggerDocUrl;
                             current.type = ctype;
                             if (current.type == "array") {
                                
-                                //commented out until we figure out what to do with collectionFormat in schema objects
-                                //var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                //current.collectionFormat = collFormat;
+                                var collFormat = row.children(".node-swagger-type-collection-format").val();
+                                if(collFormat)
+                                    current.collectionFormat = collFormat;
                                         
                                 var nextRow = row.children(".node-swagger-type-row");
                                         
-                                current.items = getArrayItemsSchema(nextRow);
+                                current.items = getArrayItems(nextRow);
 
                             } else {
                                     var format = row.children(".node-swagger-type-format").val();

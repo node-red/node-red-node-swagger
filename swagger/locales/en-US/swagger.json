@@ -61,6 +61,15 @@
         "status": {
             "excluded": "Not included in Swagger",
             "missingconfig": "Swagger config not set"
+        },
+        "helpBox": {
+            "title": "I see you're lacking Swagger doc...",
+            "swaggerIntro": "Swagger is a simple yet powerful way to document your REST API.",
+            "swaggerInfo": "The Swagger plug-in dynamically generates Swagger documentation based on input provided when setting up your HTTP endpoint nodes.",
+            "swaggerInstructions0": "After building your REST APIs in the editor, click the HTTP endpoint node. You can then attach additional Swagger documentation to that node by clicking the add button next to Docs.",
+            "swaggerInstructions1": "You are able to add additional details on the types of inputs and outputs expected from your endpoint by quickly navigating through the screens and providing some information.",
+            "swaggerInstructions2": "Once your flow is deployed, this tab will be automatically populated by a visual representation of your API.",
+            "swaggerOutro": "You can then use this Swagger-UI tab to effortlessly test your APIs."
         }
     }
 }

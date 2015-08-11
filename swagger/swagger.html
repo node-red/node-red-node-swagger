@@ -117,12 +117,8 @@ var swaggerDocUrl;
         onpaletteadd: function() {
             //setup swagger-ui
             var swaggerUi;
-            var refreshInfoHeight = 75;
             var content = $("<div/>",{
                 id:"tab-swagger-ui", style:"position: relative; padding: 0px 4px; height: 100%; overflow: hidden"
-            });
-            var refreshInfo = $("<div/>", {
-                style:"height: "+ refreshInfoHeight + "px; margin: 5px; text-align: center"
             });
 
             RED.events.on("deploy",function() {
@@ -146,9 +142,9 @@ var swaggerDocUrl;
             swaggerFrame.load(function(){
                 swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
                 window.addEventListener('resize', function(event){
-                    swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
+                    swaggerFrame.css('height', content.height());
                 });
-                swaggerFrame.css('height', content.height() - refreshInfoHeight - 45);
+                swaggerFrame.css('height', content.height());
                 swaggerUi.load();
             });
         },

@@ -17,6 +17,7 @@
   <script src='reqs/swagger-ui.js' type='text/javascript'></script>
   <script src='reqs/lib/highlight.7.3.pack.js' type='text/javascript'></script>
   <script src='reqs/lib/marked.js' type='text/javascript'></script>
+  <script src='reqs/i18next.min.js' type='text/javascript'></script>
   <script type="text/javascript">
     var url = parent.swaggerDocUrl;
     window.swaggerUi = new SwaggerUi({
@@ -30,11 +31,18 @@
         } else{
             $('.empty-swagger-doc').hide(1000);
         }
-        console.log(window.swaggerUi.api.apisArray.length);
       },
       onFailure: function(data) {
 		console.log("Unable to Load SwaggerUI");
       },
+    });
+    i18n.init({
+        resGetPath: 'nls/__lng__/__ns__.json',
+        load: 'current',
+        ns: 'swagger',
+        fallbackLng: 'en-us'
+    }, function() {
+        $('.empty-swagger-doc').i18n();
     });
   </script>
   <style>
@@ -67,13 +75,13 @@
         <i class="fa fa-circle-thin fa-stack-2x"></i>
         <i class="fa fa-question fa-stack-1x"></i>
     </span></h2>
-    <h2>I see you're lacking Swagger doc...</h2>
-    <p>Swagger is a simple yet powerful way to document your REST API.</p>
-    <p>The Swagger plug-in dynamically generates Swagger documentation based on input provided when setting up your HTTP endpoint nodes.</p>
-    <p>After building your REST APIs in the editor, click the HTTP endpoint node. You can then attach additional Swagger documentation to that node by clicking the <b>add</b> button next to <b>Docs</b></p>
-    <p>You are able to add additional details on the types of inputs and outputs expected from your endpoint by quickly navigating through the screens and providing some information.</p>
-    <p>Once your flow is deployed, this tab will be automatically populated by a visual representation of your API.</p>
-    <p>You can then use this Swagger-UI tab to effortlessly test your APIs<p>
+    <h2 data-i18n>swagger.helpBox.title</h2>
+    <p data-i18n>swagger.helpBox.swaggerIntro</p>
+    <p data-i18n>swagger.helpBox.swaggerInfo</p>
+    <p data-i18n>swagger.helpBox.swaggerInstructions0</p>
+    <p data-i18n>swagger.helpBox.swaggerInstructions1</p>
+    <p data-i18n>swagger.helpBox.swaggerInstructions2</p>
+    <p data-i18n>swagger.helpBox.swaggerOutro<p>
 </div>
 <div id="swagger-ui-container" class="swagger-ui-wrap" style="margin: 10px"></div>
 

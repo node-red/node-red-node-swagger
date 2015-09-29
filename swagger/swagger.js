@@ -151,18 +151,18 @@ module.exports = function(RED) {
     
     RED.httpAdmin.get('/swagger-ui/reqs/i18next.min.js', function(req, res){
         var filename = path.join(__dirname , '../node_modules/i18next-client/i18next.min.js');
-        res.sendfile(filename);
+        res.sendFile(filename);
     });
     RED.httpAdmin.get('/swagger-ui/reqs/*', function(req, res){
         var filename = path.join(__dirname , '../node_modules/swagger-ui/dist', req.params[0]);
-        res.sendfile(filename);
+        res.sendFile(filename);
     });
     RED.httpAdmin.get('/swagger-ui/nls/*', function(req, res){
         var filename = path.join(__dirname , 'locales', req.params[0]);
-        res.sendfile(filename);
+        res.sendFile(filename);
     });
     RED.httpAdmin.get('/swagger-ui/*', function(req, res){
         var filename = path.join(__dirname , 'swagger-ui', req.params[0]);
-        res.sendfile(filename);
+        res.sendFile(filename);
     });
 }

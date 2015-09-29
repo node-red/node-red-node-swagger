@@ -23,26 +23,31 @@
     window.swaggerUi = new SwaggerUi({
       url: url,
       dom_id: "swagger-ui-container",
-	  validatorUrl: null,
+      validatorUrl: null,
       onComplete: function(data) {
-		console.log('SwaggerUI loaded!');
+        console.log('SwaggerUI loaded!');
         if(window.swaggerUi.api.apisArray.length == 0){
-            $('.empty-swagger-doc').show(1000);
+          $('.empty-swagger-doc').show(1000);
         } else{
-            $('.empty-swagger-doc').hide(1000);
+          $('.empty-swagger-doc').hide(1000);
         }
+        $(document.links).filter(function() {
+          var target = this.href;
+          var host = window.location.href;
+          return target.substring(0, host.length) !== host;
+        }).attr('target', '_blank');
       },
       onFailure: function(data) {
-		console.log("Unable to Load SwaggerUI");
+        console.log("Unable to Load SwaggerUI");
       },
     });
     i18n.init({
-        resGetPath: 'nls/__lng__/__ns__.json',
-        load: 'current',
-        ns: 'swagger',
-        fallbackLng: 'en-us'
+      resGetPath: 'nls/__lng__/__ns__.json',
+      load: 'current',
+      ns: 'swagger',
+      fallbackLng: 'en-us'
     }, function() {
-        $('.empty-swagger-doc').i18n();
+      $('.empty-swagger-doc').i18n();
     });
   </script>
   <style>

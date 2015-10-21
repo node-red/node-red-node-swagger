@@ -981,9 +981,7 @@ var swaggerDocUrl;
                     respCode = $(this).find(".node-swagger-respCode").val();
                 }
                 var desc = $(this).find(".node-swagger-description").val();
-                if (desc) {
-                    response.description = desc;
-                }
+                response.description = desc || "";
                 var properties = {};
                 $(this).find(".node-swagger-prop-list").children(".node-swagger-property-name-row").each(function() {
                     var property = {};

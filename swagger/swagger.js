@@ -102,14 +102,18 @@ module.exports = function(RED) {
                             swaggerPart.responses = swagger.responses;
                         } else{
                             swaggerPart.responses = {
-                                default: {}
+                                default: {
+                                    description: ""
+                                }
                             };
                         }
                         node.status({});
                     } else{
                         swaggerPart.summary = node.name || (node.method+" "+url);
                         swaggerPart.responses = {
-                            default: {}
+                            default: {
+                                description: ""
+                            }
                         };
                         if(additionalParams){
                             swaggerPart.parameters = additionalParams.slice();

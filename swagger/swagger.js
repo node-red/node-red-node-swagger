@@ -53,6 +53,9 @@ module.exports = function(RED) {
                     var swagger = RED.nodes.getNode(node.swaggerDoc);
                 
                     var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
+                    if(url.charAt(0) !== '/'){
+                        url = '/' + url;
+                    }
                     
                     if(!resp.paths[url]){
                         resp.paths[url] = {};
@@ -99,14 +102,18 @@ module.exports = function(RED) {
                             swaggerPart.responses = swagger.responses;
                         } else{
                             swaggerPart.responses = {
-                                default: {}
+                                default: {
+                                    description: ""
+                                }
                             };
                         }
                         node.status({});
                     } else{
                         swaggerPart.summary = node.name || (node.method+" "+url);
                         swaggerPart.responses = {
-                            default: {}
+                            default: {
+                                description: ""
+                            }
                         };
                         if(additionalParams){
                             swaggerPart.parameters = additionalParams.slice();

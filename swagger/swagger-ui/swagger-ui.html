@@ -25,7 +25,6 @@
       dom_id: "swagger-ui-container",
 	  validatorUrl: null,
       onComplete: function(data) {
-		console.log('SwaggerUI loaded!');
         if(window.swaggerUi.api.apisArray.length == 0){
             $('.empty-swagger-doc').show(1000);
         } else{
@@ -33,7 +32,7 @@
         }
       },
       onFailure: function(data) {
-		console.log("Unable to Load SwaggerUI");
+		console.log("Unable to load SwaggerUI");
       },
     });
     i18n.init({
@@ -56,13 +55,13 @@
       font-size: 14px;
       line-height: 150%;
     }
-    
+
     .empty-swagger-doc h2 {
         font-weight: bold;
         font-size: 16px;
         text-align: center;
     }
-    
+
     .empty-swagger-doc p {
         padding: 10px 0px;
     }

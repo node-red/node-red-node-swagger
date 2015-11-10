@@ -58,10 +58,6 @@
             "code": "Code",
             "default": "Default"
         },
-        "status": {
-            "excluded": "Not included in Swagger",
-            "missingconfig": "Swagger config not set"
-        },
         "helpBox": {
             "title": "I see you're lacking Swagger doc...",
             "swaggerIntro": "Swagger is a simple yet powerful way to document your REST API.",

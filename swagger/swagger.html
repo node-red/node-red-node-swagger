@@ -149,7 +149,7 @@ var swaggerDocUrl;
             });
         },
         oneditprepare: function() {
-            
+
             // Configures popover options for all popovers that appear when an editor option is hovered over
             $('.popover-right').popover({
                 placement:"right",
@@ -158,7 +158,7 @@ var swaggerDocUrl;
                 container: '#main-container',
                 delay: { show: 500, hide: 50 }
             });
-            
+
             //Configures popover options for parameter info link
             $('#node-config-input-parameter-info').popover({
                 placement:"left",
@@ -168,7 +168,7 @@ var swaggerDocUrl;
                 content: this._("swagger.content.parameter-info"),
                 delay: { show: 500, hide: 50 }
             });
-            
+
             //Configures popover options for response info link
             $('#node-config-input-response-info').popover({
                 placement:"left",
@@ -291,7 +291,7 @@ var swaggerDocUrl;
                     style: "width: 150px;",
                     type: "text"
                 }).val(opts.format).appendTo(row);
-                
+
                 if(!opts.propertyRow){
                     var collFormatSelect = $('<select/>', {
                         class: "node-swagger-type-collection-format",
@@ -315,7 +315,7 @@ var swaggerDocUrl;
                         $(this).parent().find(".node-swagger-type-format").show();
                         $(this).parent().find(".node-swagger-type-format-label").text(formatText);
                         $(this).parent().find(".node-swagger-type-collection-format").hide();
-                        
+
                         if (t == "ref") {
                             $(this).parent().find(".node-swagger-type-format-label").text("");
                         } else {
@@ -390,7 +390,7 @@ var swaggerDocUrl;
                 This function is called anytime a new paramater is created.
                 This is called several times when parsing through the swagger doc.
                 If expand is true, the inner properties of the parameter will be showing when the editor opens.
-            */           
+            */
             var generateParameterLine = function(opts, expand) {
                 var li = $("<li/>", {
                     style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
@@ -632,7 +632,7 @@ var swaggerDocUrl;
                 This function is called anytime a new response is created.
                 It is run when parsing through the swagger doc.
                 If expand is true, the inner properties of the response will be shown when the editor opens.
-            */ 
+            */
             var generateResponseLine = function(opts, expand) {
                 var li = $("<li/>", {
                     style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
@@ -813,7 +813,7 @@ var swaggerDocUrl;
                         }, false);
                         pathParams.splice(pathParams.indexOf(p.name), 1);
                     } else{//param is no longer a path param
-                        console.log('removing outdated path param: ' + p.name);
+                        //console.log('removing outdated path param: ' + p.name);
                         delete p;
                     }
                 } else{
@@ -833,7 +833,7 @@ var swaggerDocUrl;
 
             //Add path params that weren't found above
             pathParams.forEach(function(p){
-                console.log('adding path param: ' + p);
+                //console.log('adding path param: ' + p);
                 generateParameterLine({
                     name: p,
                     in : 'path',
@@ -876,7 +876,7 @@ var swaggerDocUrl;
                 }
                 return items;
             }
-            
+
             //Parse parameters and generate list
             var params = [];
             $("#node-config-parameter-list li").each(function() {
@@ -900,21 +900,21 @@ var swaggerDocUrl;
                             var name = $(this).find(".node-swagger-type-name").val();
 
                             var row = $(this).find(".node-swagger-type-top-row");
-                            
+
                             var current = property;
                             var ctype = row.children(".node-swagger-type-select").val();
-                        
+
                             if(ctype){
                                 if (ctype != "ref") {
                                     current.type = ctype;
                                     if (current.type == "array") {
-                                        
+
                                         var collFormat = row.children(".node-swagger-type-collection-format").val();
                                         if(collFormat)
                                             current.collectionFormat = collFormat;
-                                        
+
                                         var nextRow = row.children(".node-swagger-type-row");
-                                        
+
                                         current.items = getArrayItems(nextRow);
 
                                     } else {
@@ -937,20 +937,20 @@ var swaggerDocUrl;
                         }
                     } else {
                         var row = $(this).find(".node-swagger-type-top-row");
-                        
+
                         var current = param;
-                        
+
                         var ctype = row.children(".node-swagger-type-select").val();
-                        
+
                         if(ctype){
                             if (ctype != "ref") {
                                 current.type = ctype;
                                 if (current.type == "array") {
                                     var collFormat = row.children(".node-swagger-type-collection-format").val();
                                     current.collectionFormat = collFormat;
-                                    
+
                                     var nextRow = row.children(".node-swagger-type-row");
-                                    
+
                                     current.items = getArrayItems(nextRow);
 
                                 } else {
@@ -991,18 +991,18 @@ var swaggerDocUrl;
 
                     var current = property;
                     var ctype = row.children(".node-swagger-type-select").val();
-                        
+
                     if(ctype){
                         if (ctype != "ref") {
                             current.type = ctype;
                             if (current.type == "array") {
-                               
+
                                 var collFormat = row.children(".node-swagger-type-collection-format").val();
                                 if(collFormat)
                                     current.collectionFormat = collFormat;
-                                        
+
                                 var nextRow = row.children(".node-swagger-type-row");
-                                        
+
                                 current.items = getArrayItems(nextRow);
 
                             } else {

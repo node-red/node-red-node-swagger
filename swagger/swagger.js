@@ -51,12 +51,12 @@ module.exports = function(RED) {
             if (node && node.type === "http in") {
                 if(checkWiresForHttpResponse(node)){
                     var swagger = RED.nodes.getNode(node.swaggerDoc);
-                
+
                     var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
                     if(url.charAt(0) !== '/'){
                         url = '/' + url;
                     }
-                    
+
                     if(!resp.paths[url]){
                         resp.paths[url] = {};
                     }
@@ -65,14 +65,14 @@ module.exports = function(RED) {
                         swaggerPart.summary = swagger.summary || node.name || (node.method+" "+url);
                         if(swagger.description)
                             swaggerPart.description = swagger.description;
-                        
+
                         if(swagger.tags){
                             swaggerPart.tags = swagger.tags.split(',');
                             for(var i=0; i < swaggerPart.tags.length; i++){
                                 swaggerPart.tags[i] = swaggerPart.tags[i].trim();
                             }
                         }
-                                                
+
                         if(swagger.consumes){
                             swaggerPart.consumes = swagger.consumes.split(',');
                             for(var i=0; i < swaggerPart.consumes.length; i++){
@@ -128,7 +128,7 @@ module.exports = function(RED) {
         });
         res.json(resp);
     });
-    
+
     function checkWiresForHttpResponse (node) {
         var wires = node.wires[0];
         for(var i in wires){
@@ -141,7 +141,7 @@ module.exports = function(RED) {
         }
         return false;
     }
-    
+
     function SwaggerDoc(n){
         RED.nodes.createNode(this,n);
         this.summary = n.summary;
@@ -154,22 +154,31 @@ module.exports = function(RED) {
         this.deprecated = n.deprecated;
     }
     RED.nodes.registerType("swagger-doc",SwaggerDoc);
-    
-    
+
+
+    function sendFile(res,filename) {
+        // Use the right function depending on Express 3.x/4.x
+        if (res.sendFile) {
+            res.sendFile(filename);
+        } else {
+            res.sendfile(filename);
+        }
+    }
+
     RED.httpAdmin.get('/swagger-ui/reqs/i18next.min.js', function(req, res){
         var filename = path.join(__dirname , '../node_modules/i18next-client/i18next.min.js');
-        res.sendfile(filename);
+        sendFile(res,filename);
     });
     RED.httpAdmin.get('/swagger-ui/reqs/*', function(req, res){
         var filename = path.join(__dirname , '../node_modules/swagger-ui/dist', req.params[0]);
-        res.sendfile(filename);
+        sendFile(res,filename);
     });
     RED.httpAdmin.get('/swagger-ui/nls/*', function(req, res){
         var filename = path.join(__dirname , 'locales', req.params[0]);
-        res.sendfile(filename);
+        sendFile(res,filename);
     });
     RED.httpAdmin.get('/swagger-ui/*', function(req, res){
         var filename = path.join(__dirname , 'swagger-ui', req.params[0]);
-        res.sendfile(filename);
+        sendFile(res,filename);
     });
 }

@@ -1,6 +1,6 @@
 {
     "name": "node-red-node-swagger",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "A set of tools for generating Swagger API documentation based on the HTTP nodes deployed in a flow",
     "license": "Apache",
     "repository": {
@@ -22,7 +22,7 @@
         "Cody Walker <cody@cody-walker.com>"
     ],
     "dependencies": {
-        "swagger-ui": "2.1.0",
-        "i18next-client": "1.10.2"
+        "swagger-ui": "2.1.3",
+        "i18next-client": "1.10.3"
     }
 }

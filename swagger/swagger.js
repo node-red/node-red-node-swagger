@@ -126,7 +126,8 @@ module.exports = function(RED) {
     });
 
     function checkWiresForHttpResponse (node) {
-        var wires = node.wires[0];
+        return true;
+        /*var wires = node.wires[0];
         for(var i in wires){
             var newNode = RED.nodes.getNode(wires[i]);
             if(newNode.type == "http response"){
@@ -135,7 +136,7 @@ module.exports = function(RED) {
                 return true;
             }
         }
-        return false;
+        return false;*/
     }
 
     function SwaggerDoc(n){

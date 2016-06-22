@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 IBM Corp.
+ * Copyright 2015, 2016 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,11 +162,15 @@ module.exports = function(RED) {
     }
 
     RED.httpAdmin.get('/swagger-ui/reqs/i18next.min.js', function(req, res){
-        var filename = path.join(__dirname , '../node_modules/i18next-client/i18next.min.js');
+        var basePath = require.resolve('i18next-client');
+        basePath = basePath.replace(/\/i18next.js$/,"");
+        var filename = path.join(basePath,'i18next.min.js');
         sendFile(res,filename);
     });
     RED.httpAdmin.get('/swagger-ui/reqs/*', function(req, res){
-        var filename = path.join(__dirname , '../node_modules/swagger-ui/dist', req.params[0]);
+        var basePath = require.resolve('swagger-ui');
+        basePath = basePath.replace(/\/swagger-ui.js$/,"");
+        var filename = path.join(basePath, req.params[0]);
         sendFile(res,filename);
     });
     RED.httpAdmin.get('/swagger-ui/nls/*', function(req, res){

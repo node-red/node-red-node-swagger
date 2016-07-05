@@ -1,6 +1,6 @@
 {
     "name": "node-red-node-swagger",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "A set of tools for generating Swagger API documentation based on the HTTP nodes deployed in a flow",
     "license": "Apache",
     "repository": {

@@ -163,13 +163,13 @@ module.exports = function(RED) {
 
     RED.httpAdmin.get('/swagger-ui/reqs/i18next.min.js', function(req, res){
         var basePath = require.resolve('i18next-client');
-        basePath = basePath.replace(/\/i18next.js$/,"");
+        basePath = basePath.replace(/[\\\/]i18next.js$/,"");
         var filename = path.join(basePath,'i18next.min.js');
         sendFile(res,filename);
     });
     RED.httpAdmin.get('/swagger-ui/reqs/*', function(req, res){
         var basePath = require.resolve('swagger-ui');
-        basePath = basePath.replace(/\/swagger-ui.js$/,"");
+        basePath = basePath.replace(/[\\\/]swagger-ui.js$/,"");
         var filename = path.join(basePath, req.params[0]);
         sendFile(res,filename);
     });

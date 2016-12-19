@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
 module.exports = function(RED) {
     "use strict";
-
+	
+	var supportedEndPoints; //List of node types supporting Swagger
+	if(RED.settings.swagger && RED.settings.swagger.endPoints){
+		supportedEndPoints = RED.settings.swagger.endPoints; 
+	} else {
+		supportedEndPoints = ["http in"];
+	}
+	
     var path = require("path");
     RED.httpNode.get("/http-api/swagger.json",function(req,res) {
         var resp;
@@ -48,7 +54,7 @@ module.exports = function(RED) {
         }
         resp.paths = {};
         RED.nodes.eachNode(function(node) {
-            if (node && node.type === "http in") {
+			if (node && supportedEndPoints.indexOf(node.type) >= 0) {				
                 if(checkWiresForHttpResponse(node)){
                     var swagger = RED.nodes.getNode(node.swaggerDoc);
 

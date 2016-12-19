@@ -54,7 +54,6 @@ module.exports = function(RED) {
         }
         resp.paths = {};
         RED.nodes.eachNode(function(node) {
-            //if (node && node.type === "http in") {
 			if (node && supportedEndPoints.indexOf(node.type) >= 0) {				
                 if(checkWiresForHttpResponse(node)){
                     var swagger = RED.nodes.getNode(node.swaggerDoc);

@@ -16,7 +16,7 @@
 module.exports = function(RED) {
     "use strict";
 	
-	var supportedEndPoints; //List of node types supporting sagger
+	var supportedEndPoints; //List of node types supporting Swagger
 	if(RED.settings.swagger && RED.settings.swagger.endPoints){
 		supportedEndPoints = RED.settings.swagger.endPoints; 
 	} else {

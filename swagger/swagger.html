@@ -129,7 +129,7 @@
                 });
                 swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" +
                     window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
-                RED.log.log("swaggerDocUrl=" + swaggerDocUrl);
+                console.log("swaggerDocUrl=" + swaggerDocUrl);
                 var swaggerFrame = $("<iframe/>", {
                     id: "swagger-ui-frame",
                     style: "margin: 0; padding: 0; border: none; width: 100%; height: 100%",

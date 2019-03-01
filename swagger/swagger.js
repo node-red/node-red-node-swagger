@@ -19,6 +19,8 @@ module.exports = function (RED) {
 
     var path = require("path");
     RED.httpNode.get("/http-api/swagger.json", function (req, res) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         var resp;
         if (RED.settings.swagger) {
             resp = RED.settings.swagger.template;
@@ -128,8 +130,8 @@ module.exports = function (RED) {
     });
 
     function checkWiresForHttpResponse(node) {
-        console.log('answering true to checkWiresForHttpResponse');
-        return true;
+        // console.log('answering true to checkWiresForHttpResponse');
+        // return true;
         var allWires = node.wires;
         for (var a = 0; a < allWires.length; a++) {
             var wires = allWires[a];

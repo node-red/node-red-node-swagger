@@ -1,11 +1,11 @@
 {
     "name": "node-red-node-swagger",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "A set of tools for generating Swagger API documentation based on the HTTP nodes deployed in a flow",
     "license": "Apache",
     "repository": {
         "type": "git",
-        "url": "https://github.com/node-red/node-red-node-swagger.git"
+        "url": "https://github.com/guy-datacom/node-red-node-swagger.git"
     },
     "keywords": [
         "node-red",
@@ -19,7 +19,8 @@
     },
     "contributors": [
         "Nick O'Leary <nick.oleary@gmail.com>",
-        "Cody Walker <cody@cody-walker.com>"
+        "Cody Walker <cody@cody-walker.com>",
+        "Guy Morton <guy.morton@datacom.com.au>"
     ],
     "dependencies": {
         "swagger-ui": "2.1.4",

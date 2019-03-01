@@ -16,7 +16,7 @@
 
 
 <script type="text/x-red" data-template-name="swagger-doc">
-        <div class="form-row">
+    <div class="form-row">
             <label><span data-i18n="swagger.label.path"></span></label>
             <span id="node-config-input-method"></span>
             <span id="node-config-input-path"></span>
@@ -80,725 +80,788 @@
 </script>
 
 <script type="text/javascript">
-var swaggerDocUrl;
-(function() {
-    RED.nodes.registerType('swagger-doc', {
-        category: 'config',
-        exclusive: true,
-        defaults: {
-            summary: {
-                value: ""
-            },
-            description: {
-                value: ""
-            },
-            tags: {
-                value: ""
-            },
-            consumes: {
-                value: ""
-            },
-            produces: {
-                value: ""
-            },
-            parameters: {
-                value: []
-            },
-            responses: {
-                value: null
-            },
-            deprecated: {
-                value: false
-            }
-        },
-        label: function() {
-            return this.summary || "swagger doc";
-        },
-        onpaletteadd: function() {
-            //setup swagger-ui
-            var swaggerUi;
-            var content = $("<div/>",{
-                id:"tab-swagger-ui", style:"position: relative; padding: 0px 4px; height: 100%; overflow: hidden"
-            });
-
-            RED.events.on("deploy",function() {
-                if (swaggerUi) {
-                    swaggerUi.load();
+    var swaggerDocUrl;
+    (function () {
+        RED.nodes.registerType('swagger-doc', {
+            category: 'config',
+            exclusive: true,
+            defaults: {
+                summary: {
+                    value: ""
+                },
+                description: {
+                    value: ""
+                },
+                tags: {
+                    value: ""
+                },
+                consumes: {
+                    value: ""
+                },
+                produces: {
+                    value: ""
+                },
+                parameters: {
+                    value: []
+                },
+                responses: {
+                    value: null
+                },
+                deprecated: {
+                    value: false
                 }
-            });
-            swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
-            var swaggerFrame = $("<iframe/>", {
-                id:"swagger-ui-frame",
-                style:"margin: 0; padding: 0; border: none; width: 100%; height: 100%",
-                src: "swagger-ui/swagger-ui.html"
-            }).appendTo(content);
-            RED.sidebar.addTab({
-                id: "swagger-ui",
-                label: this._("swagger.sidebar.label"),
-                name: this._("swagger.sidebar.name"),
-                content: content
-            });
+            },
+            label: function () {
+                return this.summary || "swagger doc";
+            },
+            onpaletteadd: function () {
+                //setup swagger-ui
+                var swaggerUi;
+                var content = $("<div/>", {
+                    id: "tab-swagger-ui",
+                    style: "position: relative; padding: 0px 4px; height: 100%; overflow: hidden"
+                });
 
-            swaggerFrame.load(function(){
-                swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
-                swaggerUi.load();
-            });
-        },
-        oneditprepare: function() {
+                RED.events.on("deploy", function () {
+                    if (swaggerUi) {
+                        swaggerUi.load();
+                    }
+                });
+                swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" +
+                    window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
+                RED.log.log("swaggerDocUrl=" + swaggerDocUrl);
+                var swaggerFrame = $("<iframe/>", {
+                    id: "swagger-ui-frame",
+                    style: "margin: 0; padding: 0; border: none; width: 100%; height: 100%",
+                    src: "swagger-ui/swagger-ui.html"
+                }).appendTo(content);
+                RED.sidebar.addTab({
+                    id: "swagger-ui",
+                    label: this._("swagger.sidebar.label"),
+                    name: this._("swagger.sidebar.name"),
+                    content: content
+                });
 
-            // Configures popover options for all popovers that appear when an editor option is hovered over
-            $('.popover-right').popover({
-                placement:"right",
-                html: true,
-                trigger: "hover",
-                container: '#main-container',
-                delay: { show: 500, hide: 50 }
-            });
+                swaggerFrame.load(function () {
+                    swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
+                    swaggerUi.load();
+                });
+            },
+            oneditprepare: function () {
 
-            //Configures popover options for parameter info link
-            $('#node-config-input-parameter-info').popover({
-                placement:"left",
-                html: true,
-                trigger: "hover",
-                container: '#main-container',
-                content: this._("swagger.content.parameter-info"),
-                delay: { show: 500, hide: 50 }
-            });
+                // Configures popover options for all popovers that appear when an editor option is hovered over
+                $('.popover-right').popover({
+                    placement: "right",
+                    html: true,
+                    trigger: "hover",
+                    container: '#main-container',
+                    delay: {
+                        show: 500,
+                        hide: 50
+                    }
+                });
 
-            //Configures popover options for response info link
-            $('#node-config-input-response-info').popover({
-                placement:"left",
-                html: true,
-                trigger: "hover",
-                container: '#main-container',
-                content: this._("swagger.content.response-info"),
-                delay: { show: 500, hide: 50 }
-            });
+                //Configures popover options for parameter info link
+                $('#node-config-input-parameter-info').popover({
+                    placement: "left",
+                    html: true,
+                    trigger: "hover",
+                    container: '#main-container',
+                    content: this._("swagger.content.parameter-info"),
+                    delay: {
+                        show: 500,
+                        hide: 50
+                    }
+                });
 
-            var node = this;
+                //Configures popover options for response info link
+                $('#node-config-input-response-info').popover({
+                    placement: "left",
+                    html: true,
+                    trigger: "hover",
+                    container: '#main-container',
+                    content: this._("swagger.content.response-info"),
+                    delay: {
+                        show: 500,
+                        hide: 50
+                    }
+                });
 
-            if ($("#node-input-method").length) {
-                $("#node-config-input-method").text($("#node-input-method").val().toUpperCase());
-                $("#node-config-input-path").html($("#node-input-url").val());
-            } else {
-                var httpNodes = RED.nodes.filterNodes({type: "http in"});
-                for (var i=0;i<httpNodes.length;i++) {
-                    if (httpNodes[i].swaggerDoc === node.id) {
-                        $("#node-config-input-method").text(httpNodes[i].method.toUpperCase());
-                        $("#node-config-input-path").html(httpNodes[i].url);
-                        break;
+                var node = this;
+
+                if ($("#node-input-method").length) {
+                    $("#node-config-input-method").text($("#node-input-method").val().toUpperCase());
+                    $("#node-config-input-path").html($("#node-input-url").val());
+                } else {
+                    var httpNodes = RED.nodes.filterNodes({
+                        type: "http in"
+                    });
+                    for (var i = 0; i < httpNodes.length; i++) {
+                        if (httpNodes[i].swaggerDoc === node.id) {
+                            $("#node-config-input-method").text(httpNodes[i].method.toUpperCase());
+                            $("#node-config-input-path").html(httpNodes[i].url);
+                            break;
+                        }
                     }
                 }
-            }
-            var tabs = RED.tabs.create({
-                id: "node-config-swagger-tabs",
-                onchange: function(tab) {
-                    $("#node-config-swagger-tabs-content").children().hide();
-                    $("#" + tab.id).show();
-                }
-            });
-            tabs.addTab({
-                id: "swagger-tab-info",
-                label: this._("swagger.tabs-label.info")
-            });
-            tabs.addTab({
-                id: "swagger-tab-parameters",
-                label: this._("swagger.tabs-label.parameters")
-            });
-            tabs.addTab({
-                id: "swagger-tab-responses",
-                label: this._("swagger.tabs-label.responses")
-            });
-
-            // Need to wait for it to be rendered before the sizing of the tabs
-            // can be properly calculated
-            setTimeout(function() {
-                tabs.resize();
-            }, 10);
-
-            var typeContent = this._("swagger.content.type");
-            var formatContent = this._("swagger.content.format");
-            var parameterDescriptionContent = this._("swagger.content.parameter-description");
-            var responseDescriptionContent = this._("swagger.content.response-description");
-            var requiredContent = this._("swagger.content.required");
-            var propertyText = this._("swagger.label.property");
-            var typeText = this._("swagger.text.type");
-            var formatText = this._("swagger.text.format");
-            var nameText = this._("swagger.text.name");
-            var inText = this._("swagger.text.in");
-            var pathText = this._("swagger.text.path");
-            var descriptionText = this._("swagger.text.description");
-            var requiredText = this._("swagger.text.required");
-            var propertiesText = this._("swagger.text.properties");
-            var fileText = this._("swagger.text.file");
-            var codeText = this._("swagger.text.code");
-            var defaultText = this._("swagger.text.default");
-
-            /**
-                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
-                This function is called anytime a row with Type and Format needs to be created.
-                If top is true, it is given an additional class to help keep track of everything.
-            */
-            var generateTypeRow = function(opts, top) {
-                var row = $("<div/>");
-                row.addClass('node-swagger-type-row');
-                row.css('margin-top', '3px');
-                if(top){
-                    row.addClass('node-swagger-type-top-row');
-                } else{
-                    row.css('margin-left', '10px');
-                }
-
-                var typeLabel = $("<label/>").text(typeText).appendTo(row);
-                typeLabel.popover({
-                    placement:"right",
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: typeContent,
-                    delay: { show: 500, hide: 50 }
+                var tabs = RED.tabs.create({
+                    id: "node-config-swagger-tabs",
+                    onchange: function (tab) {
+                        $("#node-config-swagger-tabs-content").children().hide();
+                        $("#" + tab.id).show();
+                    }
                 });
-                var typeSelect = $('<select/>', {
-                    class: "node-swagger-type-select",
-                    style: "max-width: 150px"
-                }).appendTo(row);
-
-                var typeoptions = ["string", "number", "integer", "boolean", "array"];
-                for (var i = 0; i < typeoptions.length; i++) {
-                    typeSelect.append($("<option/>").val(typeoptions[i]).text(typeoptions[i]));
-                }
-                if (!top) {
-                    //Remove ref until theres a plan for it
-                    //typeSelect.append($("<option/>").val("ref").text("$ref"));
-                }
-                typeSelect.val(opts.type);
-                var formatLabel = $("<label/>", {
-                    class: "node-swagger-type-format-label",
-                    style: "width: auto; margin-left:20px; margin-right: 10px;"
-                }).text(formatText).appendTo(row);
-                formatLabel.popover({
-                    placement:"right",
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: formatContent,
-                    delay: { show: 500, hide: 50 }
+                tabs.addTab({
+                    id: "swagger-tab-info",
+                    label: this._("swagger.tabs-label.info")
                 });
-                $('<input/>', {
-                    class: "node-swagger-type-format",
-                    style: "width: 150px;",
-                    type: "text"
-                }).val(opts.format).appendTo(row);
+                tabs.addTab({
+                    id: "swagger-tab-parameters",
+                    label: this._("swagger.tabs-label.parameters")
+                });
+                tabs.addTab({
+                    id: "swagger-tab-responses",
+                    label: this._("swagger.tabs-label.responses")
+                });
 
-                if(!opts.propertyRow){
-                    var collFormatSelect = $('<select/>', {
-                        class: "node-swagger-type-collection-format",
+                // Need to wait for it to be rendered before the sizing of the tabs
+                // can be properly calculated
+                setTimeout(function () {
+                    tabs.resize();
+                }, 10);
+
+                var typeContent = this._("swagger.content.type");
+                var formatContent = this._("swagger.content.format");
+                var parameterDescriptionContent = this._("swagger.content.parameter-description");
+                var responseDescriptionContent = this._("swagger.content.response-description");
+                var requiredContent = this._("swagger.content.required");
+                var propertyText = this._("swagger.label.property");
+                var typeText = this._("swagger.text.type");
+                var formatText = this._("swagger.text.format");
+                var nameText = this._("swagger.text.name");
+                var inText = this._("swagger.text.in");
+                var pathText = this._("swagger.text.path");
+                var descriptionText = this._("swagger.text.description");
+                var requiredText = this._("swagger.text.required");
+                var propertiesText = this._("swagger.text.properties");
+                var fileText = this._("swagger.text.file");
+                var codeText = this._("swagger.text.code");
+                var defaultText = this._("swagger.text.default");
+
+                /**
+                    Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                    This function is called anytime a row with Type and Format needs to be created.
+                    If top is true, it is given an additional class to help keep track of everything.
+                */
+                var generateTypeRow = function (opts, top) {
+                    var row = $("<div/>");
+                    row.addClass('node-swagger-type-row');
+                    row.css('margin-top', '3px');
+                    if (top) {
+                        row.addClass('node-swagger-type-top-row');
+                    } else {
+                        row.css('margin-left', '10px');
+                    }
+
+                    var typeLabel = $("<label/>").text(typeText).appendTo(row);
+                    typeLabel.popover({
+                        placement: "right",
+                        trigger: "hover",
+                        container: '#main-container',
+                        content: typeContent,
+                        delay: {
+                            show: 500,
+                            hide: 50
+                        }
+                    });
+                    var typeSelect = $('<select/>', {
+                        class: "node-swagger-type-select",
+                        style: "max-width: 150px"
+                    }).appendTo(row);
+
+                    var typeoptions = ["string", "number", "integer", "boolean", "array"];
+                    for (var i = 0; i < typeoptions.length; i++) {
+                        typeSelect.append($("<option/>").val(typeoptions[i]).text(typeoptions[i]));
+                    }
+                    if (!top) {
+                        //Remove ref until theres a plan for it
+                        //typeSelect.append($("<option/>").val("ref").text("$ref"));
+                    }
+                    typeSelect.val(opts.type);
+                    var formatLabel = $("<label/>", {
+                        class: "node-swagger-type-format-label",
+                        style: "width: auto; margin-left:20px; margin-right: 10px;"
+                    }).text(formatText).appendTo(row);
+                    formatLabel.popover({
+                        placement: "right",
+                        trigger: "hover",
+                        container: '#main-container',
+                        content: formatContent,
+                        delay: {
+                            show: 500,
+                            hide: 50
+                        }
+                    });
+                    $('<input/>', {
+                        class: "node-swagger-type-format",
                         style: "width: 150px;",
                         type: "text"
+                    }).val(opts.format).appendTo(row);
+
+                    if (!opts.propertyRow) {
+                        var collFormatSelect = $('<select/>', {
+                            class: "node-swagger-type-collection-format",
+                            style: "width: 150px;",
+                            type: "text"
+                        }).appendTo(row);
+                        var collformatoptions = ["csv", "ssv", "tsv", "pipes"];
+                        if (top) {
+                            collformatoptions.push("multi");
+                        }
+                        for (var i = 0; i < collformatoptions.length; i++) {
+                            collFormatSelect.append($("<option/>").val(collformatoptions[i]).text(
+                                collformatoptions[i]));
+                        }
+                        collFormatSelect.val(opts.collectionFormat || "csv");
+                    }
+
+                    typeSelect.change(function () {
+                        var t = $(this).val();
+                        if (t != "array") {
+                            $(this).parent().find(".node-swagger-type-row").remove();
+                            $(this).parent().find(".node-swagger-type-format").show();
+                            $(this).parent().find(".node-swagger-type-format-label").text(
+                                formatText);
+                            $(this).parent().find(".node-swagger-type-collection-format").hide();
+
+                            if (t == "ref") {
+                                $(this).parent().find(".node-swagger-type-format-label").text(
+                                    "");
+                            } else {
+                                $(this).parent().find(".node-swagger-type-format-label").text(
+                                    formatText);
+                            }
+
+
+                        } else {
+                            $(this).parent().find(".node-swagger-type-format").hide();
+                            $(this).parent().find(".node-swagger-type-collection-format").show();
+                            if (opts.propertyRow) {
+                                $(this).parent().find(".node-swagger-type-format-label").text(
+                                    "");
+                                if (!opts.items) {
+                                    opts.items = {};
+                                }
+                                opts.items.propertyRow = true;
+                            }
+                            generateTypeRow(opts.items || {}, false).appendTo($(this).parent());
+                        }
+                    });
+                    typeSelect.change();
+
+                    return row;
+                }
+
+                /**
+                    Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                    This function is called anytime a new property needs to be created.
+                    This is currently only done when dealing with a body parameter, as a schema (with properties) is required.
+                */
+                var generatePropertyRow = function (opts) {
+                    var row = $("<div/>", {
+                        class: "node-swagger-property-name-row",
+                        style: "margin-top: 3px; margin-left: 10px;"
+                    });
+                    $("<label/>", {
+                        class: "node-swagger-prop-name-label",
+                        style: "width: auto; margin-right: 10px;"
+                    }).text(nameText).appendTo(row);
+                    $('<input/>', {
+                        class: "node-swagger-type-name",
+                        style: "width: 150px;",
+                        type: "text"
+                    }).val(opts.name).appendTo(row);
+                    var remove = $('<a/>', {
+                        href: "#",
+                        class: "btn btn-mini",
+                        style: "float: right; margin-right: 5px; margin-top: 3px;"
                     }).appendTo(row);
-                    var collformatoptions = ["csv", "ssv", "tsv", "pipes"];
-                    if (top) {
-                        collformatoptions.push("multi");
-                    }
-                    for (var i = 0; i < collformatoptions.length; i++) {
-                        collFormatSelect.append($("<option/>").val(collformatoptions[i]).text(collformatoptions[i]));
-                    }
-                    collFormatSelect.val(opts.collectionFormat || "csv");
-                }
+                    var removeIcon = $('<i/>', {
+                        class: "fa fa-remove"
+                    }).appendTo(remove);
 
-                typeSelect.change(function() {
-                    var t = $(this).val();
-                    if (t != "array") {
-                        $(this).parent().find(".node-swagger-type-row").remove();
-                        $(this).parent().find(".node-swagger-type-format").show();
-                        $(this).parent().find(".node-swagger-type-format-label").text(formatText);
-                        $(this).parent().find(".node-swagger-type-collection-format").hide();
-
-                        if (t == "ref") {
-                            $(this).parent().find(".node-swagger-type-format-label").text("");
-                        } else {
-                            $(this).parent().find(".node-swagger-type-format-label").text(formatText);
-                        }
-
-
-                    } else {
-                        $(this).parent().find(".node-swagger-type-format").hide();
-                        $(this).parent().find(".node-swagger-type-collection-format").show();
-                        if(opts.propertyRow){
-                            $(this).parent().find(".node-swagger-type-format-label").text("");
-                            if(!opts.items){
-                                opts.items = {};
-                            }
-                            opts.items.propertyRow = true;
-                        }
-                        generateTypeRow(opts.items || {}, false).appendTo($(this).parent());
-                    }
-                });
-                typeSelect.change();
-
-                return row;
-            }
-
-            /**
-                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
-                This function is called anytime a new property needs to be created.
-                This is currently only done when dealing with a body parameter, as a schema (with properties) is required.
-            */
-            var generatePropertyRow = function(opts) {
-                var row = $("<div/>", {
-                    class: "node-swagger-property-name-row",
-                    style: "margin-top: 3px; margin-left: 10px;"
-                });
-                $("<label/>", {
-                    class: "node-swagger-prop-name-label",
-                    style: "width: auto; margin-right: 10px;"
-                }).text(nameText).appendTo(row);
-                $('<input/>', {
-                    class: "node-swagger-type-name",
-                    style: "width: 150px;",
-                    type: "text"
-                }).val(opts.name).appendTo(row);
-                var remove = $('<a/>', {
-                    href: "#",
-                    class: "btn btn-mini",
-                    style: "float: right; margin-right: 5px; margin-top: 3px;"
-                }).appendTo(row);
-                var removeIcon = $('<i/>', {
-                    class: "fa fa-remove"
-                }).appendTo(remove);
-
-                remove.click(function(e) {
-                    row.slideUp(100, function() {
-                        row.remove();
-                    });
-                    e.preventDefault();
-                });
-                var propList = $("<div/>", {
-                    class: "node-swagger-property-row",
-                    style: "margin-top: 3px; margin-left: 10px;"
-                });
-                propList.appendTo(row);
-                opts.propertyRow = true;
-                var typeRow = generateTypeRow(opts, true).appendTo(propList);
-                return row;
-            }
-
-            /**
-                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
-                This function is called anytime a new paramater is created.
-                This is called several times when parsing through the swagger doc.
-                If expand is true, the inner properties of the parameter will be showing when the editor opens.
-            */
-            var generateParameterLine = function(opts, expand) {
-                var li = $("<li/>", {
-                    style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
-                }).appendTo("#node-config-parameter-list");
-
-                var row1 = $("<div/>", {
-                    style: "background:#f3f3f3; padding: 5px;"
-                }).appendTo(li);
-                var remove = $('<a/>', {
-                    href: "#",
-                    class: "btn btn-mini",
-                    style: "float: right; margin-right: 5px; margin-top: 3px;"
-                }).appendTo(row1);
-                var removeIcon = $('<i/>', {
-                    class: "fa fa-remove"
-                }).appendTo(remove);
-
-                remove.click(function(e) {
-                    li.slideUp(100, function() {
-                        li.remove();
-                    });
-                    e.preventDefault();
-                });
-
-                var expanderSpan = $('<span/>', {
-                    style: "display:inline-block; width: 20px; margin-right:10px;"
-                }).appendTo(row1);
-                var expander = $('<a/>', {
-                    href: "#",
-                    style: "text-align: center; display: inline-block; 5px; width: 20px; height: 30px; line-height: 30px;"
-                }).appendTo(expanderSpan);
-                var expanderIcon = $('<i/>', {
-                    class: "fa fa-chevron-right",
-                    style: "width: 15px; text-align:centre;"
-                }).appendTo(expander);
-
-                var showDetails = function() {
-                    expanderIcon.removeClass("fa-chevron-right");
-                    expanderIcon.addClass("fa-chevron-down");
-                    nameRows.slideDown(200);
-                }
-                var hideDetails = function() {
-                    expanderIcon.removeClass("fa-chevron-down");
-                    expanderIcon.addClass("fa-chevron-right");
-                    nameRows.slideUp(200);
-                }
-
-                expander.click(function(e) {
-                    var icn = $(this).children(".fa");
-                    if (icn.hasClass("fa-chevron-right")) {
-                        showDetails();
-                    } else {
-                        hideDetails();
-                    }
-                    e.preventDefault();
-                });
-
-                var parameterSelect = $("<select/>", {
-                    class: "node-swagger-name-select",
-                    style: "max-width: 90px; margin-right: 10px;"
-                }).appendTo(row1);
-                parameterSelect.append($("<option/>").val("name").text(nameText));
-
-                //Remove ref until theres a plan for it..
-                //parameterSelect.append($("<option/>").val("ref").text("$ref"));
-
-                parameterSelect.change(function() {
-                    var p = $(this).val();
-                    if (p == "name") {
-                        expander.show();
-                        $(this).parent().children(".node-swagger-in-form").show();
-                        $(this).parent().find(".node-swagger-name").css({
-                            maxWidth: "150px"
+                    remove.click(function (e) {
+                        row.slideUp(100, function () {
+                            row.remove();
                         });
-                        showDetails();
-                    } else {
-                        expander.hide();
-                        $(this).parent().children(".node-swagger-in-form").hide();
-                        $(this).parent().find(".node-swagger-name").css({
-                            maxWidth: "300px"
-                        });
-                        hideDetails();
-                    }
-                });
-
-                var parameterName = $('<input/>', {
-                    style: "max-width: 150px",
-                    type: "text",
-                    class: "node-swagger-name"
-                }).appendTo(row1);
-
-                if (opts.ref) {
-                    parameterSelect.val("ref");
-                    parameterName.val(opts.ref);
-                } else {
-                    parameterSelect.val("name");
-                    parameterName.val(opts.name);
-                }
-
-                var inSpan = $('<span/>', {
-                    class: "node-swagger-in-form"
-                }).appendTo(row1);
-                $("<label/>", {
-                    style: "width: auto; margin-left:10px; margin-right: 10px;"
-                }).text(inText).appendTo(inSpan);
-                var inSelect = $('<select/>', {
-                    class: "node-swagger-in-select",
-                    style: "max-width: 150px"
-                }).appendTo(inSpan);
-                var inoptions = ["query", "header", "formData", "body"];
-                //only add path option if there were path params in the url
-                if(opts.in == 'path'){
-                    inSelect.append($("<option></option>").val('path').text(pathText));
-                }
-                for (var i = 0; i < inoptions.length; i++) {
-                    inSelect.append($("<option></option>").val(inoptions[i]).text(inoptions[i]));
-                }
-                inSelect.val(opts.in);
-
-                var nameRows = $("<div/>", {
-                    class: "node-swagger-name-row",
-                    style: "padding: 15px;"
-                }).appendTo(li).hide();
-
-                var row2 = $("<div/>", {
-                    class: "form-row node-swagger-name-row"
-                }).appendTo(nameRows);
-                var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
-                descLabel.popover({
-                    placement:"right",
-                    html: true,
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: parameterDescriptionContent,
-                    delay: { show: 500, hide: 50 }
-                });
-                $('<input/>', {
-                    type: "text",
-                    class: "node-swagger-description",
-                    style: "max-width: 300px"
-                }).val(opts.description).appendTo(row2);
-                var required = $('<input/>', {
-                    type: "checkbox",
-                    class: "node-swagger-required",
-                    style: "width: auto; float: right; margin-left: 10px; vertical-align: middle"
-                }).appendTo(row2);
-                var reqLabel = $("<label/>", {
-                    style: "width: auto; float: right; margin-left:20px; vertical-align: middle"
-                }).text(requiredText).appendTo(row2);
-                reqLabel.popover({
-                    placement:"left",
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: requiredContent,
-                    delay: { show: 500, hide: 50 }
-                });
-                required.prop('checked', opts.required);
-
-                //lock non-changeable fields if path variable
-                if(opts.in == 'path'){
-                    parameterSelect.attr('disabled', true);
-                    parameterName.attr('disabled', true);
-                    inSelect.attr('disabled', true);
-                    required.attr('disabled', true);
-                    remove.hide();
-                }
-
-                var row3 = generateTypeRow(opts, true).appendTo(nameRows);
-
-                var rowPropHeader = $("<div/>", {
-                    class: "form-row node-swagger-propHeader-row"
-                }).appendTo(nameRows);
-                $("<label/>", {
-                    class: "node-swagger-propHeader-label",
-                    style: "width: auto; font-weight: bold; margin-right: 10px"
-                }).text(propertiesText).appendTo(rowPropHeader);
-                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
-
-                var rowPropList = $("<div/>", {
-                    class: "form-row node-swagger-prop-list",
-                    style: "margin-left:10px"
-                }).appendTo(rowPropHeader);
-
-                addPropButton.click(function(e) {
-                    generatePropertyRow({}).appendTo(rowPropList);
-                    var scrollContainer = $("#node-config-parameter-list").parent();
-                    scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
-                    e.preventDefault();
-                });
-                if (opts.schema && opts.schema.properties) {
-                    var props = opts.schema.properties;
-                    for (var prop in props) {
-                        var propOpt = opts.schema.properties[prop];
-                        propOpt.name = prop;
-                        generatePropertyRow(propOpt).appendTo(rowPropList);
-                    }
-                }
-
-                inSelect.change(function() {
-                    var i = $(this).val();
-                    var schemaRow = $(this).parent().parent().parent().children(".node-swagger-name-row").children(".node-swagger-propHeader-row");
-                    var typeRow = $(this).parent().parent().parent().children(".node-swagger-name-row").children(".node-swagger-type-row");
-                    if (i == "body") {
-                        schemaRow.show();
-                        typeRow.hide();
-                    } else {
-                        if (i == "formData") {
-                            if (typeRow.children(".node-swagger-type-select").children("option[value='file']").length == 0) {
-                                $("<option/>").val("file").text(fileText).appendTo(typeRow.children(".node-swagger-type-select"));
-                            }
-                        } else {
-                            typeRow.children(".node-swagger-type-select").children("option[value='file']").remove();
-                        }
-                        schemaRow.hide();
-                        typeRow.show();
-                    }
-                });
-
-                inSelect.change();
-                parameterSelect.change();
-                if (!expand) {
-                    hideDetails();
-                }
-            }
-
-            /**
-                This is called anytime the '+ parameter' button is clicked.
-                It will then call generateParameterLine to create and attach a new parameter.
-            */
-            $("#node-config-input-add-parameter").click(function(e) {
-                generateParameterLine({}, true);
-                var scrollContainer = $("#node-config-parameter-list").parent();
-                scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
-                e.preventDefault();
-            });
-
-            /**
-                Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
-                This function is called anytime a new response is created.
-                It is run when parsing through the swagger doc.
-                If expand is true, the inner properties of the response will be shown when the editor opens.
-            */
-            var generateResponseLine = function(opts, expand) {
-                var li = $("<li/>", {
-                    style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
-                }).appendTo("#node-config-response-list");
-
-                var row1 = $("<div/>", {
-                    style: "background:#f3f3f3; padding: 5px;"
-                }).appendTo(li);
-                var remove = $('<a/>', {
-                    href: "#",
-                    class: "btn btn-mini",
-                    style: "float: right; margin-right: 5px; margin-top: 3px;"
-                }).appendTo(row1);
-                var removeIcon = $('<i/>', {
-                    class: "fa fa-remove"
-                }).appendTo(remove);
-
-                remove.click(function(e) {
-                    li.slideUp(100, function() {
-                        li.remove();
+                        e.preventDefault();
                     });
-                    e.preventDefault();
-                });
-
-                var expanderSpan = $('<span/>', {
-                    style: "display:inline-block; width: 20px; margin-right:10px;"
-                }).appendTo(row1);
-                var expander = $('<a/>', {
-                    href: "#",
-                    style: "text-align: center; display: inline-block; 5px; width: 20px; height: 30px; line-height: 30px;"
-                }).appendTo(expanderSpan);
-                var expanderIcon = $('<i/>', {
-                    class: "fa fa-chevron-right",
-                    style: "width: 15px; text-align:centre;"
-                }).appendTo(expander);
-
-                var showDetails = function() {
-                    expanderIcon.removeClass("fa-chevron-right");
-                    expanderIcon.addClass("fa-chevron-down");
-                    nameRows.slideDown(200);
-                }
-                var hideDetails = function() {
-                    expanderIcon.removeClass("fa-chevron-down");
-                    expanderIcon.addClass("fa-chevron-right");
-                    nameRows.slideUp(200);
+                    var propList = $("<div/>", {
+                        class: "node-swagger-property-row",
+                        style: "margin-top: 3px; margin-left: 10px;"
+                    });
+                    propList.appendTo(row);
+                    opts.propertyRow = true;
+                    var typeRow = generateTypeRow(opts, true).appendTo(propList);
+                    return row;
                 }
 
-                expander.click(function(e) {
-                    var icn = $(this).children(".fa");
-                    if (icn.hasClass("fa-chevron-right")) {
-                        showDetails();
+                /**
+                    Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                    This function is called anytime a new paramater is created.
+                    This is called several times when parsing through the swagger doc.
+                    If expand is true, the inner properties of the parameter will be showing when the editor opens.
+                */
+                var generateParameterLine = function (opts, expand) {
+                    var li = $("<li/>", {
+                        style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
+                    }).appendTo("#node-config-parameter-list");
+
+                    var row1 = $("<div/>", {
+                        style: "background:#f3f3f3; padding: 5px;"
+                    }).appendTo(li);
+                    var remove = $('<a/>', {
+                        href: "#",
+                        class: "btn btn-mini",
+                        style: "float: right; margin-right: 5px; margin-top: 3px;"
+                    }).appendTo(row1);
+                    var removeIcon = $('<i/>', {
+                        class: "fa fa-remove"
+                    }).appendTo(remove);
+
+                    remove.click(function (e) {
+                        li.slideUp(100, function () {
+                            li.remove();
+                        });
+                        e.preventDefault();
+                    });
+
+                    var expanderSpan = $('<span/>', {
+                        style: "display:inline-block; width: 20px; margin-right:10px;"
+                    }).appendTo(row1);
+                    var expander = $('<a/>', {
+                        href: "#",
+                        style: "text-align: center; display: inline-block; 5px; width: 20px; height: 30px; line-height: 30px;"
+                    }).appendTo(expanderSpan);
+                    var expanderIcon = $('<i/>', {
+                        class: "fa fa-chevron-right",
+                        style: "width: 15px; text-align:centre;"
+                    }).appendTo(expander);
+
+                    var showDetails = function () {
+                        expanderIcon.removeClass("fa-chevron-right");
+                        expanderIcon.addClass("fa-chevron-down");
+                        nameRows.slideDown(200);
+                    }
+                    var hideDetails = function () {
+                        expanderIcon.removeClass("fa-chevron-down");
+                        expanderIcon.addClass("fa-chevron-right");
+                        nameRows.slideUp(200);
+                    }
+
+                    expander.click(function (e) {
+                        var icn = $(this).children(".fa");
+                        if (icn.hasClass("fa-chevron-right")) {
+                            showDetails();
+                        } else {
+                            hideDetails();
+                        }
+                        e.preventDefault();
+                    });
+
+                    var parameterSelect = $("<select/>", {
+                        class: "node-swagger-name-select",
+                        style: "max-width: 90px; margin-right: 10px;"
+                    }).appendTo(row1);
+                    parameterSelect.append($("<option/>").val("name").text(nameText));
+
+                    //Remove ref until theres a plan for it..
+                    //parameterSelect.append($("<option/>").val("ref").text("$ref"));
+
+                    parameterSelect.change(function () {
+                        var p = $(this).val();
+                        if (p == "name") {
+                            expander.show();
+                            $(this).parent().children(".node-swagger-in-form").show();
+                            $(this).parent().find(".node-swagger-name").css({
+                                maxWidth: "150px"
+                            });
+                            showDetails();
+                        } else {
+                            expander.hide();
+                            $(this).parent().children(".node-swagger-in-form").hide();
+                            $(this).parent().find(".node-swagger-name").css({
+                                maxWidth: "300px"
+                            });
+                            hideDetails();
+                        }
+                    });
+
+                    var parameterName = $('<input/>', {
+                        style: "max-width: 150px",
+                        type: "text",
+                        class: "node-swagger-name"
+                    }).appendTo(row1);
+
+                    if (opts.ref) {
+                        parameterSelect.val("ref");
+                        parameterName.val(opts.ref);
                     } else {
+                        parameterSelect.val("name");
+                        parameterName.val(opts.name);
+                    }
+
+                    var inSpan = $('<span/>', {
+                        class: "node-swagger-in-form"
+                    }).appendTo(row1);
+                    $("<label/>", {
+                        style: "width: auto; margin-left:10px; margin-right: 10px;"
+                    }).text(inText).appendTo(inSpan);
+                    var inSelect = $('<select/>', {
+                        class: "node-swagger-in-select",
+                        style: "max-width: 150px"
+                    }).appendTo(inSpan);
+                    var inoptions = ["query", "header", "formData", "body"];
+                    //only add path option if there were path params in the url
+                    if (opts.in == 'path') {
+                        inSelect.append($("<option></option>").val('path').text(pathText));
+                    }
+                    for (var i = 0; i < inoptions.length; i++) {
+                        inSelect.append($("<option></option>").val(inoptions[i]).text(inoptions[i]));
+                    }
+                    inSelect.val(opts.in);
+
+                    var nameRows = $("<div/>", {
+                        class: "node-swagger-name-row",
+                        style: "padding: 15px;"
+                    }).appendTo(li).hide();
+
+                    var row2 = $("<div/>", {
+                        class: "form-row node-swagger-name-row"
+                    }).appendTo(nameRows);
+                    var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
+                    descLabel.popover({
+                        placement: "right",
+                        html: true,
+                        trigger: "hover",
+                        container: '#main-container',
+                        content: parameterDescriptionContent,
+                        delay: {
+                            show: 500,
+                            hide: 50
+                        }
+                    });
+                    $('<input/>', {
+                        type: "text",
+                        class: "node-swagger-description",
+                        style: "max-width: 300px"
+                    }).val(opts.description).appendTo(row2);
+                    var required = $('<input/>', {
+                        type: "checkbox",
+                        class: "node-swagger-required",
+                        style: "width: auto; float: right; margin-left: 10px; vertical-align: middle"
+                    }).appendTo(row2);
+                    var reqLabel = $("<label/>", {
+                        style: "width: auto; float: right; margin-left:20px; vertical-align: middle"
+                    }).text(requiredText).appendTo(row2);
+                    reqLabel.popover({
+                        placement: "left",
+                        trigger: "hover",
+                        container: '#main-container',
+                        content: requiredContent,
+                        delay: {
+                            show: 500,
+                            hide: 50
+                        }
+                    });
+                    required.prop('checked', opts.required);
+
+                    //lock non-changeable fields if path variable
+                    if (opts.in == 'path') {
+                        parameterSelect.attr('disabled', true);
+                        parameterName.attr('disabled', true);
+                        inSelect.attr('disabled', true);
+                        required.attr('disabled', true);
+                        remove.hide();
+                    }
+
+                    var row3 = generateTypeRow(opts, true).appendTo(nameRows);
+
+                    var rowPropHeader = $("<div/>", {
+                        class: "form-row node-swagger-propHeader-row"
+                    }).appendTo(nameRows);
+                    $("<label/>", {
+                        class: "node-swagger-propHeader-label",
+                        style: "width: auto; font-weight: bold; margin-right: 10px"
+                    }).text(propertiesText).appendTo(rowPropHeader);
+                    var addPropButton = $(
+                        '<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> ' +
+                        propertyText + '</a>').appendTo(rowPropHeader);
+
+                    var rowPropList = $("<div/>", {
+                        class: "form-row node-swagger-prop-list",
+                        style: "margin-left:10px"
+                    }).appendTo(rowPropHeader);
+
+                    addPropButton.click(function (e) {
+                        generatePropertyRow({}).appendTo(rowPropList);
+                        var scrollContainer = $("#node-config-parameter-list").parent();
+                        scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
+                        e.preventDefault();
+                    });
+                    if (opts.schema && opts.schema.properties) {
+                        var props = opts.schema.properties;
+                        for (var prop in props) {
+                            var propOpt = opts.schema.properties[prop];
+                            propOpt.name = prop;
+                            generatePropertyRow(propOpt).appendTo(rowPropList);
+                        }
+                    }
+
+                    inSelect.change(function () {
+                        var i = $(this).val();
+                        var schemaRow = $(this).parent().parent().parent().children(
+                            ".node-swagger-name-row").children(
+                            ".node-swagger-propHeader-row");
+                        var typeRow = $(this).parent().parent().parent().children(
+                            ".node-swagger-name-row").children(".node-swagger-type-row");
+                        if (i == "body") {
+                            schemaRow.show();
+                            typeRow.hide();
+                        } else {
+                            if (i == "formData") {
+                                if (typeRow.children(".node-swagger-type-select").children(
+                                        "option[value='file']").length == 0) {
+                                    $("<option/>").val("file").text(fileText).appendTo(
+                                        typeRow.children(".node-swagger-type-select"));
+                                }
+                            } else {
+                                typeRow.children(".node-swagger-type-select").children(
+                                    "option[value='file']").remove();
+                            }
+                            schemaRow.hide();
+                            typeRow.show();
+                        }
+                    });
+
+                    inSelect.change();
+                    parameterSelect.change();
+                    if (!expand) {
                         hideDetails();
                     }
-                    e.preventDefault();
-                });
-
-                var responseSelect = $("<select/>", {
-                    class: "node-swagger-name-select",
-                    style: "max-width: 90px; margin-right: 10px;"
-                }).appendTo(row1);
-                responseSelect.append($("<option/>").val("code").text(codeText));
-                responseSelect.append($("<option/>").val("default").text(defaultText));
-                responseSelect.change(function() {
-                    var p = $(this).val();
-                    if (p == "code") {
-                        expander.show();
-                        $(this).parent().children(".node-swagger-respCode").show();
-                        showDetails();
-                    } else {
-                        expander.show();
-                        $(this).parent().children(".node-swagger-respCode").hide();
-                        showDetails();
-                    }
-                });
-
-                var responseRespCode = $('<input/>', {
-                    style: "max-width: 150px",
-                    type: "text",
-                    class: "node-swagger-respCode"
-                }).appendTo(row1);
-
-                if (opts.code == "default") {
-                    responseSelect.val("default");
-                } else {
-                    responseSelect.val("code");
-                    responseRespCode.val(opts.code);
                 }
 
-                var nameRows = $("<div/>", {
-                    class: "node-swagger-name-row",
-                    style: "padding: 15px;"
-                }).appendTo(li).hide();
-
-                var row2 = $("<div/>", {
-                    class: "form-row node-swagger-description-row"
-                }).appendTo(nameRows);
-                var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
-                descLabel.popover({
-                    placement:"right",
-                    html: true,
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: responseDescriptionContent,
-                    delay: { show: 500, hide: 50 }
-                });
-                $('<input/>', {
-                    type: "text",
-                    class: "node-swagger-description"
-                }).val(opts.description).appendTo(row2);
-
-                var rowPropHeader = $("<div/>", {
-                    class: "form-row node-swagger-propHeader-row"
-                }).appendTo(nameRows);
-                $("<label/>", {
-                    class: "node-swagger-propHeader-label",
-                    style: "width: auto; font-weight: bold; margin-right: 10px"
-                }).text(propertiesText).appendTo(rowPropHeader);
-                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
-
-                var rowPropList = $("<div/>", {
-                    class: "form-row node-swagger-prop-list",
-                    style: "margin-left:10px"
-                }).appendTo(rowPropHeader);
-
-                if (opts.schema && opts.schema.properties) {
-                    var props = opts.schema.properties;
-                    for (var prop in props) {
-                        var propOpt = opts.schema.properties[prop];
-                        propOpt.name = prop;
-                        generatePropertyRow(propOpt).appendTo(rowPropList);
-                    }
-                }
-
-                addPropButton.click(function(e) {
-                    generatePropertyRow({}).appendTo(rowPropList);
+                /**
+                    This is called anytime the '+ parameter' button is clicked.
+                    It will then call generateParameterLine to create and attach a new parameter.
+                */
+                $("#node-config-input-add-parameter").click(function (e) {
+                    generateParameterLine({}, true);
                     var scrollContainer = $("#node-config-parameter-list").parent();
                     scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
                     e.preventDefault();
                 });
 
-                responseSelect.change();
-                if (!expand) {
-                    hideDetails();
+                /**
+                    Called when the editor opens. It is used to recreate the editor from the saved swagger doc.
+                    This function is called anytime a new response is created.
+                    It is run when parsing through the swagger doc.
+                    If expand is true, the inner properties of the response will be shown when the editor opens.
+                */
+                var generateResponseLine = function (opts, expand) {
+                    var li = $("<li/>", {
+                        style: "background: #fff; margin:4px 0; border: 1px solid #ccc;"
+                    }).appendTo("#node-config-response-list");
+
+                    var row1 = $("<div/>", {
+                        style: "background:#f3f3f3; padding: 5px;"
+                    }).appendTo(li);
+                    var remove = $('<a/>', {
+                        href: "#",
+                        class: "btn btn-mini",
+                        style: "float: right; margin-right: 5px; margin-top: 3px;"
+                    }).appendTo(row1);
+                    var removeIcon = $('<i/>', {
+                        class: "fa fa-remove"
+                    }).appendTo(remove);
+
+                    remove.click(function (e) {
+                        li.slideUp(100, function () {
+                            li.remove();
+                        });
+                        e.preventDefault();
+                    });
+
+                    var expanderSpan = $('<span/>', {
+                        style: "display:inline-block; width: 20px; margin-right:10px;"
+                    }).appendTo(row1);
+                    var expander = $('<a/>', {
+                        href: "#",
+                        style: "text-align: center; display: inline-block; 5px; width: 20px; height: 30px; line-height: 30px;"
+                    }).appendTo(expanderSpan);
+                    var expanderIcon = $('<i/>', {
+                        class: "fa fa-chevron-right",
+                        style: "width: 15px; text-align:centre;"
+                    }).appendTo(expander);
+
+                    var showDetails = function () {
+                        expanderIcon.removeClass("fa-chevron-right");
+                        expanderIcon.addClass("fa-chevron-down");
+                        nameRows.slideDown(200);
+                    }
+                    var hideDetails = function () {
+                        expanderIcon.removeClass("fa-chevron-down");
+                        expanderIcon.addClass("fa-chevron-right");
+                        nameRows.slideUp(200);
+                    }
+
+                    expander.click(function (e) {
+                        var icn = $(this).children(".fa");
+                        if (icn.hasClass("fa-chevron-right")) {
+                            showDetails();
+                        } else {
+                            hideDetails();
+                        }
+                        e.preventDefault();
+                    });
+
+                    var responseSelect = $("<select/>", {
+                        class: "node-swagger-name-select",
+                        style: "max-width: 90px; margin-right: 10px;"
+                    }).appendTo(row1);
+                    responseSelect.append($("<option/>").val("code").text(codeText));
+                    responseSelect.append($("<option/>").val("default").text(defaultText));
+                    responseSelect.change(function () {
+                        var p = $(this).val();
+                        if (p == "code") {
+                            expander.show();
+                            $(this).parent().children(".node-swagger-respCode").show();
+                            showDetails();
+                        } else {
+                            expander.show();
+                            $(this).parent().children(".node-swagger-respCode").hide();
+                            showDetails();
+                        }
+                    });
+
+                    var responseRespCode = $('<input/>', {
+                        style: "max-width: 150px",
+                        type: "text",
+                        class: "node-swagger-respCode"
+                    }).appendTo(row1);
+
+                    if (opts.code == "default") {
+                        responseSelect.val("default");
+                    } else {
+                        responseSelect.val("code");
+                        responseRespCode.val(opts.code);
+                    }
+
+                    var nameRows = $("<div/>", {
+                        class: "node-swagger-name-row",
+                        style: "padding: 15px;"
+                    }).appendTo(li).hide();
+
+                    var row2 = $("<div/>", {
+                        class: "form-row node-swagger-description-row"
+                    }).appendTo(nameRows);
+                    var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
+                    descLabel.popover({
+                        placement: "right",
+                        html: true,
+                        trigger: "hover",
+                        container: '#main-container',
+                        content: responseDescriptionContent,
+                        delay: {
+                            show: 500,
+                            hide: 50
+                        }
+                    });
+                    $('<input/>', {
+                        type: "text",
+                        class: "node-swagger-description"
+                    }).val(opts.description).appendTo(row2);
+
+                    var rowPropHeader = $("<div/>", {
+                        class: "form-row node-swagger-propHeader-row"
+                    }).appendTo(nameRows);
+                    $("<label/>", {
+                        class: "node-swagger-propHeader-label",
+                        style: "width: auto; font-weight: bold; margin-right: 10px"
+                    }).text(propertiesText).appendTo(rowPropHeader);
+                    var addPropButton = $(
+                        '<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> ' +
+                        propertyText + '</a>').appendTo(rowPropHeader);
+
+                    var rowPropList = $("<div/>", {
+                        class: "form-row node-swagger-prop-list",
+                        style: "margin-left:10px"
+                    }).appendTo(rowPropHeader);
+
+                    if (opts.schema && opts.schema.properties) {
+                        var props = opts.schema.properties;
+                        for (var prop in props) {
+                            var propOpt = opts.schema.properties[prop];
+                            propOpt.name = prop;
+                            generatePropertyRow(propOpt).appendTo(rowPropList);
+                        }
+                    }
+
+                    addPropButton.click(function (e) {
+                        generatePropertyRow({}).appendTo(rowPropList);
+                        var scrollContainer = $("#node-config-parameter-list").parent();
+                        scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
+                        e.preventDefault();
+                    });
+
+                    responseSelect.change();
+                    if (!expand) {
+                        hideDetails();
+                    }
                 }
-            }
 
-            /**
-                This is called anytime the '+ response' button is clicked.
-                It will then call generateResponseLine to create and attach a new response.
-            */
-            $("#node-config-input-add-response").click(function(e) {
-                generateResponseLine({}, true);
-                var scrollContainer = $("#node-config-response-list").parent();
-                scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
-                e.preventDefault();
-            });
+                /**
+                    This is called anytime the '+ response' button is clicked.
+                    It will then call generateResponseLine to create and attach a new response.
+                */
+                $("#node-config-input-add-response").click(function (e) {
+                    generateResponseLine({}, true);
+                    var scrollContainer = $("#node-config-response-list").parent();
+                    scrollContainer.scrollTop(scrollContainer.prop('scrollHeight'));
+                    e.preventDefault();
+                });
 
-            //Discover path params
-            var pathParams = [];
-            if($('#node-config-input-path').html().match(/\/:\w*/g))
-                $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function(p){ pathParams.push(p.substring(2)); });
+                //Discover path params
+                var pathParams = [];
+                if ($('#node-config-input-path').html().match(/\/:\w*/g))
+                    $('#node-config-input-path').html().match(/\/:\w*/g).forEach(function (p) {
+                        pathParams.push(p.substring(2));
+                    });
 
-            //Parse defined parameters, calling appropriate functions to recreate the editor
-            node.parameters.forEach(function(p) {
-                if(p.in == 'path'){
-                    if(pathParams.indexOf(p.name) > -1){     //param was previously defined
+                //Parse defined parameters, calling appropriate functions to recreate the editor
+                node.parameters.forEach(function (p) {
+                    if (p.in == 'path') {
+                        if (pathParams.indexOf(p.name) > -1) { //param was previously defined
+                            generateParameterLine({
+                                name: p.name,
+                                in: p.in,
+                                description: p.description,
+                                required: p.required,
+                                type: p.type,
+                                format: p.format,
+                                collectionFormat: p.collectionFormat,
+                                items: p.items,
+                                schema: p.schema
+                            }, false);
+                            pathParams.splice(pathParams.indexOf(p.name), 1);
+                        } else { //param is no longer a path param
+                            //console.log('removing outdated path param: ' + p.name);
+                            delete p;
+                        }
+                    } else {
                         generateParameterLine({
                             name: p.name,
-                            in : p.in,
+                            in: p.in,
                             description: p.description,
                             required: p.required,
                             type: p.type,
@@ -807,107 +870,133 @@ var swaggerDocUrl;
                             items: p.items,
                             schema: p.schema
                         }, false);
-                        pathParams.splice(pathParams.indexOf(p.name), 1);
-                    } else{//param is no longer a path param
-                        //console.log('removing outdated path param: ' + p.name);
-                        delete p;
                     }
-                } else{
+                });
+
+                //Add path params that weren't found above
+                pathParams.forEach(function (p) {
+                    //console.log('adding path param: ' + p);
                     generateParameterLine({
-                        name: p.name,
-                        in : p.in,
-                        description: p.description,
-                        required: p.required,
-                        type: p.type,
-                        format: p.format,
-                        collectionFormat: p.collectionFormat,
-                        items: p.items,
-                        schema: p.schema
-                    }, false);
+                        name: p,
+                        in: 'path',
+                        description: '',
+                        required: true,
+                        type: null,
+                        format: null,
+                        items: null,
+                        schema: null
+                    }, true);
+                });
+
+                //Recreate response objects in editor for those already defined
+                for (var code in node.responses) {
+                    var response = node.responses[code];
+                    response.code = code;
+                    generateResponseLine(response, false);
                 }
-            });
 
-            //Add path params that weren't found above
-            pathParams.forEach(function(p){
-                //console.log('adding path param: ' + p);
-                generateParameterLine({
-                    name: p,
-                    in : 'path',
-                    description: '',
-                    required: true,
-                    type: null,
-                    format: null,
-                    items: null,
-                    schema: null
-                }, true);
-            });
+            },
+            oneditsave: function () {
+                var node = this;
 
-            //Recreate response objects in editor for those already defined
-            for (var code in node.responses) {
-                var response = node.responses[code];
-                response.code = code;
-                generateResponseLine(response, false);
-            }
-
-        },
-        oneditsave: function() {
-            var node = this;
-
-            /**
-                Recursive function used to generate the items object that is required for array objects
-            */
-            var getArrayItems = function (row){
-                var items = {};
-                var type = row.find('.node-swagger-type-select').val();
-                items.type = type;
-                if(type == 'array'){
-                    var collFormat = row.find('.node-swagger-type-collection-format').val();
-                    if(collFormat)
-                        items.collectionFormat = collFormat;
-                    var nextRow = row.children(".node-swagger-type-row");
-                    items.items = getArrayItems(nextRow);
-                } else{
-                    var format = row.find('.node-swagger-type-format').val();
-                    items.format = format;
-                }
-                return items;
-            }
-
-            //Parse parameters and generate list
-            var params = [];
-            $("#node-config-parameter-list li").each(function() {
-                var param = {};
-                var nameType = $(this).find(".node-swagger-name-select").val();
-                var name = $(this).find(".node-swagger-name").val();
-                if (nameType == "ref") {
-                    param["$ref"] = name;
-                } else {
-                    param.name = name;
-                    param.in = $(this).find(".node-swagger-in-select").val();
-                    var desc = $(this).find(".node-swagger-description").val();
-                    if (desc) {
-                        param.description = desc;
+                /**
+                    Recursive function used to generate the items object that is required for array objects
+                */
+                var getArrayItems = function (row) {
+                    var items = {};
+                    var type = row.find('.node-swagger-type-select').val();
+                    items.type = type;
+                    if (type == 'array') {
+                        var collFormat = row.find('.node-swagger-type-collection-format').val();
+                        if (collFormat)
+                            items.collectionFormat = collFormat;
+                        var nextRow = row.children(".node-swagger-type-row");
+                        items.items = getArrayItems(nextRow);
+                    } else {
+                        var format = row.find('.node-swagger-type-format').val();
+                        items.format = format;
                     }
-                    param.required = $(this).find(".node-swagger-required").is(':checked');
-                    if (param.in == "body") {
-                        var properties = {};
-                        $(this).find(".node-swagger-prop-list").children(".node-swagger-property-name-row").each(function() {
-                            var property = {};
-                            var name = $(this).find(".node-swagger-type-name").val();
+                    return items;
+                }
 
+                //Parse parameters and generate list
+                var params = [];
+                $("#node-config-parameter-list li").each(function () {
+                    var param = {};
+                    var nameType = $(this).find(".node-swagger-name-select").val();
+                    var name = $(this).find(".node-swagger-name").val();
+                    if (nameType == "ref") {
+                        param["$ref"] = name;
+                    } else {
+                        param.name = name;
+                        param.in = $(this).find(".node-swagger-in-select").val();
+                        var desc = $(this).find(".node-swagger-description").val();
+                        if (desc) {
+                            param.description = desc;
+                        }
+                        param.required = $(this).find(".node-swagger-required").is(':checked');
+                        if (param.in == "body") {
+                            var properties = {};
+                            $(this).find(".node-swagger-prop-list").children(
+                                ".node-swagger-property-name-row").each(function () {
+                                var property = {};
+                                var name = $(this).find(".node-swagger-type-name").val();
+
+                                var row = $(this).find(".node-swagger-type-top-row");
+
+                                var current = property;
+                                var ctype = row.children(".node-swagger-type-select").val();
+
+                                if (ctype) {
+                                    if (ctype != "ref") {
+                                        current.type = ctype;
+                                        if (current.type == "array") {
+
+                                            var collFormat = row.children(
+                                                ".node-swagger-type-collection-format"
+                                            ).val();
+                                            if (collFormat)
+                                                current.collectionFormat = collFormat;
+
+                                            var nextRow = row.children(
+                                                ".node-swagger-type-row");
+
+                                            current.items = getArrayItems(nextRow);
+
+                                        } else {
+                                            var format = row.children(
+                                                ".node-swagger-type-format").val();
+                                            if (format) {
+                                                current.format = format;
+                                            }
+                                        }
+                                    } else {
+                                        current["$ref"] = row.children(
+                                            ".node-swagger-type-format").val();
+                                    }
+                                }
+
+                                properties[name] = property;
+                            });
+                            param.schema = {};
+                            param.schema.type = "object";
+                            if (Object.keys(properties).length > 0) {
+                                param.schema.properties = properties;
+                            }
+                        } else {
                             var row = $(this).find(".node-swagger-type-top-row");
 
-                            var current = property;
+                            var current = param;
+
                             var ctype = row.children(".node-swagger-type-select").val();
 
-                            if(ctype){
+                            if (ctype) {
                                 if (ctype != "ref") {
                                     current.type = ctype;
                                     if (current.type == "array") {
-
-                                        var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                        if(collFormat)
-                                            current.collectionFormat = collFormat;
+                                        var collFormat = row.children(
+                                            ".node-swagger-type-collection-format").val();
+                                        current.collectionFormat = collFormat;
 
                                         var nextRow = row.children(".node-swagger-type-row");
 
@@ -920,115 +1009,83 @@ var swaggerDocUrl;
                                         }
                                     }
                                 } else {
-                                    current["$ref"] = row.children(".node-swagger-type-format").val();
+                                    current["$ref"] = row.children(".node-swagger-type-format")
+                                        .val();
                                 }
                             }
-
-                            properties[name] = property;
-                        });
-                        param.schema = {};
-                        param.schema.type = "object";
-                        if(Object.keys(properties).length > 0){
-                            param.schema.properties = properties;
                         }
+                    }
+                    params.push(param);
+                });
+                node.parameters = params;
+
+                //Parse responses and generate list
+                var responses = {};
+                $("#node-config-response-list li").each(function () {
+                    var response = {};
+                    var respCode;
+                    var nameType = $(this).find(".node-swagger-name-select").val();
+                    if (nameType === "default") {
+                        respCode = "default";
                     } else {
+                        respCode = $(this).find(".node-swagger-respCode").val();
+                    }
+                    var desc = $(this).find(".node-swagger-description").val();
+                    response.description = desc || "";
+                    var properties = {};
+                    $(this).find(".node-swagger-prop-list").children(
+                        ".node-swagger-property-name-row").each(function () {
+                        var property = {};
+                        var name = $(this).find(".node-swagger-type-name").val();
+
                         var row = $(this).find(".node-swagger-type-top-row");
 
-                        var current = param;
-
+                        var current = property;
                         var ctype = row.children(".node-swagger-type-select").val();
 
-                        if(ctype){
+                        if (ctype) {
                             if (ctype != "ref") {
                                 current.type = ctype;
                                 if (current.type == "array") {
-                                    var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                    current.collectionFormat = collFormat;
+
+                                    var collFormat = row.children(
+                                        ".node-swagger-type-collection-format").val();
+                                    if (collFormat)
+                                        current.collectionFormat = collFormat;
 
                                     var nextRow = row.children(".node-swagger-type-row");
 
                                     current.items = getArrayItems(nextRow);
 
                                 } else {
-                                    var format = row.children(".node-swagger-type-format").val();
+                                    var format = row.children(
+                                        ".node-swagger-type-format").val();
                                     if (format) {
                                         current.format = format;
                                     }
                                 }
                             } else {
-                                current["$ref"] = row.children(".node-swagger-type-format").val();
+                                current["$ref"] = row.children(
+                                    ".node-swagger-type-format").val();
                             }
                         }
-                    }
-                }
-                params.push(param);
-            });
-            node.parameters = params;
 
-            //Parse responses and generate list
-            var responses = {};
-            $("#node-config-response-list li").each(function() {
-                var response = {};
-                var respCode;
-                var nameType = $(this).find(".node-swagger-name-select").val();
-                if (nameType === "default") {
-                    respCode = "default";
-                } else {
-                    respCode = $(this).find(".node-swagger-respCode").val();
-                }
-                var desc = $(this).find(".node-swagger-description").val();
-                response.description = desc || "";
-                var properties = {};
-                $(this).find(".node-swagger-prop-list").children(".node-swagger-property-name-row").each(function() {
-                    var property = {};
-                    var name = $(this).find(".node-swagger-type-name").val();
+                        properties[name] = property;
+                    });
 
-                    var row = $(this).find(".node-swagger-type-top-row");
-
-                    var current = property;
-                    var ctype = row.children(".node-swagger-type-select").val();
-
-                    if(ctype){
-                        if (ctype != "ref") {
-                            current.type = ctype;
-                            if (current.type == "array") {
-
-                                var collFormat = row.children(".node-swagger-type-collection-format").val();
-                                if(collFormat)
-                                    current.collectionFormat = collFormat;
-
-                                var nextRow = row.children(".node-swagger-type-row");
-
-                                current.items = getArrayItems(nextRow);
-
-                            } else {
-                                    var format = row.children(".node-swagger-type-format").val();
-                                    if (format) {
-                                        current.format = format;
-                                    }
-                                }
-                        } else {
-                            current["$ref"] = row.children(".node-swagger-type-format").val();
-                        }
+                    if (Object.keys(properties).length > 0) {
+                        response.schema = {
+                            properties: properties
+                        };
                     }
 
-                    properties[name] = property;
+                    responses[respCode] = response;
                 });
+                node.responses = responses;
 
-                if (Object.keys(properties).length > 0) {
-                    response.schema = {
-                        properties: properties
-                    };
-                }
+                delete this.editor;
+            }
 
-                responses[respCode] = response;
-            });
-            node.responses = responses;
-
-            delete this.editor;
-        }
-
-    });
-})();
-
+        });
+    })();
 </script>

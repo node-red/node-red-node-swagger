@@ -128,7 +128,7 @@ module.exports = function (RED) {
     });
 
     function checkWiresForHttpResponse(node) {
-        RED.log('answering true to checkWiresForHttpResponse');
+        this.log('answering true to checkWiresForHttpResponse');
         return true;
         var allWires = node.wires;
         for (var a = 0; a < allWires.length; a++) {

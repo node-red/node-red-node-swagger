@@ -22,7 +22,7 @@
   <script src='reqs/lib/marked.js' type='text/javascript'></script>
   <script src='reqs/i18next.min.js' type='text/javascript'></script>
   <script type="text/javascript">
-    var url = parent.swaggerDocUrl;
+    var url = parent.swaggerDocUrl || '/http-api/swagger.json';
     console.log("url=" + url);
     window.swaggerUi = new SwaggerUi({
       url: url,

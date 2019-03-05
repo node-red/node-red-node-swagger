@@ -23,8 +23,7 @@
         "Guy Morton <guy.morton@datacom.com.au>"
     ],
     "dependencies": {
-        "i18next": "^15.0.5",
-        "i18next-client": "^1.11.4",
-        "swagger-ui": "^3.21.0"
+        "swagger-ui": "2.1.4",
+        "i18next-client": "1.10.3"
     }
 }

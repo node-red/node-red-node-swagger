@@ -1,6 +1,6 @@
 {
-    "name": "node-red-node-swagger",
-    "version": "0.1.8",
+    "name": "@jfdi/node-red-node-swagger",
+    "version": "0.1.10",
     "description": "A set of tools for generating Swagger API documentation based on the HTTP nodes deployed in a flow",
     "license": "Apache",
     "repository": {
@@ -19,10 +19,14 @@
     },
     "contributors": [
         "Nick O'Leary <nick.oleary@gmail.com>",
-        "Cody Walker <cody@cody-walker.com>"
+        "Cody Walker <cody@cody-walker.com>",
+        "Jon Silver <js@jfdi.info>"
     ],
     "dependencies": {
         "swagger-ui": "2.1.4",
-        "i18next-client": "1.10.3"
+        "i18next-client": "1.11.4"
+    },
+    "devDependencies": {
+        "eslint": "^6.4.0"
     }
 }

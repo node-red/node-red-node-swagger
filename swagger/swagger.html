@@ -14,7 +14,6 @@
   limitations under the License.
 -->
 
-
 <script type="text/x-red" data-template-name="swagger-doc">
         <div class="form-row">
             <label><span data-i18n="swagger.label.path"></span></label>
@@ -835,7 +834,7 @@ var swaggerDocUrl;
                     in : 'path',
                     description: '',
                     required: true,
-                    type: null,
+                    type: "string", // string by default - null causes problems
                     format: null,
                     items: null,
                     schema: null

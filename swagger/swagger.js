@@ -14,132 +14,80 @@
  * limitations under the License.
  **/
 
+const DEFAULT_TEMPLATE = {
+    swagger: "2.0",
+    info: {
+        title: "My Node-RED API",
+        version: "0.0.1"
+    }
+};
+
 module.exports = function(RED) {
     "use strict";
 
-    var path = require("path");
-    RED.httpNode.get("/http-api/swagger.json",function(req,res) {
-        var resp;
-        if(RED.settings.swagger){
-            resp = RED.settings.swagger.template;
-        }
-        if(!resp){
-            resp = {
-                swagger: "2.0",
-                info: {
-                    "title": "My Node-RED API",
-                    "version": "0.0.1"
-                }
-            };
-        }
-        if(!resp.basePath){
-            var basePath = "/";
-            if(RED.settings.httpNodeRoot){
-                basePath = RED.settings.httpNodeRoot;
-                if (basePath != "/") {
-                    basePath = basePath.replace(/\/$/,"");
-                }
-            }
-            resp.basePath = basePath;
-        }
-        var additionalParams;
-        if(RED.settings.swagger && RED.settings.swagger.parameters){
-            additionalParams = RED.settings.swagger.parameters;
-        }
+    const path = require("path");
+
+    const convToSwaggerPath = x => `/{${x.substring(2)}}`;
+    const trimAll = ary => ary.map(x => x.trim());
+    const csvStrToArray = csvStr => csvStr ? trimAll(csvStr.split(",")) : [];
+    const ensureLeadingSlash = url => (url.startsWith("/") ? url : "/" + url);
+    const stripTerminalSlash = url =>
+        url.length > 1 && url.endsWith("/") ? url.slice(0, -1) : url;
+    const regexColons = /\/:\w*/g;
+
+    RED.httpNode.get("/http-api/swagger.json", (req, res) => {
+        const {
+            httpNodeRoot,
+            swagger: { parameters: additionalParams = [], template: resp = { ...DEFAULT_TEMPLATE } } = {}
+        } = RED.settings;
+        const { basePath = httpNodeRoot } = resp;
+        resp.basePath = stripTerminalSlash(basePath);
         resp.paths = {};
-        RED.nodes.eachNode(function(node) {
-            if (node && node.type === "http in") {
-                if(checkWiresForHttpResponse(node)){
-                    var swagger = RED.nodes.getNode(node.swaggerDoc);
 
-                    var url = node.url.replace(/\/:\w*/g, function convToSwaggerPath(x){return '/{' + x.substring(2) + '}';});
-                    if(url.charAt(0) !== '/'){
-                        url = '/' + url;
-                    }
+        RED.nodes.eachNode(node => {
+            const { name, type, method, swaggerDoc, url } = node;
 
-                    if(!resp.paths[url]){
-                        resp.paths[url] = {};
-                    }
-                    var swaggerPart = {};
-                    if(swagger){
-                        swaggerPart.summary = swagger.summary || node.name || (node.method+" "+url);
-                        if(swagger.description)
-                            swaggerPart.description = swagger.description;
+            if (type === "http in") {
+                const swagger = RED.nodes.getNode(swaggerDoc);
+                const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));
+                if (!resp.paths[endPoint]) resp.paths[endPoint] = {};
 
-                        if(swagger.tags){
-                            swaggerPart.tags = swagger.tags.split(',');
-                            for(var i=0; i < swaggerPart.tags.length; i++){
-                                swaggerPart.tags[i] = swaggerPart.tags[i].trim();
-                            }
-                        }
-
-                        if(swagger.consumes){
-                            swaggerPart.consumes = swagger.consumes.split(',');
-                            for(var i=0; i < swaggerPart.consumes.length; i++){
-                                swaggerPart.consumes[i] = swaggerPart.consumes[i].trim();
-                            }
-                        }
-                        if(swagger.produces){
-                            swaggerPart.produces = swagger.produces.split(',');
-                            for(var i=0; i < swaggerPart.produces.length; i++){
-                                swaggerPart.produces[i] = swaggerPart.produces[i].trim();
-                            }
-                        }
-                        if(swagger.deprecated){
-                            swaggerPart.deprecated = true;
-                        }
-                        if(swagger.parameters.length > 0){
-                            swaggerPart.parameters = swagger.parameters.slice();
-                            if(additionalParams){
-                                for(var i in additionalParams){
-                                    swaggerPart.parameters.push(additionalParams[i]);
-                                }
-                            }
-                        } else if(additionalParams){
-                            swaggerPart.parameters = additionalParams.slice();
-                        }
-                        if(Object.keys(swagger.responses).length > 0){
-                            swaggerPart.responses = swagger.responses;
-                        } else{
-                            swaggerPart.responses = {
-                                default: {
-                                    description: ""
-                                }
-                            };
-                        }
-                    } else{
-                        swaggerPart.summary = node.name || (node.method+" "+url);
-                        swaggerPart.responses = {
-                            default: {
-                                description: ""
-                            }
-                        };
-                        if(additionalParams){
-                            swaggerPart.parameters = additionalParams.slice();
+                const {
+                    summary = name || method + " " + endPoint,
+                    description = "",
+                    tags = "",
+                    consumes,
+                    produces,
+                    deprecated,
+                    parameters = [],
+                    responses = {
+                        default: {
+                            description: ""
                         }
                     }
-                    resp.paths[url][node.method] = swaggerPart;
-                }
+                } = swagger || {};
+                
+                const aryTags = csvStrToArray(tags),
+                    aryConsumes = csvStrToArray(consumes),
+                    aryProduces = csvStrToArray(produces);
+
+                resp.paths[endPoint][method] = {
+                    summary,
+                    description,
+                    tags: aryTags,
+                    consumes: aryConsumes,
+                    produces: aryProduces,
+                    deprecated,
+                    parameters: [...parameters, ...additionalParams],
+                    responses
+                };
             }
         });
         res.json(resp);
     });
 
-    function checkWiresForHttpResponse (node) {
-        var wires = node.wires[0];
-        for(var i in wires){
-            var newNode = RED.nodes.getNode(wires[i]);
-            if(newNode.type == "http response"){
-                return true;
-            } else if(checkWiresForHttpResponse(newNode)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function SwaggerDoc(n){
-        RED.nodes.createNode(this,n);
+    function SwaggerDoc(n) {
+        RED.nodes.createNode(this, n);
         this.summary = n.summary;
         this.description = n.description;
         this.tags = n.tags;
@@ -149,10 +97,9 @@ module.exports = function(RED) {
         this.responses = n.responses;
         this.deprecated = n.deprecated;
     }
-    RED.nodes.registerType("swagger-doc",SwaggerDoc);
+    RED.nodes.registerType("swagger-doc", SwaggerDoc);
 
-
-    function sendFile(res,filename) {
+    function sendFile(res, filename) {
         // Use the right function depending on Express 3.x/4.x
         if (res.sendFile) {
             res.sendFile(filename);
@@ -161,24 +108,22 @@ module.exports = function(RED) {
         }
     }
 
-    RED.httpAdmin.get('/swagger-ui/reqs/i18next.min.js', function(req, res){
-        var basePath = require.resolve('i18next-client');
-        basePath = basePath.replace(/[\\\/]i18next.js$/,"");
-        var filename = path.join(basePath,'i18next.min.js');
-        sendFile(res,filename);
+    RED.httpAdmin.get("/swagger-ui/reqs/i18next.min.js", (req, res) => {
+        const basePath = require.resolve("i18next-client").replace(/[\\/]i18next.js$/, "");
+        const filename = path.join(basePath, "i18next.min.js");
+        sendFile(res, filename);
     });
-    RED.httpAdmin.get('/swagger-ui/reqs/*', function(req, res){
-        var basePath = require.resolve('swagger-ui');
-        basePath = basePath.replace(/[\\\/]swagger-ui.js$/,"");
-        var filename = path.join(basePath, req.params[0]);
-        sendFile(res,filename);
+    RED.httpAdmin.get("/swagger-ui/reqs/*", (req, res) => {
+        const basePath = require.resolve("swagger-ui").replace(/[\\/]swagger-ui.js$/, "");
+        const filename = path.join(basePath, req.params[0]);
+        sendFile(res, filename);
     });
-    RED.httpAdmin.get('/swagger-ui/nls/*', function(req, res){
-        var filename = path.join(__dirname , 'locales', req.params[0]);
-        sendFile(res,filename);
+    RED.httpAdmin.get("/swagger-ui/nls/*", (req, res) => {
+        const filename = path.join(__dirname, "locales", req.params[0]);
+        sendFile(res, filename);
     });
-    RED.httpAdmin.get('/swagger-ui/*', function(req, res){
-        var filename = path.join(__dirname , 'swagger-ui', req.params[0]);
-        sendFile(res,filename);
+    RED.httpAdmin.get("/swagger-ui/*", (req, res) => {
+        const filename = path.join(__dirname, "swagger-ui", req.params[0]);
+        sendFile(res, filename);
     });
-}
+};

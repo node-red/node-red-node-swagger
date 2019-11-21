@@ -67,6 +67,64 @@
         padding: 10px 0px;
     }
   </style>
+<!-- Styling mods by JS -->
+<style>
+    .swagger-section .swagger-ui-wrap ul#resources .resource .endpoints .endpoint .operations .operation .heading h3 .path {
+        font-size: small;
+        font-weight: 600;
+        display: block;
+        margin: 5px 0;
+    }
+
+    .swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.heading ul.options {
+        margin: 5px 10px 5px 0;
+    }
+
+    .swagger-section .swagger-ui-wrap h4 {
+        font-weight: 600;
+    }
+
+    .swagger-section .swagger-ui-wrap input.parameter {
+        padding: 5px 5px;
+        border-color: #bbb;
+        border-radius: 4px;
+    }
+
+    .swagger-section .swagger-ui-wrap input.parameter::placeholder {
+        color: #bbb;font-weight: 100;
+    }
+ 
+    .swagger-section .swagger-ui-wrap th {
+        font-weight: 600;
+        line-height: 1.2;
+    }
+    .swagger-section .swagger-ui-wrap td label {
+        line-height: 27px;
+    }
+
+    .swagger-section .swagger-ui-wrap input.submit {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: 600;
+        border: 1px solid #bbb;
+        border-radius: 4px;
+        width: 100px;
+        height: 40px;
+    }
+
+    .swagger-section .swagger-ui-wrap .endpoint ul.options {
+        position: absolute;
+        right: 5px;
+    }
+
+    .swagger-section .swagger-ui-wrap #resources .resource .endpoints .endpoint .operations .operation.get .content > h4:first-of-type:last-of-type {
+        color: inherit;
+    }
+
+    .swagger-section .swagger-ui-wrap #resources .resource .endpoints .endpoint .operations .operation.get .content > h4:first-of-type {
+        color: red;
+    }
+  </style>
 </head>
 
 <body class="swagger-section">

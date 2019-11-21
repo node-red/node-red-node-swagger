@@ -14,7 +14,6 @@
   limitations under the License.
 -->
 
-
 <script type="text/x-red" data-template-name="swagger-doc">
         <div class="form-row">
             <label><span data-i18n="swagger.label.path"></span></label>
@@ -146,35 +145,17 @@ var swaggerDocUrl;
         },
         oneditprepare: function() {
 
-            // Configures popover options for all popovers that appear when an editor option is hovered over
-            $('.popover-right').popover({
-                placement:"right",
-                html: true,
-                trigger: "hover",
-                container: '#main-container',
-                delay: { show: 500, hide: 50 }
-            });
-
-            //Configures popover options for parameter info link
-            $('#node-config-input-parameter-info').popover({
-                placement:"left",
-                html: true,
-                trigger: "hover",
-                container: '#main-container',
-                content: this._("swagger.content.parameter-info"),
-                delay: { show: 500, hide: 50 }
-            });
-
-            //Configures popover options for response info link
-            $('#node-config-input-response-info').popover({
-                placement:"left",
-                html: true,
-                trigger: "hover",
-                container: '#main-container',
-                content: this._("swagger.content.response-info"),
-                delay: { show: 500, hide: 50 }
-            });
-
+            // Tooltips for Summary, Description, Tags, Consumes, Produces and Deprecated Labels on Properties Tab.
+            RED.popover.tooltip($('#node-config-input-summary-label'), this._("swagger.data-content.summary"));
+            RED.popover.tooltip($('#node-config-input-description-label'), this._("swagger.data-content.description"));
+            RED.popover.tooltip($('#node-config-input-tags-label'), this._("swagger.data-content.tags"));
+            RED.popover.tooltip($('#node-config-input-consumes-label'), this._("swagger.data-content.consumes"));
+            RED.popover.tooltip($('#node-config-input-produces-label'), this._("swagger.data-content.produces"));
+            RED.popover.tooltip($('#node-config-input-deprecated-label'), this._("swagger.data-content.deprecated"));
+            
+            RED.popover.tooltip($('#node-config-input-parameter-info'), this._("swagger.content.parameter-info"));
+            RED.popover.tooltip($('#node-config-input-response-info'), this._("swagger.content.response-info"))
+        
             var node = this;
 
             if ($("#node-input-method").length) {
@@ -250,13 +231,7 @@ var swaggerDocUrl;
                 }
 
                 var typeLabel = $("<label/>").text(typeText).appendTo(row);
-                typeLabel.popover({
-                    placement:"right",
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: typeContent,
-                    delay: { show: 500, hide: 50 }
-                });
+                RED.popover.tooltip(typeLabel, typeContent);
                 var typeSelect = $('<select/>', {
                     class: "node-swagger-type-select",
                     style: "max-width: 150px"
@@ -275,13 +250,8 @@ var swaggerDocUrl;
                     class: "node-swagger-type-format-label",
                     style: "width: auto; margin-left:20px; margin-right: 10px;"
                 }).text(formatText).appendTo(row);
-                formatLabel.popover({
-                    placement:"right",
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: formatContent,
-                    delay: { show: 500, hide: 50 }
-                });
+                RED.popover.tooltip(formatLabel, formatContent);
+
                 $('<input/>', {
                     class: "node-swagger-type-format",
                     style: "width: 150px;",
@@ -515,14 +485,8 @@ var swaggerDocUrl;
                     class: "form-row node-swagger-name-row"
                 }).appendTo(nameRows);
                 var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
-                descLabel.popover({
-                    placement:"right",
-                    html: true,
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: parameterDescriptionContent,
-                    delay: { show: 500, hide: 50 }
-                });
+                RED.popover.tooltip(descLabel, parameterDescriptionContent);
+                
                 $('<input/>', {
                     type: "text",
                     class: "node-swagger-description",
@@ -536,13 +500,8 @@ var swaggerDocUrl;
                 var reqLabel = $("<label/>", {
                     style: "width: auto; float: right; margin-left:20px; vertical-align: middle"
                 }).text(requiredText).appendTo(row2);
-                reqLabel.popover({
-                    placement:"left",
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: requiredContent,
-                    delay: { show: 500, hide: 50 }
-                });
+
+                RED.popover.tooltip(reqLabel, requiredContent);
                 required.prop('checked', opts.required);
 
                 //lock non-changeable fields if path variable
@@ -727,14 +686,8 @@ var swaggerDocUrl;
                     class: "form-row node-swagger-description-row"
                 }).appendTo(nameRows);
                 var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
-                descLabel.popover({
-                    placement:"right",
-                    html: true,
-                    trigger: "hover",
-                    container: '#main-container',
-                    content: responseDescriptionContent,
-                    delay: { show: 500, hide: 50 }
-                });
+                RED.popover.tooltip(descLabel, responseDescriptionContent);
+                
                 $('<input/>', {
                     type: "text",
                     class: "node-swagger-description"
@@ -835,7 +788,7 @@ var swaggerDocUrl;
                     in : 'path',
                     description: '',
                     required: true,
-                    type: null,
+                    type: "string", // string by default - null causes problems
                     format: null,
                     items: null,
                     schema: null

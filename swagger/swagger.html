@@ -56,7 +56,7 @@
                     <ul id="node-config-parameter-list" style="padding: 0; margin:0;"></ul>
                 </div>
                 <div class="form-row">
-                    <a href="#" class="btn btn-mini" id="node-config-input-add-parameter"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.parameter"></span></a>
+                    <a href="#" class="red-ui-button red-ui-button-small" id="node-config-input-add-parameter"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.parameter"></span></a>
                     <a href="#" id="node-config-input-parameter-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right"><span data-i18n="swagger.label.parameters-help"></span></a>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                     <ul id="node-config-response-list" style="padding: 0; margin:0;"></ul>
                 </div>
                 <div class="form-row">
-                    <a href="#" class="btn btn-mini" id="node-config-input-add-response"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.response"></span></a>
+                    <a href="#" class="red-ui-button red-ui-button-small" id="node-config-input-add-response"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.response"></span></a>
                     <a href="#" id="node-config-input-response-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right"><span data-i18n="swagger.label.responses-help"></span></a>
                 </div>
             </div>
@@ -135,7 +135,8 @@ var swaggerDocUrl;
                 id: "swagger-ui",
                 label: this._("swagger.sidebar.label"),
                 name: this._("swagger.sidebar.name"),
-                content: content
+                content: content,
+                iconClass: "fa fa-file-text-o" 
             });
 
             swaggerFrame.load(function(){
@@ -152,10 +153,10 @@ var swaggerDocUrl;
             RED.popover.tooltip($('#node-config-input-consumes-label'), this._("swagger.data-content.consumes"));
             RED.popover.tooltip($('#node-config-input-produces-label'), this._("swagger.data-content.produces"));
             RED.popover.tooltip($('#node-config-input-deprecated-label'), this._("swagger.data-content.deprecated"));
-            
+
             RED.popover.tooltip($('#node-config-input-parameter-info'), this._("swagger.content.parameter-info"));
             RED.popover.tooltip($('#node-config-input-response-info'), this._("swagger.content.response-info"))
-        
+
             var node = this;
 
             if ($("#node-input-method").length) {
@@ -328,7 +329,7 @@ var swaggerDocUrl;
                 }).val(opts.name).appendTo(row);
                 var remove = $('<a/>', {
                     href: "#",
-                    class: "btn btn-mini",
+                    class: "red-ui-button red-ui-button-small",
                     style: "float: right; margin-right: 5px; margin-top: 3px;"
                 }).appendTo(row);
                 var removeIcon = $('<i/>', {
@@ -367,7 +368,7 @@ var swaggerDocUrl;
                 }).appendTo(li);
                 var remove = $('<a/>', {
                     href: "#",
-                    class: "btn btn-mini",
+                    class: "red-ui-button red-ui-button-small",
                     style: "float: right; margin-right: 5px; margin-top: 3px;"
                 }).appendTo(row1);
                 var removeIcon = $('<i/>', {
@@ -486,7 +487,7 @@ var swaggerDocUrl;
                 }).appendTo(nameRows);
                 var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
                 RED.popover.tooltip(descLabel, parameterDescriptionContent);
-                
+
                 $('<input/>', {
                     type: "text",
                     class: "node-swagger-description",
@@ -522,7 +523,7 @@ var swaggerDocUrl;
                     class: "node-swagger-propHeader-label",
                     style: "width: auto; font-weight: bold; margin-right: 10px"
                 }).text(propertiesText).appendTo(rowPropHeader);
-                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
+                var addPropButton = $('<a href=#" class="red-ui-button red-ui-button-small" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
 
                 var rowPropList = $("<div/>", {
                     class: "form-row node-swagger-prop-list",
@@ -598,7 +599,7 @@ var swaggerDocUrl;
                 }).appendTo(li);
                 var remove = $('<a/>', {
                     href: "#",
-                    class: "btn btn-mini",
+                    class: "red-ui-button red-ui-button-small",
                     style: "float: right; margin-right: 5px; margin-top: 3px;"
                 }).appendTo(row1);
                 var removeIcon = $('<i/>', {
@@ -687,7 +688,7 @@ var swaggerDocUrl;
                 }).appendTo(nameRows);
                 var descLabel = $("<label/>").text(descriptionText).appendTo(row2);
                 RED.popover.tooltip(descLabel, responseDescriptionContent);
-                
+
                 $('<input/>', {
                     type: "text",
                     class: "node-swagger-description"
@@ -700,7 +701,7 @@ var swaggerDocUrl;
                     class: "node-swagger-propHeader-label",
                     style: "width: auto; font-weight: bold; margin-right: 10px"
                 }).text(propertiesText).appendTo(rowPropHeader);
-                var addPropButton = $('<a href=#" class="btn btn-mini" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
+                var addPropButton = $('<a href=#" class="red-ui-button red-ui-button-small" id="node-config-input-add-property"><i class="fa fa-plus"></i> '+propertyText+'</a>').appendTo(rowPropHeader);
 
                 var rowPropList = $("<div/>", {
                     class: "form-row node-swagger-prop-list",

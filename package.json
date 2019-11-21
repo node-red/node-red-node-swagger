@@ -23,7 +23,7 @@
         "Jon Silver <js@jfdi.info>"
     ],
     "dependencies": {
-        "swagger-ui": "2.1.4",
+        "swagger-ui": "3.24.3",
         "i18next-client": "1.11.4"
     },
     "devDependencies": {

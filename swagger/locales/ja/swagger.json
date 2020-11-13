@@ -1,0 +1,71 @@
+{
+    "swagger": {
+        "sidebar": {
+            "label": "swagger",
+            "name": "Swagger UI"
+        },
+        "label": {
+            "path": "パス",
+            "summary": "要約",
+            "description": "説明",
+            "tags": "タグ",
+            "consumes": "コンシューム",
+            "produces": "プロデュース",
+            "deprecated": "非推奨",
+            "parameter": "パラメータ",
+            "parameters-help": "パラメータのヘルプ",
+            "response": "応答",
+            "responses-help": "応答のヘルプ",
+            "property": "プロパティ"
+        },
+        "placeholder": {
+            "tags": "コンマ区切りのタグのリスト",
+            "consumes": "コンマ区切りのMime型のリスト",
+            "produces": "コンマ区切りのMime型のリスト"
+        },
+        "data-content": {
+            "summary": "操作内容ついての短い要約。Swagger-UI上で読みやすくするために、このフィールドは120文字未満にする必要があります。",
+            "description": "操作の動作についての詳細な説明。GitHub風のマークアップ構文を用いることで、豊かな文章表現が可能です。",
+            "tags": "APIドキュメントの制御用のタグリスト。リソースやその他の修飾子による操作の論理グループ化のために、本タグを使用できます。",
+            "consumes": "操作で利用するコンシュームのMIMEタイプのリスト。",
+            "produces": "操作で利用するプロディュースのMIMEタイプのリスト。",
+            "deprecated": "本操作が非推奨になることを宣言します。宣言された操作の利用は控えるべきです。"
+        },
+        "content": {
+            "parameter-info": "<div style=\"max-width: 450px\"><p>この操作に適用できるパラメータのリスト。</p><p>パラメータを追加するには、<span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i> パラメータ</span>ボタンをクリックします。</p><p>利用できるパラメータは、4種類あります。</p><ul><li>Query - URLに追加されるパラメータ。例えば、/items?id=### におけるクエリパラメータはidです。</li><li>Header - リクエストの一部として期待されるカスタムヘッダ。</li><li>Body - HTTPリクエストに追加されるペイロード。ペイロードは1つだけのため、ボディパラメータは1つしか存在できません。ボディパラメータの名前は、パラメータ自体には影響せず、文書化の目的のみで使用されます。</li><li>Form - リクエストのcontent type (Swagger定義では、操作のコンシュームプロパティ)として、application/x-www-form-urlencodedまたはmultipart/form-dataのいずれかが使われている際に、HTTPリクエストのペイロードを説明するために使用されます。これはファイル送信に使用できる唯一のパラメータであるため、ファイルタイプをサポートします。</li></ul></div>",
+            "response-info": "<div><p>この操作を実行すると返される可能性のあるレスポンスのリスト。</p><p>デフォルトのレスポンスと、個別の状態コードのためのレスポンスを提供できます。</p><p>パラメータを追加するには、<span class='btn btn-mini' id='node-config-input-add-parameter'><i class='fa fa-plus'></i>レスポンス</span>ボタンをクリックします。</p><p>レスポンスが入力されない場合は「成功」を返すデフォルトのレスポンスが追加されます。</p></div>",
+            "type": "プリミティブ型に限定された属性のタイプ。",
+            "format": "前述のタイプのための拡張フォーマット。",
+            "parameter-description": "パラメータの簡単な説明。ここには使用例を含めることができます。GitHub風のマークアップ構文を用いて、豊かなテキスト表現を利用できます。",
+            "required": "必須パラメータか否かを判別します。",
+            "response-description": "レスポンスの簡単な説明。ここには使用例を含めることができます。GitHub風のマークアップ構文を用いて、豊かなテキスト表現を利用できます。"
+        },
+        "tabs-label": {
+            "info": "情報",
+            "parameters": "パラメータ",
+            "responses": "応答"
+        },
+        "text": {
+            "type": "型",
+            "format": "形式",
+            "name": "名前",
+            "in": "in",
+            "path": "パス",
+            "description": "説明",
+            "required": "必須?",
+            "properties": "プロパティ",
+            "file": "ファイル",
+            "code": "コード",
+            "default": "規定"
+        },
+        "helpBox": {
+            "title": "Swaggerドキュメントがない様です...",
+            "swaggerIntro": "Swaggerとは、REST APIをドキュメント化する簡単で強力な方法です。",
+            "swaggerInfo": "本Swaggerプラグインは、HTTPエンドポイントのノードを設定した時の入力値に基づいて、動的にSwaggerドキュメントを生成します。",
+            "swaggerInstructions0": "エディタ上でREST APIを作成した後、HTTPエンドポイントのノードをクリックします。「ドキュメント」の隣にある「追加」ボタンをクリックすることで、Swaggerのドキュメントをそのノードに追加できます。",
+            "swaggerInstructions1": "画面上で素早く操作して情報を提供することで、エンドポイントの入力や期待される出力のタイプに関する詳細情報の追加できます。",
+            "swaggerInstructions2": "フローがデプロイされると、このタブには自動的にAPIを視覚的に表示されます。",
+            "swaggerOutro": "このSwagger-UIを用いて、簡単にAPIをテストできます。"
+        }
+    }
+}

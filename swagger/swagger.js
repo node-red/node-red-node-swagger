@@ -37,11 +37,22 @@ module.exports = function(RED) {
 
     RED.httpNode.get("/http-api/swagger.json", (req, res) => {
         const {
+            uiHost,
+            uiPort,
             httpNodeRoot,
-            swagger: { parameters: additionalParams = [], template: resp = { ...DEFAULT_TEMPLATE } } = {}
+            https,
+            swagger: { parameters: additionalParams = [], template: template = {} } = {}
         } = RED.settings;
+        const resp = { ...DEFAULT_TEMPLATE, ...template };
+        resp.info = { ...DEFAULT_TEMPLATE.info, ...template.info };
+        if (!resp.host) {
+            resp.host = (uiHost === "0.0.0.0" ? "127.0.0.1" : uiHost) + ":" + uiPort;
+        }
         const { basePath = httpNodeRoot } = resp;
         resp.basePath = stripTerminalSlash(basePath);
+        if (!resp.schemes) {
+            resp.schemes = https ? ["https"] : ["http"];
+        }
         resp.paths = {};
 
         RED.nodes.eachNode(node => {

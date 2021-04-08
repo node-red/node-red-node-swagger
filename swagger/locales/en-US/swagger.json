@@ -9,6 +9,7 @@
             "summary": "Summary",
             "description": "Description",
             "tags": "Tags",
+            "operationId": "OperationId",
             "consumes": "Consumes",
             "produces": "Produces",
             "deprecated": "Deprecated",
@@ -27,6 +28,7 @@
             "summary": "A short summary of what the operation does. For maximum readability in the swagger-ui, this field SHOULD be less than 120 characters.",
             "description": "A verbose explanation of the operation behavior. GitHub Flavored Markup syntax can be used for rich text representation.",
             "tags": "A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.",
+            "operationId": "Unique string used to identify the operation.",
             "consumes": "A list of MIME types the operation can consume.",
             "produces": "A list of MIME types the operation can produce.",
             "deprecated": "Declares this operation to be deprecated. Usage of the declared operation should be refrained."

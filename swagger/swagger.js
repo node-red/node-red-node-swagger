@@ -56,6 +56,7 @@ module.exports = function(RED) {
                     summary = name || method + " " + endPoint,
                     description = "",
                     tags = "",
+                    operationId,
                     consumes,
                     produces,
                     deprecated,
@@ -75,6 +76,7 @@ module.exports = function(RED) {
                     summary,
                     description,
                     tags: aryTags,
+                    operationId,
                     consumes: aryConsumes,
                     produces: aryProduces,
                     deprecated,
@@ -91,6 +93,7 @@ module.exports = function(RED) {
         this.summary = n.summary;
         this.description = n.description;
         this.tags = n.tags;
+        this.operationId = n.operationId
         this.consumes = n.consumes;
         this.produces = n.produces;
         this.parameters = n.parameters;

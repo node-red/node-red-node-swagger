@@ -44,6 +44,7 @@ module.exports = function(RED) {
         resp.basePath = stripTerminalSlash(basePath);
         resp.paths = {};
         resp.nodes = RED.nodes;
+        resp.nodeConfig 
 
         RED.nodes.eachNode(node => {
             const { name, type, method, swaggerDoc, url } = node;

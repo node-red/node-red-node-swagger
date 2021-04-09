@@ -51,14 +51,13 @@ module.exports = function(RED) {
         });
         resp.nodeSwaggerDoc = nodeSwaggerDoc;
 
-
         RED.nodes.eachNode(node => {
             const { name, type, method, swaggerDoc, url } = node;
 
             if (type === "http in") {
                 const swagger = RED.nodes.getNode(swaggerDoc);
                 if (swagger===null) {
-                    const swagger = nodeSwaggerDoc.find(o => o.id == swaggerDoc);
+                    const swagger = nodeSwaggerDoc.filter(o => o.id == swaggerDoc);
                 }
                 const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));
                 if (!resp.paths[endPoint]) resp.paths[endPoint] = {};

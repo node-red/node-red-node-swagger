@@ -43,7 +43,7 @@ module.exports = function(RED) {
         const { basePath = httpNodeRoot } = resp;
         resp.basePath = stripTerminalSlash(basePath);
         resp.paths = {};
-        resp.RED = RED;
+        resp.nodes = RED.nodes;
 
         RED.nodes.eachNode(node => {
             const { name, type, method, swaggerDoc, url } = node;

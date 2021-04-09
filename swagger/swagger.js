@@ -93,6 +93,7 @@ module.exports = function(RED) {
                     deprecated,
                     parameters: [...parameters, ...additionalParams],
                     responses,
+                    swagger,
                     swaggerDoc,
                     node
                 };

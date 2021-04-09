@@ -91,7 +91,6 @@ module.exports = function(RED) {
                     parameters: [...parameters, ...additionalParams],
                     responses,
                     swagger,
-                    swagger2,
                     swaggerDoc,
                     node
                 };

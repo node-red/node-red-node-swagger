@@ -47,8 +47,10 @@ module.exports = function(RED) {
         //Load SwaggerDoc Nodes
         var nodeSwaggerDoc = [];
         RED.nodes.eachNode(node => {
-            if (node.type === "swagger-doc") { nodeSwaggerDoc.push(node) }
+            if (node.type === "swagger-doc") { nodeSwaggerDoc.push(node); }
         });
+        resp.nodeSwaggerDoc = nodeSwaggerDoc;
+
 
         RED.nodes.eachNode(node => {
             const { name, type, method, swaggerDoc, url } = node;

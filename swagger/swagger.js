@@ -56,6 +56,7 @@ module.exports = function(RED) {
 
             if (type === "http in") {
                 const swagger = RED.nodes.getNode(swaggerDoc);
+                var swagger2 = {};
                 if (swagger===null) {
                     //const swagger = nodeSwaggerDoc.filter(o => o.id == swaggerDoc);
                     for (var i=0;i<nodeSwaggerDoc.length; i++) {

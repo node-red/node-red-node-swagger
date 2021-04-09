@@ -49,6 +49,7 @@ module.exports = function(RED) {
 
             if (type === "http in") {
                 const swagger = RED.nodes.getNode(swaggerDoc);
+                const nodeinfo = RED.nodes.getNodeInfo(node.id);
                 const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));
                 if (!resp.paths[endPoint]) resp.paths[endPoint] = {};
 
@@ -82,7 +83,8 @@ module.exports = function(RED) {
                     deprecated,
                     parameters: [...parameters, ...additionalParams],
                     responses,
-                    node
+                    node,
+                    nodeinfo
                 };
             }
         });

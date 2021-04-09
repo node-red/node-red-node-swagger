@@ -81,7 +81,8 @@ module.exports = function(RED) {
                     produces: aryProduces,
                     deprecated,
                     parameters: [...parameters, ...additionalParams],
-                    responses
+                    responses,
+                    swaggerDoc
                 };
             }
         });

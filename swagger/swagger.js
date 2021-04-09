@@ -44,12 +44,10 @@ module.exports = function(RED) {
         resp.basePath = stripTerminalSlash(basePath);
         resp.paths = {};
 
-        //Load SwaggerDoc Nodes
         var nodeSwaggerDoc = [];
         RED.nodes.eachNode(node => {
             if (node.type === "swagger-doc") { nodeSwaggerDoc.push(node); }
         });
-        resp.nodeSwaggerDoc = nodeSwaggerDoc;
 
         RED.nodes.eachNode(node => {
             const { name, type, method, swaggerDoc, url } = node;
@@ -90,9 +88,6 @@ module.exports = function(RED) {
                     deprecated,
                     parameters: [...parameters, ...additionalParams],
                     responses,
-                    swagger,
-                    swaggerDoc,
-                    node
                 };
             }
         });

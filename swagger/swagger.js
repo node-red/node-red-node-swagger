@@ -82,7 +82,7 @@ module.exports = function(RED) {
                     deprecated,
                     parameters: [...parameters, ...additionalParams],
                     responses,
-                    swaggerDoc
+                    node
                 };
             }
         });

@@ -57,7 +57,7 @@ module.exports = function(RED) {
 
             if (type === "http in") {
                 const swagger = RED.nodes.getNode(swaggerDoc);
-                if (swagger===undefined) {
+                if (swagger===null) {
                     const swagger = nodeSwaggerDoc.find(o => o.id === swaggerDoc);
                 }
                 const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));

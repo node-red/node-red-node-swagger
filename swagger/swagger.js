@@ -44,11 +44,17 @@ module.exports = function(RED) {
         resp.basePath = stripTerminalSlash(basePath);
         resp.paths = {};
 
+        var nodeSwaggerDoc = [];
+        RED.nodes.eachNode(node => {
+            if (node.type === "swagger-doc") { nodeSwaggerDoc.push(node); }
+        });
+
         RED.nodes.eachNode(node => {
             const { name, type, method, swaggerDoc, url } = node;
 
             if (type === "http in") {
-                const swagger = RED.nodes.getNode(swaggerDoc);
+                
+                const swagger = RED.nodes.getNode(swaggerDoc) || nodeSwaggerDoc.filter(o => o.id == swaggerDoc)[0];
                 const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));
                 if (!resp.paths[endPoint]) resp.paths[endPoint] = {};
 
@@ -56,6 +62,7 @@ module.exports = function(RED) {
                     summary = name || method + " " + endPoint,
                     description = "",
                     tags = "",
+                    operationId,
                     consumes,
                     produces,
                     deprecated,
@@ -75,11 +82,12 @@ module.exports = function(RED) {
                     summary,
                     description,
                     tags: aryTags,
+                    operationId,
                     consumes: aryConsumes,
                     produces: aryProduces,
                     deprecated,
                     parameters: [...parameters, ...additionalParams],
-                    responses
+                    responses,
                 };
             }
         });
@@ -91,6 +99,7 @@ module.exports = function(RED) {
         this.summary = n.summary;
         this.description = n.description;
         this.tags = n.tags;
+        this.operationId = n.operationId
         this.consumes = n.consumes;
         this.produces = n.produces;
         this.parameters = n.parameters;

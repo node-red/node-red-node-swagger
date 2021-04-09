@@ -40,6 +40,10 @@
                     <input type="text" id="node-config-input-tags" data-i18n="[placeholder]swagger.placeholder.tags">
                 </div>
                 <div class="form-row">
+                    <label id="node-config-input-operationId-label" for="node-config-input-operationId" class="popover-right" data-i18n="[data-content]swagger.data-content.operationId"><span data-i18n="swagger.label.operationId"></span></label>
+                    <input type="text" id="node-config-input-operationId" >
+                </div>
+                <div class="form-row">
                     <label id="node-config-input-consumes-label" for="node-config-input-consumes" class="popover-right" data-i18n="[data-content]swagger.data-content.consumes"><span data-i18n="swagger.label.consumes"></span></label>
                     <input type="text" id="node-config-input-consumes" data-i18n="[placeholder]swagger.placeholder.consumes">
                 </div>
@@ -93,6 +97,9 @@ var swaggerDocUrl;
             },
             tags: {
                 value: ""
+            },
+            operationId: {
+                value:""
             },
             consumes: {
                 value: ""
@@ -150,6 +157,7 @@ var swaggerDocUrl;
             RED.popover.tooltip($('#node-config-input-summary-label'), this._("swagger.data-content.summary"));
             RED.popover.tooltip($('#node-config-input-description-label'), this._("swagger.data-content.description"));
             RED.popover.tooltip($('#node-config-input-tags-label'), this._("swagger.data-content.tags"));
+            RED.popover.tooltip($('#node-config-input-operationId-label'), this._("swagger.data-content.operationId"));
             RED.popover.tooltip($('#node-config-input-consumes-label'), this._("swagger.data-content.consumes"));
             RED.popover.tooltip($('#node-config-input-produces-label'), this._("swagger.data-content.produces"));
             RED.popover.tooltip($('#node-config-input-deprecated-label'), this._("swagger.data-content.deprecated"));

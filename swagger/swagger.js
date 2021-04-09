@@ -61,6 +61,7 @@ module.exports = function(RED) {
                     for (var i=0;i<nodeSwaggerDoc.length; i++) {
                         if (swaggerDoc == nodeSwaggerDoc[i].id) {
                             const swagger = nodeSwaggerDoc[i];
+                            swagger2 = nodeSwaggerDoc[i];
                         }
                     }
                 }
@@ -98,6 +99,7 @@ module.exports = function(RED) {
                     parameters: [...parameters, ...additionalParams],
                     responses,
                     swagger,
+                    swagger2,
                     swaggerDoc,
                     node
                 };

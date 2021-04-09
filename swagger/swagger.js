@@ -58,13 +58,15 @@ module.exports = function(RED) {
                 const swagger = RED.nodes.getNode(swaggerDoc);
                 var swagger2 = {};
                 if (swagger===null) {
-                    //const swagger = nodeSwaggerDoc.filter(o => o.id == swaggerDoc);
+                    swagger2 = nodeSwaggerDoc.filter(o => o.id == swaggerDoc);
+                    /*
                     for (var i=0;i<nodeSwaggerDoc.length; i++) {
                         if (swaggerDoc == nodeSwaggerDoc[i].id) {
                             const swagger = nodeSwaggerDoc[i];
                             swagger2 = nodeSwaggerDoc[i];
                         }
                     }
+                    */
                 }
                 const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));
                 if (!resp.paths[endPoint]) resp.paths[endPoint] = {};

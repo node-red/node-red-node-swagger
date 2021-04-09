@@ -44,15 +44,20 @@ module.exports = function(RED) {
         resp.basePath = stripTerminalSlash(basePath);
         resp.paths = {};
 
-        var nodeArray = [];
-        RED.nodes.eachNode(node => {nodeArray.push(node)});
-        resp.nodes = nodeArray;
+        //Load SwaggerDoc Nodes
+        var nodeSwaggerDoc = [];
+        RED.nodes.eachNode(node => {
+            if (node.type === "swagger-doc") { nodeSwaggerDoc.push(node) }
+        });
 
         RED.nodes.eachNode(node => {
             const { name, type, method, swaggerDoc, url } = node;
 
             if (type === "http in") {
                 const swagger = RED.nodes.getNode(swaggerDoc);
+                if (swagger==null) {
+                    swagger = nodeSwaggerDoc.find(o => o.id === swaggerDoc);
+                }
                 const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));
                 if (!resp.paths[endPoint]) resp.paths[endPoint] = {};
 

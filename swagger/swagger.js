@@ -94,6 +94,7 @@ module.exports = function(RED) {
                 };
             }
         });
+        res.header("Access-Control-Allow-Origin", "*");
         res.json(resp);
     });
 

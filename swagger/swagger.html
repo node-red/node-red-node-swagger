@@ -43,12 +43,19 @@
                     <input type="checkbox" id="node-config-input-deprecated" style="width: auto; vertical-align: top;"> <label id="node-config-input-deprecated-label" for="node-config-input-deprecated" class="popover-right" data-i18n="[data-content]swagger.data-content.deprecated"><span data-i18n="swagger.label.deprecated"></span></label>
                 </div>
             </div>
-            <div id="swagger-tab-parameters">
+           <div id="swagger-tab-parameters">
                 <div class="form-row" style="box-sizing: border-box; border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">
                     <ul id="node-config-parameter-list" style="padding: 0; margin:0;"></ul>
                 </div>
+                <div class="form-row">
+                    <a href="#" class="red-ui-button red-ui-button-small" id="node-config-input-add-parameter"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.parameter"></span></a>
+                    <a href="#" id="node-config-input-parameter-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right"><span data-i18n="swagger.label.parameters-help"></span></a>
+                </div>
             </div>
             <div id="swagger-tab-responses">
+                <div class="form-row" style="box-sizing: border-box; border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">
+                    <ul id="node-config-response-list" style="padding: 0; margin:0;"></ul>
+                </div>
                 <div class="form-row">
                     <a href="#" class="red-ui-button red-ui-button-small" id="node-config-input-add-response"><i class="fa fa-plus"></i> <span data-i18n="swagger.label.response"></span></a>
                     <a href="#" id="node-config-input-response-info" class="popover-closable" style="font-size: 10px; text-decoration: underline; float: right"><span data-i18n="swagger.label.responses-help"></span></a>

@@ -187,31 +187,6 @@ module.exports = function (RED) {
     this.deprecated = n.deprecated;
   }
   RED.nodes.registerType("swagger-doc", SwaggerDoc);
-  /*
-    function sendFile(res, filename) {
-        // Use the right function depending on Express 3.x/4.x
-        if (res.sendFile) {
-            res.sendFile(filename);
-        } else {
-            res.sendfile(filename);
-        }
-    }
-/*
-    RED.httpAdmin.get('/swagger-ui/*', (req, res) => {
-        const filename = req.params[0];
-        const filePath = path.join(swaggerUiDistPath, filename);
-        sendFile(res, filePath);
-    });
-    
-    function sendFile(res, filePath) {
-        res.sendFile(filePath, (err) => {
-            if (err) {
-                console.error('Error sending file:', err);
-                res.status(500).send('Error sending file.');
-            }
-        });
-    }
-*/
 
   // Serve the main Swagger UI HTML file
   RED.httpAdmin.get("/swagger-ui/swagger-ui.html", (req, res) => {

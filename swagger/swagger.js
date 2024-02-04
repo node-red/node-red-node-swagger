@@ -43,6 +43,8 @@ const DEFAULT_TEMPLATE = {
     // Add more properties as needed
 };
 
+
+
 module.exports = function(RED) {
     "use strict";
 
@@ -56,130 +58,7 @@ module.exports = function(RED) {
         url.length > 1 && url.endsWith("/") ? url.slice(0, -1) : url;
     const regexColons = /\/:\w*/g;
 
-    /*
-    RED.httpNode.get("/http-api/swagger.json", (req, res) => {
-        const {
-            httpNodeRoot,
-            swagger: { parameters: additionalParams = [], template: resp = { ...DEFAULT_TEMPLATE } } = {}
-        } = RED.settings;
-        const { basePath = httpNodeRoot } = resp;
-        resp.basePath = stripTerminalSlash(basePath);
-        resp.paths = {};
 
-        RED.nodes.eachNode(node => {
-            const { name, type, method, swaggerDoc, url } = node;
-
-            if (type === "http in") {
-                const swagger = RED.nodes.getNode(swaggerDoc);
-                const endPoint = ensureLeadingSlash(url.replace(regexColons, convToSwaggerPath));
-                if (!resp.paths[endPoint]) resp.paths[endPoint] = {};
-
-                const {
-                    summary = name || method + " " + endPoint,
-                    description = "",
-                    tags = "",
-                    consumes,
-                    produces,
-                    deprecated,
-                    parameters = [],
-                    responses = {
-                        default: {
-                            description: ""
-                        }
-                    }
-                } = swagger || {};
-                
-                const aryTags = csvStrToArray(tags),
-                    aryConsumes = csvStrToArray(consumes),
-                    aryProduces = csvStrToArray(produces);
-
-                resp.paths[endPoint][method] = {
-                    summary,
-                    description,
-                    tags: aryTags,
-                    consumes: aryConsumes,
-                    produces: aryProduces,
-                    deprecated,
-                    parameters: [...parameters, ...additionalParams],
-                    responses
-                };
-            }
-        });
-        res.json(resp);
-    });
-
-    RED.httpNode.get("/http-api/swagger.json", (req, res) => {
-        // Use the default template as the base for the response
-        const openApiSpec = { ...DEFAULT_TEMPLATE };
-    
-        // Iterate over each node that could have associated API documentation
-        RED.nodes.eachNode(node => {
-            if (node.type === "http in") {
-                // Get the Swagger documentation node associated with this http in node
-                const swaggerDocNode = RED.nodes.getNode(node.swaggerDoc);
-    
-                if (swaggerDocNode) {
-                    // Construct the path for the endpoint
-                    const path = ensureLeadingSlash(node.url.replace(regexColons, convToSwaggerPath));
-    
-                    // Initialize the path object if not already initialized
-                    if (!openApiSpec.paths[path]) {
-                        openApiSpec.paths[path] = {};
-                    }
-    
-                    // Define the operation object for this method and path
-                    const operation = {
-                        summary: swaggerDocNode.summary || `${node.method.toUpperCase()} ${path}`,
-                        description: swaggerDocNode.description || '',
-                        tags: csvStrToArray(swaggerDocNode.tags),
-                        parameters: [], // This will need to be populated based on your parameter definitions
-                        responses: {} // This will need to be populated based on your response definitions
-                    };
-    
-                    // Populate parameters array
-                    // You'll need to construct your parameter objects according to OpenAPI 3.0
-                    // For example:
-                    swaggerDocNode.parameters.forEach(param => {
-                        operation.parameters.push({
-                            name: param.name,
-                            in: param.in, // 'query', 'header', 'path' or 'cookie'
-                            description: param.description,
-                            required: param.required,
-                            schema: {
-                                type: param.type
-                                // More schema properties can be set here
-                            }
-                        });
-                    });
-    
-                    // Populate responses object
-                    // You'll need to map your response objects to status codes
-                    // For example:
-                    console.log(swaggerDocNode); // Should log true if it's an array
-
-                    swaggerDocNode.responses.forEach(resp => {
-                        operation.responses[resp.code] = {
-                            description: resp.description,
-                            content: {
-                                'application/json': {
-                                    schema: {
-                                        // Define the schema for the response
-                                    }
-                                }
-                            }
-                        };
-                    });
-    
-                    // Add the operation to the path in the spec
-                    openApiSpec.paths[path][node.method.toLowerCase()] = operation;
-                }
-            }
-        });
-    
-        // Send the OpenAPI Specification as JSON
-        res.json(openApiSpec);
-    });
-        */
 
     RED.httpNode.get("/http-api/swagger.json", (req, res) => {
         const {
@@ -257,10 +136,31 @@ module.exports = function(RED) {
                 }
             }
         });
-    
+         // Final cleanup to remove empty sections
+    cleanupOpenAPISpec(resp);
         res.json(resp);
     });
     
+    function cleanupOpenAPISpec(spec) {
+    // Clean up components
+    if (spec.components) {
+        ['schemas', 'responses', 'parameters', 'securitySchemes'].forEach(key => {
+            if (spec.components[key] && Object.keys(spec.components[key]).length === 0) {
+                delete spec.components[key];
+            }
+        });
+
+        // If all components are empty, remove the components object itself
+        if (Object.keys(spec.components).length === 0) {
+            delete spec.components;
+        }
+    }
+
+    // Clean up empty tags array
+    if (Array.isArray(spec.tags) && spec.tags.length === 0) {
+        delete spec.tags;
+    }
+}
 
     function SwaggerDoc(n) {
         RED.nodes.createNode(this, n);

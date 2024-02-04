@@ -2,19 +2,18 @@
 <html>
 <head>
   <title>Swagger UI</title>
-  <link rel="stylesheet" type="text/css" href="swagger-ui.css" > <!-- Update the path to where your Swagger UI CSS file is located -->
+  <link rel="stylesheet" type="text/css" href="swagger-ui.css" > 
 </head>
 
 <body>
   <div id="swagger-ui"></div>
 
-  <script src="swagger-ui-bundle.js"></script> <!-- Update the path to where your Swagger UI JS bundle file is located -->
-  <script src="swagger-ui-standalone-preset.js"></script> <!-- Update the path if you're using the standalone preset -->
+  <script src="swagger-ui-bundle.js"></script> 
+  <script src="swagger-ui-standalone-preset.js"></script> 
   <script>
   window.onload = function() {
-    // Begin Swagger UI call region
     const ui = SwaggerUIBundle({
-      url: "/http-api/swagger.json", // Update with the path to your OpenAPI spec
+      url: "/http-api/swagger.json", 
       dom_id: '#swagger-ui',
       deepLinking: true,
       presets: [
@@ -26,7 +25,6 @@
       ],
       layout: "StandaloneLayout"
     })
-    // End Swagger UI call region
 
     window.ui = ui
   }

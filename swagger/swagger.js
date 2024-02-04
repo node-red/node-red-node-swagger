@@ -136,7 +136,9 @@ module.exports = function(RED) {
                 }
             }
         });
-         // Final cleanup to remove empty sections
+        
+        
+    // Final cleanup to remove empty sections
     cleanupOpenAPISpec(resp);
         res.json(resp);
     });

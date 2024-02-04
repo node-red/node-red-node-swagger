@@ -118,6 +118,7 @@ var swaggerDocUrl;
                     swaggerUi.load();
                 }
             });
+            
             swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
             var swaggerFrame = $("<iframe/>", {
                 id:"swagger-ui-frame",
@@ -131,11 +132,12 @@ var swaggerDocUrl;
                 content: content,
                 iconClass: "fa fa-file-text-o" 
             });
-
+/*
             swaggerFrame.load(function(){
                 swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
                 swaggerUi.load();
             });
+            */
         },
         oneditprepare: function() {
 

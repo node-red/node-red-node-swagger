@@ -235,15 +235,16 @@ module.exports = function(RED) {
                         Object.keys(swaggerDocNode.responses).forEach(status => {
                             const responseDetails = swaggerDocNode.responses[status];
                             operation.responses[status] = {
-                                description: responseDetails.description || '',
-                                content: {
-                                    'application/json': {
-                                        schema: {
-                                            // Define or reference your schema here
-                                        }
-                                    }
-                                }
+                                description: responseDetails.description || 'No description',
+                                content: {}
                             };
+                        
+                            // Conditionally add schema if it's set
+                            if (responseDetails.schema) {
+                                operation.responses[status].content['application/json'] = {
+                                    schema: responseDetails.schema
+                                };
+                            }
                         });
                     } else {
                         console.error('swaggerDocNode.responses is not an object or is null:', swaggerDocNode.responses);

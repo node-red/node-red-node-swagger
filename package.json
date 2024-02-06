@@ -1,7 +1,7 @@
 {
     "name": "node-red-node-swagger",
-    "version": "0.1.9",
-    "description": "A set of tools for generating Swagger API documentation based on the HTTP nodes deployed in a flow",
+    "version": "0.2.0",
+    "description": "A set of tools for generating OpenAPI3/Swagger documentation based on the HTTP nodes deployed in a flow",
     "license": "Apache",
     "repository": {
         "type": "git",
@@ -9,10 +9,11 @@
     },
     "keywords": [
         "node-red",
-        "swagger"
+        "swagger",
+        "open-api"
     ],
     "node-red": {
-        "version": ">=0.11.0",
+        "version": ">=3.0.0",
         "nodes": {
             "swagger": "swagger/swagger.js"
         }
@@ -23,10 +24,11 @@
         "Jon Silver <js@jfdi.info>"
     ],
     "dependencies": {
-        "swagger-ui": "2.1.4",
-        "i18next-client": "1.11.4"
+        "i18next": "^23.7.20",
+        "swagger-ui": "^5.11.1",
+        "swagger-ui-dist": "^5.11.1"
     },
     "devDependencies": {
-        "eslint": "^6.4.0"
+        "eslint": "^8.56.0"
     }
 }

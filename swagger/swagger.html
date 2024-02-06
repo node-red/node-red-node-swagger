@@ -39,19 +39,11 @@
                     <label id="node-config-input-tags-label" for="node-config-input-tags" class="popover-right" data-i18n="[data-content]swagger.data-content.tags"><span data-i18n="swagger.label.tags"></span></label>
                     <input type="text" id="node-config-input-tags" data-i18n="[placeholder]swagger.placeholder.tags">
                 </div>
-                <div class="form-row">
-                    <label id="node-config-input-consumes-label" for="node-config-input-consumes" class="popover-right" data-i18n="[data-content]swagger.data-content.consumes"><span data-i18n="swagger.label.consumes"></span></label>
-                    <input type="text" id="node-config-input-consumes" data-i18n="[placeholder]swagger.placeholder.consumes">
-                </div>
-                <div class="form-row">
-                    <label id="node-config-input-produces-label" for="node-config-input-produces" class="popover-right" data-i18n="[data-content]swagger.data-content.produces"><span data-i18n="swagger.label.produces"></span></label>
-                    <input type="text" id="node-config-input-produces" data-i18n="[placeholder]swagger.placeholder.produces">
-                </div>
                 <div  class="form-row">
                     <input type="checkbox" id="node-config-input-deprecated" style="width: auto; vertical-align: top;"> <label id="node-config-input-deprecated-label" for="node-config-input-deprecated" class="popover-right" data-i18n="[data-content]swagger.data-content.deprecated"><span data-i18n="swagger.label.deprecated"></span></label>
                 </div>
             </div>
-            <div id="swagger-tab-parameters">
+           <div id="swagger-tab-parameters">
                 <div class="form-row" style="box-sizing: border-box; border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">
                     <ul id="node-config-parameter-list" style="padding: 0; margin:0;"></ul>
                 </div>
@@ -94,12 +86,6 @@ var swaggerDocUrl;
             tags: {
                 value: ""
             },
-            consumes: {
-                value: ""
-            },
-            produces: {
-                value: ""
-            },
             parameters: {
                 value: []
             },
@@ -125,6 +111,7 @@ var swaggerDocUrl;
                     swaggerUi.load();
                 }
             });
+            
             swaggerDocUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + RED.settings.httpNodeRoot + 'http-api/swagger.json';
             var swaggerFrame = $("<iframe/>", {
                 id:"swagger-ui-frame",
@@ -138,20 +125,19 @@ var swaggerDocUrl;
                 content: content,
                 iconClass: "fa fa-file-text-o" 
             });
-
+/*
             swaggerFrame.load(function(){
                 swaggerUi = document.getElementById('swagger-ui-frame').contentWindow.swaggerUi;
                 swaggerUi.load();
             });
+            */
         },
         oneditprepare: function() {
 
-            // Tooltips for Summary, Description, Tags, Consumes, Produces and Deprecated Labels on Properties Tab.
+            // Tooltips for Summary, Description, Tags, and Deprecated Labels on Properties Tab.
             RED.popover.tooltip($('#node-config-input-summary-label'), this._("swagger.data-content.summary"));
             RED.popover.tooltip($('#node-config-input-description-label'), this._("swagger.data-content.description"));
             RED.popover.tooltip($('#node-config-input-tags-label'), this._("swagger.data-content.tags"));
-            RED.popover.tooltip($('#node-config-input-consumes-label'), this._("swagger.data-content.consumes"));
-            RED.popover.tooltip($('#node-config-input-produces-label'), this._("swagger.data-content.produces"));
             RED.popover.tooltip($('#node-config-input-deprecated-label'), this._("swagger.data-content.deprecated"));
 
             RED.popover.tooltip($('#node-config-input-parameter-info'), this._("swagger.content.parameter-info"));

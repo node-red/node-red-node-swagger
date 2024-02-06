@@ -1,147 +1,33 @@
+<!DOCTYPE html>
 <html>
 <head>
   <title>Swagger UI</title>
-  <link href='reqs/css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
-  <link href='reqs/css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
-  <link href='reqs/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
-  <link href='reqs/css/reset.css' media='print' rel='stylesheet' type='text/css'/>
-  <link href='reqs/css/screen.css' media='print' rel='stylesheet' type='text/css'/>
-  <link href='reqs/css/print.css' media='print' rel='stylesheet' type='text/css'/>
-  <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
-  <script src='reqs/lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-  <script src='reqs/lib/jquery.slideto.min.js' type='text/javascript'></script>
-  <script src='reqs/lib/jquery.wiggle.min.js' type='text/javascript'></script>
-  <script src='reqs/lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-  <script src='reqs/lib/handlebars-2.0.0.js' type='text/javascript'></script>
-  <script src='reqs/lib/underscore-min.js' type='text/javascript'></script>
-  <script src='reqs/lib/backbone-min.js' type='text/javascript'></script>
-  <script src='reqs/swagger-ui.js' type='text/javascript'></script>
-  <script src='reqs/lib/highlight.7.3.pack.js' type='text/javascript'></script>
-  <script src='reqs/lib/jsoneditor.min.js' type='text/javascript'></script>
-  <script src='reqs/lib/marked.js' type='text/javascript'></script>
-  <script src='reqs/i18next.min.js' type='text/javascript'></script>
-  <script type="text/javascript">
-    var url = parent.swaggerDocUrl;
-    window.swaggerUi = new SwaggerUi({
-      url: url,
-      dom_id: "swagger-ui-container",
-	  validatorUrl: null,
-      onComplete: function(data) {
-        if(window.swaggerUi.api.apisArray.length == 0){
-            $('.empty-swagger-doc').show(1000);
-        } else{
-            $('.empty-swagger-doc').hide(1000);
-        }
-      },
-      onFailure: function(data) {
-		console.log("Unable to load SwaggerUI");
-      },
-    });
-    i18n.init({
-        resGetPath: 'nls/__lng__/__ns__.json',
-        load: 'current',
-        ns: 'swagger',
-        fallbackLng: 'en-us'
-    }, function() {
-        $('.empty-swagger-doc').i18n();
-    });
-  </script>
-  <style>
-    .empty-swagger-doc {
-      margin: 10px;
-      padding: 10px;
-      background-color: #5AAAFA;
-      border-radius: 5px;
-      font-family: Helvetica Neue, Helvetica, sans-serif;
-      font-size: 14px;
-      line-height: 150%;
-    }
-
-    .empty-swagger-doc h2 {
-        font-weight: bold;
-        font-size: 16px;
-        text-align: center;
-    }
-
-    .empty-swagger-doc p {
-        padding: 10px 0px;
-    }
-  </style>
-<!-- Styling mods by JS -->
-<style>
-    .swagger-section .swagger-ui-wrap ul#resources .resource .endpoints .endpoint .operations .operation .heading h3 .path {
-        font-size: small;
-        font-weight: 600;
-        display: block;
-        margin: 5px 0;
-    }
-
-    .swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.heading ul.options {
-        margin: 5px 10px 5px 0;
-    }
-
-    .swagger-section .swagger-ui-wrap h4 {
-        font-weight: 600;
-    }
-
-    .swagger-section .swagger-ui-wrap input.parameter {
-        padding: 5px 5px;
-        border-color: #bbb;
-        border-radius: 4px;
-    }
-
-    .swagger-section .swagger-ui-wrap input.parameter::placeholder {
-        color: #bbb;font-weight: 100;
-    }
- 
-    .swagger-section .swagger-ui-wrap th {
-        font-weight: 600;
-        line-height: 1.2;
-    }
-    .swagger-section .swagger-ui-wrap td label {
-        line-height: 27px;
-    }
-
-    .swagger-section .swagger-ui-wrap input.submit {
-        background-color: #007bff;
-        color: #fff;
-        font-weight: 600;
-        border: 1px solid #bbb;
-        border-radius: 4px;
-        width: 100px;
-        height: 40px;
-    }
-
-    .swagger-section .swagger-ui-wrap .endpoint ul.options {
-        position: absolute;
-        right: 5px;
-    }
-
-    .swagger-section .swagger-ui-wrap #resources .resource .endpoints .endpoint .operations .operation.get .content > h4:first-of-type:last-of-type {
-        color: inherit;
-    }
-
-    .swagger-section .swagger-ui-wrap #resources .resource .endpoints .endpoint .operations .operation.get .content > h4:first-of-type {
-        color: red;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="swagger-ui.css" > 
 </head>
 
-<body class="swagger-section">
-  <div class="empty-swagger-doc">
-    <h2><span class="fa-stack fa-lg">
-        <i class="fa fa-circle-thin fa-stack-2x"></i>
-        <i class="fa fa-question fa-stack-1x"></i>
-    </span></h2>
-    <h2 data-i18n>swagger.helpBox.title</h2>
-    <p data-i18n>swagger.helpBox.swaggerIntro</p>
-    <p data-i18n>swagger.helpBox.swaggerInfo</p>
-    <p data-i18n>swagger.helpBox.swaggerInstructions0</p>
-    <p data-i18n>swagger.helpBox.swaggerInstructions1</p>
-    <p data-i18n>swagger.helpBox.swaggerInstructions2</p>
-    <p data-i18n>swagger.helpBox.swaggerOutro<p>
-  </div>
-  <div id="swagger-ui-container" class="swagger-ui-wrap" style="margin: 10px"></div>
+<body>
+  <div id="swagger-ui"></div>
 
+  <script src="swagger-ui-bundle.js"></script> 
+  <script src="swagger-ui-standalone-preset.js"></script> 
+  <script>
+  window.onload = function() {
+    const ui = SwaggerUIBundle({
+      url: "/http-api/swagger.json", 
+      dom_id: '#swagger-ui',
+      deepLinking: true,
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ],
+      plugins: [
+        SwaggerUIBundle.plugins.DownloadUrl
+      ],
+      layout: "StandaloneLayout"
+    })
+
+    window.ui = ui
+  }
+  </script>
 </body>
 </html>
